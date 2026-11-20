@@ -1,0 +1,20 @@
+[Unit]
+Description=Software Next Generation portal
+After=network-online.target
+Wants=network-online.target
+[Service]
+User=nextgensoftware
+Group=nextgensoftware
+WorkingDirectory=/opt/nextgensoftware/current
+EnvironmentFile=/etc/nextgensoftware/app.env
+ExecStart=/usr/bin/dotnet /opt/nextgensoftware/current/Nextgen.Web.dll
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/nextgensoftware
+UMask=0077
+[Install]
+WantedBy=multi-user.target

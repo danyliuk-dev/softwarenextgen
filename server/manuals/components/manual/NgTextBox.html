@@ -1,0 +1,422 @@
+<h1 id="ngtextbox-single-line-text">NgTextBox — Single-line text</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Edit a string with a visible label and form validation.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgTextBox#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgTextBox#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="editing-and-ownership">Editing and ownership</h3>
+<p>Blazor uses @bind-Value and InputBase/EditContext validation. Flutter uses an application-owned TextEditingController or initialValue, never both; initialValue is not a continuously controlled value. Dispose controllers and FocusNodes in their owner. Programmatic controller changes do not invoke onChanged.</p>
+<p>ReadOnly/readOnly permits focus, selection and copying without editing. Disabled/enabled=false prevents normal interaction. Placeholder is a hint, not a replacement for the visible label. HelperText/helperText is persistent guidance. Blazor merges its helper ID with caller-supplied aria-describedby.</p>
+<p>PrefixTemplate/SuffixTemplate and prefix/suffix accept decorative content beside the editor. Keep decoration short; provide separate labelled controls for interactive actions. These slots do not replace the field label or validator. Use FocusAsync after rendering in Blazor, or an owned focusNode.requestFocus() in Flutter.</p>
+<p>MaxLength must be positive when supplied. It limits user entry, not application data: validate on the server too. Browser maxlength counts UTF-16 units; Flutter counts grapheme clusters and displays its native counter. Emoji limits can therefore differ. Existing/programmatic overlong values are not silently truncated.</p>
+<p>OnCommit is the Blazor native change event (normally blur, or Enter for a single-line input); ValueChanged still fires while typing. Flutter onSubmitted is the platform submission action, not a blur event; multiline Enter normally inserts a newline. These are deliberately documented platform contracts, not identical event timing.</p>
+<h3 id="current-scope">Current scope</h3>
+<p>No arbitrary border/radius customization or certified screen-reader parity. Native/mobile verification remains deferred. Application supplies localized labels, guidance and validation errors.</p>
+<h3 id="clear-action-046">Clear action (0.46)</h3>
+<p>ShowClearButton/showClearButton adds a labelled Clear action. It is disabled for empty, read-only or disabled fields. Clear sets the value to the empty string, not null, updates the form field and emits one value-change callback. It restores input focus and does not explicitly invoke OnCommit/onSubmitted; Blazor native blur/change can still commit the preceding typed value when focus moves to the button. Required validators can therefore reject the empty field. Flutter preserves controller ownership and initialValue form reset; retained actions cannot clear a replacement controller or bypass locks. The clear action and supplied suffix can coexist.</p>
+<h3 id="password-presentation">Password presentation</h3>
+<p>Password/password masks the single-line value; default false. ShowPasswordToggle/showPasswordToggle is opt-in and only appears in password mode. Reveal changes presentation, never the bound value or change callbacks. Read-only/disabled fields cannot reveal; entering these states hides the value. Clear and focus leaving the reveal control hide it too. Flutter controller replacement resets reveal. Password mode does not encrypt values or provide a credential manager; application storage and submission remain application responsibilities. Flutter disables suggestions/autocorrection in password mode. TextArea has no password mode.</p>
+<h3 id="size-and-fill-048">Size and fill (0.48)</h3>
+<p>Size/size accepts small, medium (default), or large. FillMode/fillMode accepts theme (default), outline, filled, or flat. Invalid values throw. Medium and theme inherit the existing application density/decoration. Small and large adjust text size and padding; they do not impose a fixed TextArea height. Outline removes background fill; filled uses a theme-aware surface. Borders, focus and validation indicators remain controlled by the platform/theme. Flutter custom themes should supply an outline border if that shape is required; fill selection does not replace theme borders.</p>
+<p>Changing appearance preserves the value, selection and form state and emits no change callback. Automatic TextArea height recalculates with the new metrics. Read-only/disabled permissions and clear/password behavior remain unchanged. Flutter keeps native action hit targets; compact fields containing actions can therefore remain taller than fields without actions. Prefix/suffix templates keep their own sizing. The two platforms do not promise equal pixel heights. Rounded presets and flat borders are available from 0.53; arbitrary border styling remains application-owned.</p>
+<h3 id="debounced-notifications-049">Debounced notifications (0.49)</h3>
+<p>OnDebouncedChange/onDebouncedChange is an optional notification after typing or Clear pauses for DebounceDelay/debounceDelay milliseconds (default 300, range 0–60000). The latest value in a burst wins. Zero means no intentional wait; Flutter uses the next timer turn. Value binding, onChanged and form validation remain immediate. These callbacks receive the actual value even in password mode; the sample displays only its length.</p>
+<p>A different externally supplied value, a changed delay, read-only/disabled state, handler removal, Flutter controller replacement or disposal cancels a pending notification. External changes alone never schedule notifications. Appearance changes and ordinary parent rebuilds retain pending work; the current callback receives the notification. Flutter selection-only controller changes do not cancel it. Flutter Form.reset follows TextFormField's native onChanged behavior and may schedule the reset value; use a replacement key/controller to discard all draft work.</p>
+<p>OnCommit/onSubmitted stays independent: blur/submit neither flushes nor cancels the delayed callback. Debouncing does not make submission wait or perform validation/network requests. Once a callback starts, cancelling later input cannot undo its effects: applications must protect asynchronous search results with their own request/version checks. IME composition suppression is available from 0.57; see below. Blazor cannot distinguish an external assignment of the same string from the normal binding echo; use a replacement key to reset the editor unconditionally.</p>
+<h3 id="rounded-corners-and-flat-fill-053">Rounded corners and flat fill (0.53)</h3>
+<p>Rounded/rounded accepts theme (default), none, small, medium, large, or full. Presets request radii of 0, 4, 8, 16, or 9999 logical pixels; the platform clamps large radii to the field bounds. Theme preserves the existing CSS/Flutter decoration. Unknown values throw. The radius applies to the editor border, not to separate action buttons or adornment content. Full is most suitable for short single-line fields; prefer smaller radii for long multiline text.</p>
+<p>Flat uses the same theme-aware surface as filled and hides the idle/disabled border without changing field dimensions. Focus and validation error indicators remain visible in the provided theme. Custom Flutter border sides/colors are retained for focus and errors; InputBorder.none remains an explicit application choice. Outline and underline theme borders retain their type when rounded presets are applied. Arbitrary custom InputBorder subclasses are replaced with an outline for an explicit rounded preset; theme retains them.</p>
+<p>Changing these options retains text, selection, focus and validation and does not emit editing events. It also retains TextArea autosizing, read-only/disabled permissions and clear/password actions. Original design values are used; API and theme compatibility with other libraries is not claimed.</p>
+<h3 id="ime-composition-057">IME composition (0.57)</h3>
+<p>While an input method is composing text, debounced notifications are suppressed, including with a zero delay. Binding, validation and onChanged still follow native edits immediately. Completing composition starts the configured delay again; completion with unchanged text also produces one notification. A later edit replaces that pending notification normally.</p>
+<p>Locks, external replacement, handler removal and disposal still cancel pending work. Clear is a new empty edit. Composition does not delay form submission or OnCommit/onSubmitted. Blazor uses a native composition observer loaded after interactive rendering; Flutter observes the editing composition range and native Web composition events (including semantics mode), while retaining TextFormField controller/reset ownership. Initial rendering does not notify. Browser automation checks native Chromium composition events and Flutter tests cover editing ranges; physical OS input methods, mobile keyboards and assistive technology certification remain separate verification.</p>
+<h3 id="character-counters-059">Character counters (0.59)</h3>
+<p>CounterMode/counterMode accepts native (default), hidden, used or remaining. Native preserves existing presentation: no counter in Blazor, the framework counter in Flutter when MaxLength/maxLength is set. Hidden removes only the counter; it never disables length enforcement or validation. Used displays the current count, with the maximum when present. Remaining requires a maximum, displays the remaining allowance and reports an over-limit amount for externally supplied overlong text.</p>
+<p>CounterText/counterText optionally formats the displayed text from the current count and nullable maximum. It applies only in used/remaining modes; use it for localized text. It receives counts, never the password value. In Blazor it is Func&lt;int,int?,string&gt;; in Flutter it is String Function(int current,int? maximum). Returned text is plain text, not HTML. Keep this formatting function pure.</p>
+<p>Counts follow each platform's existing length limit: Blazor browser maxlength and counter use UTF-16 units; Flutter uses grapheme clusters. A family emoji can therefore count as 11 in Blazor and 1 in Flutter. Counts do not promise byte counts or a shared server-side length policy. External overlong values remain visible; a counter is presentation, not additional validation.</p>
+<p>Counters update immediately for drafts (including IME), Clear, external replacement and native Flutter Form.reset. Appearance/mode changes retain text and pending debounce work. Blazor merges the counter ID into aria-describedby and exposes a polite atomic live region; Flutter retains framework counter semantics with a live text update. Physical screen-reader behavior remains unverified. Long labels can wrap; custom code should avoid announcing sensitive information.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-prompt-actions&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;CycleCounter&quot;</span><span class="p">&gt;</span>Change counter<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;customCounter=!customCounter&quot;</span><span class="p">&gt;</span>Custom counter<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;LoadEmoji&quot;</span><span class="p">&gt;</span>Load emoji<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;LoadOverflow&quot;</span><span class="p">&gt;</span>Load over limit<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>IME input updates the draft immediately; notifications wait until composition ends.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-prompt-actions&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;CycleRounded&quot;</span><span class="p">&gt;</span>Change corners<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;ToggleFlat&quot;</span><span class="p">&gt;</span>Toggle flat fill<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Corners: @rounded<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-prompt-actions&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;ReplaceDraft&quot;</span><span class="p">&gt;</span>Replace draft<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;delay=delay==600?0:600&quot;</span><span class="p">&gt;</span>Change delay<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Delay: @delay ms · Notifications: @notifications · Notified length: @notifiedLength<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-prompt-actions&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;CycleSize&quot;</span><span class="p">&gt;</span>Change size<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;CycleFill&quot;</span><span class="p">&gt;</span>Change fill<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Size: @size · Fill: @fill<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;password=!password&quot;</span><span class="p">&gt;</span>Toggle password mode<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Read only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;locked&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">NgTextBox</span> <span class="na">CounterMode</span><span class="o">=</span><span class="s">&quot;@counterMode&quot;</span> <span class="na">CounterText</span><span class="o">=</span><span class="s">&quot;@(customCounter?FormatCounter:null)&quot;</span> <span class="na">Rounded</span><span class="o">=</span><span class="s">&quot;@rounded&quot;</span> <span class="na">DebounceDelay</span><span class="o">=</span><span class="s">&quot;delay&quot;</span> <span class="na">OnDebouncedChange</span><span class="o">=</span><span class="s">&quot;Debounced&quot;</span> <span class="na">Size</span><span class="o">=</span><span class="s">&quot;@size&quot;</span> <span class="na">FillMode</span><span class="o">=</span><span class="s">&quot;@fill&quot;</span> <span class="err">@</span><span class="na">ref</span><span class="o">=</span><span class="s">&quot;editor&quot;</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Project name&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;locked&quot;</span> <span class="na">ShowClearButton</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">Password</span><span class="o">=</span><span class="s">&quot;password&quot;</span> <span class="na">ShowPasswordToggle</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">MaxLength</span><span class="o">=</span><span class="s">&quot;80&quot;</span> <span class="na">HelperText</span><span class="o">=</span><span class="s">&quot;Use a short, descriptive name.&quot;</span> <span class="na">OnCommit</span><span class="o">=</span><span class="s">&quot;v=&gt;committed=v&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="p">&lt;</span><span class="nt">PrefixTemplate</span><span class="p">&gt;&lt;</span><span class="nt">span</span> <span class="na">aria-hidden</span><span class="o">=</span><span class="s">&quot;true&quot;</span><span class="p">&gt;</span>@@<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">PrefixTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="13"><span class="p">&lt;/</span><span class="nt">NgTextBox</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="14"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;editor!.FocusAsync().AsTask()&quot;</span><span class="p">&gt;</span>Focus editor<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="15"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Length: @(text?.Length??0)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="16"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">counterMode</span><span class="o">=</span><span class="s">&quot;used&quot;</span><span class="p">;</span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">customCounter</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">FormatCounter</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">current</span><span class="p">,</span><span class="kt">int?</span><span class="w"> </span><span class="n">maximum</span><span class="p">)</span><span class="o">=&gt;</span><span class="s">$&quot;Used: {current}; limit: {maximum}&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="19"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">CycleCounter</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">counterMode</span><span class="o">=</span><span class="n">counterMode</span><span class="o">==</span><span class="s">&quot;used&quot;</span><span class="o">?</span><span class="s">&quot;remaining&quot;</span><span class="p">:</span><span class="n">counterMode</span><span class="o">==</span><span class="s">&quot;remaining&quot;</span><span class="o">?</span><span class="s">&quot;hidden&quot;</span><span class="p">:</span><span class="n">counterMode</span><span class="o">==</span><span class="s">&quot;hidden&quot;</span><span class="o">?</span><span class="s">&quot;native&quot;</span><span class="p">:</span><span class="s">&quot;used&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="20"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LoadEmoji</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">text</span><span class="o">=</span><span class="s">&quot;👨‍👩‍👧‍👦&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="21"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">LoadOverflow</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">text</span><span class="o">=</span><span class="k">new</span><span class="w"> </span><span class="kt">string</span><span class="p">(</span><span class="sc">&#39;x&#39;</span><span class="p">,</span><span class="mi">85</span><span class="p">);</span></span>
+<span class="code-line" data-line="22"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ToggleFlat</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="o">==</span><span class="s">&quot;flat&quot;</span><span class="o">?</span><span class="s">&quot;theme&quot;</span><span class="p">:</span><span class="s">&quot;flat&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="23"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">rounded</span><span class="o">=</span><span class="s">&quot;theme&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="24"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">CycleRounded</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">rounded</span><span class="o">=</span><span class="n">rounded</span><span class="o">==</span><span class="s">&quot;theme&quot;</span><span class="o">?</span><span class="s">&quot;large&quot;</span><span class="p">:</span><span class="n">rounded</span><span class="o">==</span><span class="s">&quot;large&quot;</span><span class="o">?</span><span class="s">&quot;none&quot;</span><span class="p">:</span><span class="n">rounded</span><span class="o">==</span><span class="s">&quot;none&quot;</span><span class="o">?</span><span class="s">&quot;small&quot;</span><span class="p">:</span><span class="n">rounded</span><span class="o">==</span><span class="s">&quot;small&quot;</span><span class="o">?</span><span class="s">&quot;medium&quot;</span><span class="p">:</span><span class="n">rounded</span><span class="o">==</span><span class="s">&quot;medium&quot;</span><span class="o">?</span><span class="s">&quot;full&quot;</span><span class="p">:</span><span class="s">&quot;theme&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="25"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">delay</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span><span class="n">notifications</span><span class="p">,</span><span class="n">notifiedLength</span><span class="p">;</span></span>
+<span class="code-line" data-line="26"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Debounced</span><span class="p">(</span><span class="kt">string?</span><span class="w"> </span><span class="k">value</span><span class="p">){</span><span class="n">notifications</span><span class="o">++</span><span class="p">;</span><span class="n">notifiedLength</span><span class="o">=</span><span class="k">value</span><span class="o">?.</span><span class="n">Length</span><span class="o">??</span><span class="mi">0</span><span class="p">;}</span></span>
+<span class="code-line" data-line="27"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ReplaceDraft</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">text</span><span class="o">=</span><span class="s">&quot;External replacement&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="28"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="s">&quot;medium&quot;</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="s">&quot;theme&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="29"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">CycleSize</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="o">==</span><span class="s">&quot;medium&quot;</span><span class="o">?</span><span class="s">&quot;large&quot;</span><span class="p">:</span><span class="n">size</span><span class="o">==</span><span class="s">&quot;large&quot;</span><span class="o">?</span><span class="s">&quot;small&quot;</span><span class="p">:</span><span class="s">&quot;medium&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="30"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">CycleFill</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="o">==</span><span class="s">&quot;theme&quot;</span><span class="o">?</span><span class="s">&quot;filled&quot;</span><span class="p">:</span><span class="n">fill</span><span class="o">==</span><span class="s">&quot;filled&quot;</span><span class="o">?</span><span class="s">&quot;outline&quot;</span><span class="p">:</span><span class="s">&quot;theme&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgTextBox</span><span class="o">?</span><span class="w"> </span><span class="n">editor</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">locked</span><span class="p">,</span><span class="n">password</span><span class="o">=</span><span class="k">true</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">text</span><span class="o">=</span><span class="s">&quot;Design review&quot;</span><span class="p">,</span><span class="n">committed</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">String</span><span class="w"> </span><span class="n">counterMode</span><span class="o">=</span><span class="s1">&#39;used&#39;</span><span class="p">;</span><span class="kt">bool</span><span class="w"> </span><span class="n">customCounter</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kt">String</span><span class="w"> </span><span class="n">rounded</span><span class="o">=</span><span class="s1">&#39;theme&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kt">int</span><span class="w"> </span><span class="n">delay</span><span class="o">=</span><span class="m">600</span><span class="p">,</span><span class="n">notifications</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">notifiedLength</span><span class="o">=</span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="4"><span class="kt">String</span><span class="w"> </span><span class="n">size</span><span class="o">=</span><span class="s1">&#39;medium&#39;</span><span class="p">,</span><span class="n">fill</span><span class="o">=</span><span class="s1">&#39;theme&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="5"><span class="kt">bool</span><span class="w"> </span><span class="n">locked</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">submitted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="6"><span class="kd">final</span><span class="w"> </span><span class="n">editor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">TextEditingController</span><span class="p">(</span><span class="nl">text:</span><span class="s1">&#39;Design review&#39;</span><span class="p">);</span></span>
+<span class="code-line" data-line="7"><span class="kd">final</span><span class="w"> </span><span class="n">focus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FocusNode</span><span class="p">();</span></span>
+<span class="code-line" data-line="8"><span class="nd">@override</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">(){</span><span class="n">editor</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span><span class="n">focus</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();}</span></span>
+<span class="code-line" data-line="9"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">runSpacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">counterMode</span><span class="o">=</span><span class="n">counterMode</span><span class="o">==</span><span class="s1">&#39;used&#39;</span><span class="o">?</span><span class="s1">&#39;remaining&#39;</span><span class="o">:</span><span class="n">counterMode</span><span class="o">==</span><span class="s1">&#39;remaining&#39;</span><span class="o">?</span><span class="s1">&#39;hidden&#39;</span><span class="o">:</span><span class="n">counterMode</span><span class="o">==</span><span class="s1">&#39;hidden&#39;</span><span class="o">?</span><span class="s1">&#39;native&#39;</span><span class="o">:</span><span class="s1">&#39;used&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Change counter&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">customCounter</span><span class="o">=!</span><span class="n">customCounter</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Custom counter&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">editor</span><span class="p">.</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;👨‍👩‍👧‍👦&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Load emoji&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">editor</span><span class="p">.</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="o">*</span><span class="m">85</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Load over limit&#39;</span><span class="p">))]),</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;IME input updates the draft immediately; notifications wait until composition ends.&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="10"><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">rounded</span><span class="o">=</span><span class="n">rounded</span><span class="o">==</span><span class="s1">&#39;theme&#39;</span><span class="o">?</span><span class="s1">&#39;large&#39;</span><span class="o">:</span><span class="n">rounded</span><span class="o">==</span><span class="s1">&#39;large&#39;</span><span class="o">?</span><span class="s1">&#39;none&#39;</span><span class="o">:</span><span class="n">rounded</span><span class="o">==</span><span class="s1">&#39;none&#39;</span><span class="o">?</span><span class="s1">&#39;small&#39;</span><span class="o">:</span><span class="n">rounded</span><span class="o">==</span><span class="s1">&#39;small&#39;</span><span class="o">?</span><span class="s1">&#39;medium&#39;</span><span class="o">:</span><span class="n">rounded</span><span class="o">==</span><span class="s1">&#39;medium&#39;</span><span class="o">?</span><span class="s1">&#39;full&#39;</span><span class="o">:</span><span class="s1">&#39;theme&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Change corners&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="o">==</span><span class="s1">&#39;flat&#39;</span><span class="o">?</span><span class="s1">&#39;theme&#39;</span><span class="o">:</span><span class="s1">&#39;flat&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle flat fill&#39;</span><span class="p">))]),</span></span>
+<span class="code-line" data-line="11"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Corners: </span><span class="si">$</span><span class="n">rounded</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="12"><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">editor</span><span class="p">.</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;External replacement&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Replace draft&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">delay</span><span class="o">=</span><span class="n">delay</span><span class="o">==</span><span class="m">600</span><span class="o">?</span><span class="m">0</span><span class="o">:</span><span class="m">600</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Change delay&#39;</span><span class="p">))]),</span></span>
+<span class="code-line" data-line="13"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Delay: </span><span class="si">$</span><span class="n">delay</span><span class="s1"> ms · Notifications: </span><span class="si">$</span><span class="n">notifications</span><span class="s1"> · Notified length: </span><span class="si">$</span><span class="n">notifiedLength</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="14"><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="o">==</span><span class="s1">&#39;medium&#39;</span><span class="o">?</span><span class="s1">&#39;large&#39;</span><span class="o">:</span><span class="n">size</span><span class="o">==</span><span class="s1">&#39;large&#39;</span><span class="o">?</span><span class="s1">&#39;small&#39;</span><span class="o">:</span><span class="s1">&#39;medium&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Change size&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">fill</span><span class="o">=</span><span class="n">fill</span><span class="o">==</span><span class="s1">&#39;theme&#39;</span><span class="o">?</span><span class="s1">&#39;filled&#39;</span><span class="o">:</span><span class="n">fill</span><span class="o">==</span><span class="s1">&#39;filled&#39;</span><span class="o">?</span><span class="s1">&#39;outline&#39;</span><span class="o">:</span><span class="s1">&#39;theme&#39;</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Change fill&#39;</span><span class="p">))]),</span></span>
+<span class="code-line" data-line="15"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Size: </span><span class="si">$</span><span class="n">size</span><span class="s1"> · Fill: </span><span class="si">$</span><span class="n">fill</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="16"><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">password</span><span class="o">=!</span><span class="n">password</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle password mode&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="17"><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Read only&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">locked</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">locked</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="18"><span class="n">NgTextBox</span><span class="p">(</span><span class="nl">counterMode:</span><span class="n">counterMode</span><span class="p">,</span><span class="nl">counterText:</span><span class="n">customCounter</span><span class="o">?</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">)</span><span class="o">=&gt;</span><span class="s1">&#39;Used: </span><span class="si">$</span><span class="n">n</span><span class="s1">; limit: </span><span class="si">$</span><span class="n">m</span><span class="s1">&#39;</span><span class="o">:</span><span class="kc">null</span><span class="p">,</span><span class="nl">rounded:</span><span class="n">rounded</span><span class="p">,</span><span class="nl">debounceDelay:</span><span class="n">delay</span><span class="p">,</span><span class="nl">onDebouncedChange:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">notifications</span><span class="o">++</span><span class="p">;</span><span class="n">notifiedLength</span><span class="o">=</span><span class="n">v</span><span class="p">.</span><span class="n">length</span><span class="p">;}),</span><span class="nl">size:</span><span class="n">size</span><span class="p">,</span><span class="nl">fillMode:</span><span class="n">fill</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Project name&#39;</span><span class="p">,</span><span class="nl">controller:</span><span class="n">editor</span><span class="p">,</span><span class="nl">focusNode:</span><span class="n">focus</span><span class="p">,</span><span class="nl">readOnly:</span><span class="n">locked</span><span class="p">,</span><span class="nl">showClearButton:</span><span class="kc">true</span><span class="p">,</span><span class="nl">password:</span><span class="n">password</span><span class="p">,</span><span class="nl">showPasswordToggle:</span><span class="kc">true</span><span class="p">,</span><span class="nl">maxLength:</span><span class="m">80</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="nl">helperText:</span><span class="s1">&#39;Use a short, descriptive name.&#39;</span><span class="p">,</span><span class="nl">prefix:</span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">edit_outlined</span><span class="p">),</span></span>
+<span class="code-line" data-line="20"><span class="nl">onChanged:</span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){}),</span><span class="nl">onSubmitted:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">submitted</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="21"><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">focus</span><span class="p">.</span><span class="n">requestFocus</span><span class="p">(),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Focus editor&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="22"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Length: </span><span class="si">${</span><span class="n">editor</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">length</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CounterMode</code></td>
+<td><code>string</code></td>
+<td>&quot;native&quot;</td>
+<td>native (default), hidden, used or remaining; remaining requires a maximum.</td>
+</tr>
+<tr>
+<td><code>CounterText</code></td>
+<td><code>Func&lt;int,int?,string&gt;?</code></td>
+<td>not set</td>
+<td>Optional plain-text formatter receiving current count and nullable maximum; used/remaining only.</td>
+</tr>
+<tr>
+<td><code>Id</code></td>
+<td><code>string</code></td>
+<td>&quot;ng-&quot;+Guid.NewGuid().ToString(&quot;N&quot;)</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>string</code></td>
+<td>&quot;medium&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Rounded</code></td>
+<td><code>string</code></td>
+<td>&quot;theme&quot;</td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>FillMode</code></td>
+<td><code>string</code></td>
+<td>&quot;theme&quot;</td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>Placeholder</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Hint displayed for empty input.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>ShowClearButton</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Password</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ShowPasswordToggle</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>MaxLength</code></td>
+<td><code>int?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>HelperText</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>PrefixTemplate</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SuffixTemplate</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>DebounceDelay</code></td>
+<td><code>int</code></td>
+<td>300</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnDebouncedChange</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnCommit</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>string?</code></td>
+<td>model value</td>
+<td>Current field value.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>Value change callback.</td>
+</tr>
+<tr>
+<td><code>ValueExpression</code></td>
+<td><code>Expression&lt;Func&lt;string?&gt;&gt;</code></td>
+<td>required</td>
+<td>Supplied by @bind-Value; pass explicitly with manual binding.</td>
+</tr>
+<tr>
+<td><code>AdditionalAttributes</code></td>
+<td>HTML attribute dictionary</td>
+<td>null</td>
+<td>Extra HTML/ARIA attributes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>counterMode</code></td>
+<td><code>String</code></td>
+<td>native (default), hidden, used or remaining; remaining requires a maximum.</td>
+</tr>
+<tr>
+<td><code>counterText</code></td>
+<td><code>String Function(int current, int? maximum)?</code></td>
+<td>Optional plain-text formatter receiving current count and nullable maximum; used/remaining only.</td>
+</tr>
+<tr>
+<td><code>debounceDelay</code></td>
+<td><code>int</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onDebouncedChange</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>fillMode</code></td>
+<td><code>String</code></td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>rounded</code></td>
+<td><code>String</code></td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>controller</code></td>
+<td><code>TextEditingController?</code></td>
+<td>Text controller; do not combine with initialValue. Dispose in its owner.</td>
+</tr>
+<tr>
+<td><code>initialValue</code></td>
+<td><code>String?</code></td>
+<td>Starting field value, not continuous controlled state.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>validator</code></td>
+<td><code>FormFieldValidator&lt;String&gt;?</code></td>
+<td>Return null when valid or a user-facing validation error.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>showClearButton</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>showPasswordToggle</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>focusNode</code></td>
+<td><code>FocusNode?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>helperText</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>suffix</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onSubmitted</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>placeholder</code></td>
+<td><code>String?</code></td>
+<td>Hint displayed for empty input.</td>
+</tr>
+<tr>
+<td><code>maxLength</code></td>
+<td><code>int?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgTextBox</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">counterMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;native&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">counterText</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;medium&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">fillMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;theme&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;theme&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">debounceDelay</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onDebouncedChange</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">controller</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">initialValue</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">validator</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showClearButton</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">password</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showPasswordToggle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">focusNode</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">helperText</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">prefix</span><span class="p">,</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">suffix</span><span class="p">,</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onSubmitted</span><span class="p">,</span></span>
+<span class="code-line" data-line="25"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">placeholder</span><span class="p">,</span></span>
+<span class="code-line" data-line="26"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">maxLength</span><span class="p">,</span></span>
+<span class="code-line" data-line="27"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

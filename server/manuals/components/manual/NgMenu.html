@@ -1,0 +1,211 @@
+<h1 id="ngmenu-command-menu">NgMenu — Command menu</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Group related application commands in a horizontal toolbar or a vertical navigation area. Open nested groups to choose a leaf action.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgMenu#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgMenu#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="commands-and-data">Commands and data</h3>
+<p>The parent owns SelectedId/selectedId and dispatches enabled leaf IDs from OnInvoke/onInvoke. Opening a group is not a command. A missing handler disables leaf buttons. Models copy their child collections; replace records to change Visible/visible, Disabled/disabled or Separator/separator. Hidden ancestors suppress their entire subtree. Separators have a unique ID and nonempty descriptive Text/text, never invoke, and cannot have children. Validation includes hidden items: at most 100 unique IDs, three levels, IDs of 1–64 ASCII letters/digits/underscore/hyphen and labels of 1–120 characters.</p>
+<h3 id="appearance-and-accessible-templates">Appearance and accessible templates</h3>
+<p>ItemTemplate/itemBuilder replaces display content; LeadingTemplate/leadingBuilder supplies a decorative icon or image. Text/text remains the accessible name and leading content is excluded from that name. Templates must contain display content only: no buttons, links, inputs or focusable descendants. Automatic URL routing is not provided; handle the leaf callback in the application.</p>
+<h3 id="opening-closing-and-direction">Opening, closing and direction</h3>
+<p>CloseOnClick/closeOnClick defaults to true. Set false to keep a menu open after choosing an enabled leaf (for repeated commands). Escape, outside clicks and focus traversal still dismiss. Blazor opens on click or keyboard; Flutter uses Material submenu behavior, including pointer hover. Rtl/rtl reverses horizontal keyboard direction and submenu direction; vertical menus retain Up/Down navigation. Blazor provides one root Tab stop and Home/End; Flutter delegates keyboard handling to Material menus. Removing a focused item is an application-level focus concern. Popup animation, hover delay configuration, arbitrary-model field mapping and full screen-reader certification remain outside this implementation.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Keep menu open&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;keepOpen&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Right-to-left&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;rtl&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgMenu</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Document commands&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;commands&quot;</span> <span class="na">SelectedId</span><span class="o">=</span><span class="s">&quot;@selected&quot;</span></span>
+<span class="code-line" data-line="4">        <span class="na">OnInvoke</span><span class="o">=</span><span class="s">&quot;Run&quot;</span> <span class="na">Rtl</span><span class="o">=</span><span class="s">&quot;rtl&quot;</span> <span class="na">CloseOnClick</span><span class="o">=</span><span class="s">&quot;@(!keepOpen)&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5">  <span class="p">&lt;</span><span class="nt">LeadingTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;item&quot;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>◆<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">LeadingTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6">  <span class="p">&lt;</span><span class="nt">ItemTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;item&quot;</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>@item.Text<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">ItemTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;/</span><span class="nt">NgMenu</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Last command: @selected · Invocations: @count<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">keepOpen</span><span class="p">,</span><span class="w"> </span><span class="n">rtl</span><span class="p">;</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="s">&quot;none&quot;</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="p">;</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgMenuItem</span><span class="p">[]</span><span class="w"> </span><span class="n">commands</span><span class="o">=</span><span class="p">[</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;file&quot;</span><span class="p">,</span><span class="s">&quot;File&quot;</span><span class="p">,</span><span class="n">children</span><span class="p">:[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;new&quot;</span><span class="p">,</span><span class="s">&quot;New document&quot;</span><span class="p">),</span></span>
+<span class="code-line" data-line="14"><span class="w">      </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;exports&quot;</span><span class="p">,</span><span class="s">&quot;Export formats&quot;</span><span class="p">,</span><span class="n">separator</span><span class="p">:</span><span class="k">true</span><span class="p">),</span></span>
+<span class="code-line" data-line="15"><span class="w">      </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;export&quot;</span><span class="p">,</span><span class="s">&quot;Export&quot;</span><span class="p">,</span><span class="n">children</span><span class="p">:[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;pdf&quot;</span><span class="p">,</span><span class="s">&quot;PDF&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;csv&quot;</span><span class="p">,</span><span class="s">&quot;CSV&quot;</span><span class="p">)]),</span></span>
+<span class="code-line" data-line="16"><span class="w">      </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;secret&quot;</span><span class="p">,</span><span class="s">&quot;Internal command&quot;</span><span class="p">,</span><span class="n">visible</span><span class="p">:</span><span class="k">false</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;delete&quot;</span><span class="p">,</span><span class="s">&quot;Delete&quot;</span><span class="p">,</span><span class="n">disabled</span><span class="p">:</span><span class="k">true</span><span class="p">)]),</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;help&quot;</span><span class="p">,</span><span class="s">&quot;Help&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Run</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">id</span><span class="p">){</span><span class="n">selected</span><span class="o">=</span><span class="n">id</span><span class="p">;</span><span class="n">count</span><span class="o">++</span><span class="p">;}</span></span>
+<span class="code-line" data-line="19"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">keepOpen</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;none&#39;</span><span class="p">;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kd">final</span><span class="w"> </span><span class="n">commands</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;file&#39;</span><span class="p">,</span><span class="s1">&#39;File&#39;</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;new&#39;</span><span class="p">,</span><span class="s1">&#39;New document&#39;</span><span class="p">),</span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;exports&#39;</span><span class="p">,</span><span class="s1">&#39;Export formats&#39;</span><span class="p">,</span><span class="nl">separator:</span><span class="kc">true</span><span class="p">),</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;export&#39;</span><span class="p">,</span><span class="s1">&#39;Export&#39;</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;pdf&#39;</span><span class="p">,</span><span class="s1">&#39;PDF&#39;</span><span class="p">),</span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;csv&#39;</span><span class="p">,</span><span class="s1">&#39;CSV&#39;</span><span class="p">)]),</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;secret&#39;</span><span class="p">,</span><span class="s1">&#39;Internal command&#39;</span><span class="p">,</span><span class="nl">visible:</span><span class="kc">false</span><span class="p">),</span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;delete&#39;</span><span class="p">,</span><span class="s1">&#39;Delete&#39;</span><span class="p">,</span><span class="nl">disabled:</span><span class="kc">true</span><span class="p">)]),</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="n">NgMenuItem</span><span class="p">(</span><span class="s1">&#39;help&#39;</span><span class="p">,</span><span class="s1">&#39;Help&#39;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="7"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="w"> </span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Keep menu open&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">keepOpen</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">keepOpen</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Right-to-left&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">rtl</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">rtl</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="n">NgMenu</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Document commands&#39;</span><span class="p">,</span><span class="nl">items:</span><span class="n">commands</span><span class="p">,</span><span class="nl">selectedId:</span><span class="n">selected</span><span class="p">,</span><span class="nl">rtl:</span><span class="n">rtl</span><span class="p">,</span><span class="nl">closeOnClick:</span><span class="o">!</span><span class="n">keepOpen</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="nl">leadingBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">item</span><span class="p">)</span><span class="o">=&gt;</span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">description_outlined</span><span class="p">,</span><span class="nl">size:</span><span class="m">18</span><span class="p">),</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="nl">itemBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">item</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Text</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">text</span><span class="p">,</span><span class="nl">style:</span><span class="k">const</span><span class="w"> </span><span class="n">TextStyle</span><span class="p">(</span><span class="nl">fontWeight:</span><span class="n">FontWeight</span><span class="p">.</span><span class="n">bold</span><span class="p">)),</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="nl">onInvoke:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">selected</span><span class="o">=</span><span class="n">id</span><span class="p">;</span><span class="n">count</span><span class="o">++</span><span class="p">;})),</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Last command: </span><span class="si">$</span><span class="n">selected</span><span class="s1"> · Invocations: </span><span class="si">$</span><span class="n">count</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="15"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Commands&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgMenuItem&gt;</code></td>
+<td>required</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>SelectedId</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>OnInvoke</code></td>
+<td><code>EventCallback&lt;string&gt;</code></td>
+<td>not set</td>
+<td>Enabled leaf command ID; dispatch the application action in this handler.</td>
+</tr>
+<tr>
+<td><code>Vertical</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Rtl</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>CloseOnClick</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ItemTemplate</code></td>
+<td><code>RenderFragment&lt;NgMenuItem&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>LeadingTemplate</code></td>
+<td><code>RenderFragment&lt;NgMenuItem&gt;?</code></td>
+<td>not set</td>
+<td>Decorative leading content for an item; no nested interactive elements.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgMenuItem&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>selectedId</code></td>
+<td><code>String?</code></td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>onInvoke</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>Enabled leaf command ID; dispatch the application action in this handler.</td>
+</tr>
+<tr>
+<td><code>vertical</code></td>
+<td><code>bool</code></td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>rtl</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>closeOnClick</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>itemBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgMenuItem)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>leadingBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgMenuItem)?</code></td>
+<td>Decorative leading widget for an item; no nested interactive controls.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgMenu</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Commands&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectedId</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onInvoke</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">vertical</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">closeOnClick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">leadingBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

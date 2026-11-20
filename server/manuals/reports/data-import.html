@@ -1,0 +1,136 @@
+<h1 id="csv-tsv-excel-data-import">CSV / TSV / Excel data import</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>Import is a one-time conversion into the project's JSON data. It does not create
+a live file connection or change the report template. Save the project to retain
+the imported rows. No uploaded file or server-side file path is stored.</p>
+<ol>
+<li>Open <strong>Data → Import data</strong>, choose a UTF-8 file (optional BOM), and set the
+target <strong>Table name</strong>. A <code>.tsv</code> file selects Tab; other files default to Comma.
+Choose Comma, Semicolon, Tab or Pipe explicitly if needed.</li>
+<li>Leave <strong>First row contains headers</strong> checked, or uncheck it to use column1,
+column2, etc. Headers are trimmed, must be nonempty/distinct and at most 100
+characters. Field keys use letters/digits/underscores: <code>Product name</code> becomes
+<code>Product_name</code>; collisions gain suffixes, non-ASCII-only names become columnN.
+The preview shows both original headers and generated field names.</li>
+<li><strong>Keep all text</strong> is the default. <strong>Infer columns</strong> examines every nonempty
+value in each column, not only the 20 preview rows. A column becomes boolean
+only for lowercase true/false, or number only for plain decimal values with a
+dot and at most 15 digits. Leading zeros, dates, exponents, locale decimals,
+mixed values and longer numbers stay strings. Whitespace in values is retained.</li>
+<li>Select <strong>Preview</strong>. Review row/column counts, generated names and types. Each
+column can override the default with auto/string/number/boolean. Changing parse
+options or an override requires another Preview. Forced types reject invalid
+values; they never silently replace bad values with null. Empty numeric/boolean
+cells become null; empty string cells stay empty strings. Entirely empty columns
+infer as string. Formulas and HTML remain literal data.</li>
+<li><strong>Apply import</strong> adds one root-level array to the current JSON object. Other
+properties are retained. Existing arrays require <strong>Replace existing table</strong>;
+scalar/object properties cannot be replaced. Table names must be 1–80 ASCII
+letters/digits/underscores, start with a letter/underscore and cannot be
+<strong>proto</strong>, constructor or prototype. Cancel, parse errors and invalid options
+leave data unchanged. A concurrent data edit requires reopening the import.</li>
+<li>The Data table view selects the imported array. Set a report table's <strong>Data
+source</strong> to the table name and its columns to the generated field keys. Generate
+preview and export PDF. Importing does not automatically rebuild report columns.</li>
+<li><strong>Undo import</strong> restores the data before the latest applied import, while it is
+still unchanged. It is separate from template Undo/Redo, has one level and is
+cleared by opening a project. Save/reopen the project to retain imported data;
+loading a project does not retain the original file or import settings.</li>
+</ol>
+<p>Quoted fields support embedded delimiters, doubled quotes (<code>&quot;&quot;</code>) and embedded
+line breaks. CRLF/LF/CR record separators are accepted; quoted line endings are
+preserved. Empty physical records are skipped, but quoted empty fields are data.
+Rows must have identical field counts. Quotes in unquoted fields, unclosed quotes,
+characters after a closing quote (including spaces), NUL and duplicate/empty
+headers are rejected. There is no comment syntax, delimiter guessing, date parser,
+formula evaluation, encoding conversion or automatic refresh in CSV/TSV mode.</p>
+<p>Limits: 2 MB UTF-8 input, 10,000 data rows, 50 columns, 200,000 cells including
+headers, 64,000 characters per field, 6 MB compact imported JSON. Applying also
+checks the existing 8 MB project limit. Preview shows at most 20 rows and truncates
+long cell display to 500 characters; the imported values are not truncated.
+JSON numbers are used in the browser, so identifiers should remain strings.</p>
+<h2 id="example-and-cli">Example and CLI</h2>
+<p>Try <code>samples/import/items.csv</code> or <code>samples/import/items.tsv</code> with table name <code>items</code>
+and Infer columns. Codes 001/002/003 stay strings, quantity/price become numbers,
+active becomes boolean, quoted product names retain commas, quotes and line breaks.
+Use <code>samples/import/inventory.nrtemplate</code> for the resulting JSON data.</p>
+<p>With Studio running locally:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">python3<span class="w"> </span>tools/import-delimited.py<span class="w"> </span>--input<span class="w"> </span>samples/import/items.csv<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span>--table<span class="w"> </span>items<span class="w"> </span>--typing<span class="w"> </span>infer<span class="w"> </span>--output<span class="w"> </span>artifacts/imported-items.json</span>
+<span class="code-line" data-line="3">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/import/inventory.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span>--data<span class="w"> </span>artifacts/imported-items.json<span class="w"> </span>--format<span class="w"> </span>pdf<span class="w"> </span>--output<span class="w"> </span>artifacts/imported-items.pdf</span></code></pre></figure>
+<p>For TSV add <code>--delimiter tab</code>; for other delimiters use semicolon/pipe. Use
+<code>--no-header</code> for generated headers, or repeated <code>--column-type price=number</code>
+options using normalized field keys. The CLI writes a new JSON object, does not
+merge with an existing data file, and refuses an existing output unless <code>--force</code>
+is given. stdout/stderr are JSON. It calls the same API/parser as Studio.</p>
+<h2 id="api">API</h2>
+<p><code>POST /api/data/import</code>, JSON body:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;id,amount\n001,12.50\n&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;delimiter&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;hasHeader&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="nt">&quot;typing&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;infer&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="nt">&quot;columnTypes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="9"><span class="p">}</span></span></code></pre></figure>
+<p>Returns <code>{columns:[{header,field,type}],rows:[{...}]}</code>. Defaults are comma, header
+true and typing strings. Overrides are keyed by generated field names and may be
+auto/string/number/boolean; unknown fields/types fail. The endpoint returns rows,
+not a report data root object; callers choose their table name. Validation errors
+return HTTP 400 Problem Details. Import performs no filesystem or URL access.</p>
+<h2 id="excel-worksheets-xlsx">Excel worksheets (.xlsx)</h2>
+<p>Open <strong>Data → Import data</strong>, select <code>samples/import/inventory.xlsx</code>, choose
+<strong>Worksheet → Items</strong>, set Table name to <code>items</code> and Types to <strong>Infer columns</strong>.
+Preview shows three rows: codes retain leading zeros, quantity/price become
+numbers, active becomes boolean and delivered contains ISO dates. Apply import,
+use <code>samples/import/inventory.nrtemplate</code>, then Generate. Replacement, Cancel,
+Undo import, field overrides and project saving behave exactly as for CSV/TSV.
+Changing the worksheet, header, types or formula option invalidates the preview.
+Delimiter is disabled for XLSX. Keep all text remains the default.</p>
+<p>The Summary worksheet contains a formula. Preview initially rejects it. Only after
+recalculating and saving a real workbook in Excel/LibreOffice should you enable
+<strong>Use cached formula values</strong> and Preview again. The sample has an explicitly
+prepared cache of 187.7. The importer never calculates formulas; caches can be
+stale even when present. Missing caches and Excel error cells fail. This behavior
+follows the <a href="https://learn.microsoft.com/en-us/office/open-xml/spreadsheet/working-with-formulas">SpreadsheetML formula/cache distinction</a>.</p>
+<p>Worksheets, including hidden ones, are listed in workbook order. Empty rows are
+skipped, sparse cells are filled with empty values and hidden/filtered rows and
+columns are included. Headers are the first nonempty row unless disabled. Values
+outside columns A–AX fail; merged cells must be unmerged first. There is no range
+selection, named-table selection or automatic refresh. Other worksheets are not
+imported until selected.</p>
+<p>Text, shared/rich strings, numeric and boolean cells are read as stored values;
+Excel fonts, colors, display rounding, currency/percent symbols and numeric
+zero-padding are not imported. Store identifiers as text in Excel. Numeric
+exponents are expanded to decimal text; inference still uses the conservative
+15-digit rule. Values outside decimal range/precision (28 significant digits,
+28 fractional places) fail instead of silently rounding.</p>
+<p>Recognized date formats become ISO text: built-in 14–22, 45 and 47 and custom
+formats with date/time tokens y/d/h/s after removing quoted/escaped literals and
+locale/color annotations. Both 1900 and 1904 date systems are supported. Date-only
+formats produce yyyy-MM-dd; time-only produce HH:mm:ss with optional milliseconds;
+combined formats produce yyyy-MM-ddTHH:mm:ss. Unrecognized formats remain numeric
+values. Negative/out-of-range date serials, Excel's fictitious 1900-02-29 and
+elapsed-time formats ([h]/[m]/[s], built-in 46) fail. Convert unsupported dates or
+durations to explicit ISO text/plain numbers in the workbook first.</p>
+<p>Only transitional .xlsx is supported, not .xls, .xlsm, .xlsb, strict OOXML or
+encrypted workbooks. No macros, external links or XML external entities are run
+or fetched. Limits: 4 MB file, 1,024 ZIP entries, 16 MB per expanded part, 32 MB
+expanded total, 100 worksheets; the shared 10,000 data rows / 50 columns / 200,000
+cells / 64,000 characters per field / 6 MB JSON / 8 MB project limits also apply.</p>
+<h3 id="xlsx-cli-and-api">XLSX CLI and API</h3>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">python3<span class="w"> </span>tools/import-xlsx.py<span class="w"> </span>--input<span class="w"> </span>samples/import/inventory.xlsx<span class="w"> </span>--list-sheets</span>
+<span class="code-line" data-line="2">python3<span class="w"> </span>tools/import-xlsx.py<span class="w"> </span>--input<span class="w"> </span>samples/import/inventory.xlsx<span class="w"> </span>--sheet<span class="w"> </span>Items<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span>--table<span class="w"> </span>items<span class="w"> </span>--typing<span class="w"> </span>infer<span class="w"> </span>--output<span class="w"> </span>artifacts/xlsx-items.json</span>
+<span class="code-line" data-line="4">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/import/inventory.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span>--data<span class="w"> </span>artifacts/xlsx-items.json<span class="w"> </span>--format<span class="w"> </span>pdf<span class="w"> </span>--output<span class="w"> </span>artifacts/xlsx-items.pdf</span></code></pre></figure>
+<p>The XLSX CLI supports --no-header, repeated --column-type FIELD=TYPE,
+--use-cached-formulas and --force. It writes a new JSON data object, not a merge.
+Existing outputs are refused without --force. Warnings are included in JSON stdout.</p>
+<p><code>POST /api/data/xlsx/sheets</code> accepts <code>{contentBase64:&quot;...&quot;}</code> and returns
+<code>{sheets:[{name,hidden}]}</code>. <code>POST /api/data/xlsx</code> accepts
+<code>{contentBase64:&quot;...&quot;,sheet:&quot;Items&quot;,hasHeader:true,typing:&quot;infer&quot;,columnTypes:{},useCachedFormulas:false}</code>
+and returns <code>{columns,rows,warnings}</code>. Errors return HTTP 400 Problem Details.
+No server-side file paths are accepted; neither endpoint persists the workbook.</p>

@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+const port=process.argv[2]||'9350',base=process.argv[3]||'https://softwarenextgen.com';
+const docs=JSON.parse(fs.readFileSync('server/manuals/components/index.json','utf8')).filter(d=>d.Path.startsWith('manual/Ng')&&(!process.argv[4]||process.argv[4].split(',').some(n=>d.Path.endsWith('/'+n))));
+const tabs=await(await fetch(`http://127.0.0.1:${port}/json/list`)).json();const tab=tabs.find(t=>t.type==='page');
+const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let id=0;const pending=new Map();ws.onmessage=e=>{const x=JSON.parse(e.data);if(pending.has(x.id)){const [r,j]=pending.get(x.id);pending.delete(x.id);x.error?j(Error(x.error.message)):r(x.result)}};
+const send=(method,params={})=>new Promise((r,j)=>{const n=++id;pending.set(n,[r,j]);ws.send(JSON.stringify({id:n,method,params}))});
+const evaluate=async expression=>{const r=await send('Runtime.evaluate',{expression,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
+await send('Emulation.setDeviceMetricsOverride',{width:760,height:620,deviceScaleFactor:1,mobile:false});fs.mkdirSync('server/wwwroot/images/components',{recursive:true});
+for(const doc of docs){const name=doc.Path.split('/').at(-1);const selector=({NgPivotGrid:'.ng-pivot-table',NgSpreadsheet:'.ng-sheet',NgLinearGauge:'.ng-gauge',NgTextBox:'.ng-text-field',NgTextArea:'.ng-text-field',NgComboBox:'.ng-combo',NgMultiSelect:'.ng-multiselect',NgAutoComplete:'.ng-field'}[name])||'.'+name.replace(/([A-Z]+)([A-Z][a-z])/g,'$1-$2').replace(/([a-z0-9])([A-Z])/g,'$1-$2').toLowerCase();await send('Page.navigate',{url:base+'/preview/components/preview/'+name});let ready=false;
+for(let n=0;n<40;n++){await new Promise(r=>setTimeout(r,200));try{ready=await evaluate(`document.title===${JSON.stringify(name+' preview')} && !!document.querySelector('.manual-preview') && document.readyState==='complete'`)}catch{}if(ready)break;}if(!ready)throw Error(name+' did not load');
+await evaluate('document.fonts.ready.then(()=>true)');await new Promise(r=>setTimeout(r,250));
+if(name==='NgDialog') {await new Promise(r=>setTimeout(r,1500));await evaluate("[...document.querySelectorAll('button')].find(b=>b.textContent.trim()==='Open')?.click()");await new Promise(r=>setTimeout(r,500));}
+await evaluate(`(()=>{const root=document.querySelector('.manual-preview');const el=root.querySelector(${JSON.stringify(selector)})||root.querySelector('[class^="ng-"]:not(.ng-sr-only)')||root;el.scrollIntoView({block:'start'});})()`);
+await new Promise(r=>setTimeout(r,250));
+const clip=await evaluate(`(()=>{const root=document.querySelector('.manual-preview');if(/Unknown component|This example could not render/.test(root.innerText))throw Error('Invalid preview');const el=root.querySelector(${JSON.stringify(selector)})||root.querySelector('[class^="ng-"]:not(.ng-sr-only)')||root;const r=el.getBoundingClientRect();return {x:scrollX+Math.max(0,r.x-8),y:scrollY+Math.max(0,r.y-8),width:Math.min(752-Math.max(0,r.x-8),Math.max(180,r.width+16)),height:Math.min(612-Math.max(0,r.y-8),Math.max(100,r.height+16)),scale:.5}})()`);
+const shot=await send('Page.captureScreenshot',{format:'png',clip,captureBeyondViewport:true});fs.writeFileSync('server/wwwroot/images/components/'+name+'.png',Buffer.from(shot.data,'base64'));console.log(name);
+}ws.close();

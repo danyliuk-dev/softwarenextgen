@@ -1,0 +1,21 @@
+[Unit]
+Description=NextgenComponents authenticated documentation previews
+After=network-online.target
+[Service]
+User=nextgensoftware
+Group=nextgensoftware
+WorkingDirectory=/opt/nextgen-component-preview/current
+Environment=ASPNETCORE_URLS=http://127.0.0.1:5340
+Environment=ASPNETCORE_ENVIRONMENT=Production
+Environment=Logging__LogLevel__Default=Warning
+ExecStart=/usr/bin/dotnet /opt/nextgen-component-preview/current/BlazorGallery.dll
+Restart=on-failure
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/nextgensoftware
+MemoryMax=768M
+UMask=0077
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,111 @@
+<h1 id="ngcheckbox-checkbox">NgCheckBox — Checkbox</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Edit a Boolean option.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgCheckBox#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgCheckBox#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>The parent owns Value/value. Store ValueChanged/onChanged and pass the updated value back; Flutter needs setState or your state manager. Disabled prevents interaction. The label provides the accessible name. Keyboard focus and Space toggle the control. These components represent true/false, not a tri-state value; validate application requirements separately.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Notifications&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;enabled&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="n">@code</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="o">=</span><span class="k">true</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Notifications&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nl">value:</span><span class="w"> </span><span class="n">enabled</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">));</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;bool&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>ValueExpression</code></td>
+<td><code>System.Linq.Expressions.Expression&lt;Func&lt;bool&gt;&gt;?</code></td>
+<td>not set</td>
+<td>Expression identifying the model field; @bind-Value supplies it automatically.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>AdditionalAttributes</code></td>
+<td><code>Dictionary&lt;string,object&gt;?</code></td>
+<td>not set</td>
+<td>Additional HTML/ARIA attributes; do not bypass component validation.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>bool</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;bool&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

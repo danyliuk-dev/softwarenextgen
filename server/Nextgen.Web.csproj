@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup><TargetFramework>net10.0</TargetFramework><Nullable>enable</Nullable><ImplicitUsings>enable</ImplicitUsings><Version>1.2.13</Version></PropertyGroup>
+  <ItemGroup><PackageReference Include="Npgsql" Version="10.0.3"/><PackageReference Include="Otp.NET" Version="1.4.1"/><PackageReference Include="QRCoder" Version="1.8.1"/></ItemGroup>
+  <ItemGroup><Content Remove="manuals/**/*" /><Content Include="manuals/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup><Content Include="previews/**/*" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" /></ItemGroup>
+</Project>

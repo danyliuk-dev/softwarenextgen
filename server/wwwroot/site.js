@@ -1,0 +1,21 @@
+for(const search of document.querySelectorAll('[data-doc-search]'))search.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let found=0;for(const link of document.querySelectorAll('.doc-list a,.docs-nav a:not(.back-link)')){link.hidden=!link.textContent.toLowerCase().includes(q);if(!link.hidden)found++;}const status=document.querySelector('[data-doc-count]');if(status)status.textContent=found+' guides';});
+for(const button of document.querySelectorAll('[data-reload-preview]'))button.addEventListener('click',()=>{const f=button.closest('.preview-panel').querySelector('iframe');f.src=f.src;});
+for(const viewer of document.querySelectorAll('[data-report-preview]')){
+ let pages=[],page=0;const sample=viewer.querySelector('[data-sample]'),image=viewer.querySelector('[data-report-page]');
+ function render(){image.src='/preview/reports/'+sample.value+'/'+pages[page];image.alt=sample.options[sample.selectedIndex].text+', page '+(page+1);viewer.querySelector('[data-page-label]').textContent='Page '+(page+1)+' of '+pages.length;viewer.querySelector('[data-previous]').disabled=page===0;viewer.querySelector('[data-next]').disabled=page===pages.length-1;viewer.querySelector('[data-pdf]').href='/preview/reports/'+sample.value+'/sample.pdf';}
+ async function load(){try{const r=await fetch('/preview/reports/'+sample.value+'/manifest');if(!r.ok)throw Error();pages=(await r.json()).pages;page=0;render();}catch{viewer.querySelector('[data-page-label]').textContent='Preview unavailable. Reload the page.';}}
+ sample.addEventListener('change',load);viewer.querySelector('[data-previous]').addEventListener('click',()=>{if(page>0){page--;render();}});viewer.querySelector('[data-next]').addEventListener('click',()=>{if(page<pages.length-1){page++;render();}});viewer.querySelector('[data-zoom]').addEventListener('change',e=>{image.style.width=e.target.value+'%';image.style.maxWidth='none';});load();
+}
+for(const details of document.querySelectorAll('[data-component-preview]'))details.addEventListener('toggle',()=>{
+ const host=details.querySelector('[data-preview-src]');
+ if(details.open){for(const other of document.querySelectorAll('[data-component-preview][open]'))if(other!==details)other.open=false;
+ if(!host.firstChild){const frame=document.createElement('iframe');frame.className='component-frame';frame.src=host.dataset.previewSrc;frame.title=host.dataset.previewName+' interactive preview';host.append(frame);}}
+ else host.replaceChildren();
+});
+for(const search of document.querySelectorAll('[data-component-search]'))search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();let count=0;for(const card of document.querySelectorAll('[data-component-card]')){card.hidden=!card.querySelector('.component-card-heading').textContent.toLowerCase().includes(query);if(card.hidden)card.querySelector('details').open=false;else count++;}document.querySelector('[data-component-count]').textContent=count+' components';document.querySelector('[data-component-empty]').hidden=count!==0;});
+for(const search of document.querySelectorAll('[data-component-search]'))search.addEventListener('input',()=>{for(const group of document.querySelectorAll('[data-component-category]'))group.hidden=!group.querySelector('[data-component-card]:not([hidden])');});
+for(const search of document.querySelectorAll('[data-doc-search]'))search.addEventListener('input',()=>{for(const group of document.querySelectorAll('[data-doc-category]'))group.hidden=!group.querySelector('a:not([hidden])');});
+for(const example of document.querySelectorAll('[data-code-example]')){
+ const wrap=example.querySelector('[data-code-wrap]');wrap.addEventListener('click',()=>{const enabled=example.classList.toggle('wrap-code');wrap.setAttribute('aria-pressed',String(enabled));wrap.textContent=enabled?'No wrap':'Wrap lines';});
+ const copy=example.querySelector('[data-code-copy]');copy.addEventListener('click',async()=>{const status=example.querySelector('[data-code-status]');try{await navigator.clipboard.writeText(example.querySelector('code').textContent);copy.textContent='Copied';status.textContent='Code copied to clipboard.';setTimeout(()=>{copy.textContent='Copy code';},1800);}catch{status.textContent='Could not copy. Select the code and copy it manually.';copy.textContent='Select to copy';}});
+}

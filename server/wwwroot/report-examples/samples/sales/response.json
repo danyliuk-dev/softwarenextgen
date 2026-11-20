@@ -1,0 +1,5739 @@
+{
+  "title": "Sales report",
+  "pages": [
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "image",
+          "bytes": "iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAIAAAAlC+aJAAAAa0lEQVR4nO3PQQ3AMAwEwZAMiEIumgZFs7I01r6tm/Xsd3QrXwBQLwCoFwDUCwDqBQD1AoB6AUC9AKBecBXw/X8AAAAAAAAJIPkDAAAAAAAAAAAAAAAAAAAwN4A6gDqAOoA6gDqAOoC68YADuRghpt5aeIIAAAAASUVORK5CYII=",
+          "x": 42,
+          "y": 42,
+          "width": 32,
+          "height": 32
+        },
+        {
+          "type": "text",
+          "text": "Sales report",
+          "x": 42,
+          "y": 90,
+          "width": 511.28,
+          "height": 33.8975,
+          "style": {
+            "size": 26,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "October 1–15, 2026 / Northstar Group",
+          "x": 42,
+          "y": 128.8975,
+          "width": 511.28,
+          "height": 13.037500000000001,
+          "style": {
+            "size": 10,
+            "bold": false,
+            "color": "#79859A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "ORDER REGISTER",
+          "x": 42,
+          "y": 161.935,
+          "width": 511.28,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#6955D9",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 181.66875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Order",
+          "x": 49,
+          "y": 188.66875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Customer",
+          "x": 132.2316279069767,
+          "y": 188.66875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Description",
+          "x": 266.9875968992248,
+          "y": 188.66875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Amount",
+          "x": 465.1581395348837,
+          "y": 188.66875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 205.59875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 206.09875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0001",
+          "x": 49,
+          "y": 213.09875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 213.09875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 213.09875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,281.25",
+          "x": 465.1581395348837,
+          "y": 213.09875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 230.02875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 230.52875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0002",
+          "x": 49,
+          "y": 237.52875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 237.52875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 237.52875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,312.50",
+          "x": 465.1581395348837,
+          "y": 237.52875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 254.45875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 254.95875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0003",
+          "x": 49,
+          "y": 261.95875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 261.95875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 261.95875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,343.75",
+          "x": 465.1581395348837,
+          "y": 261.95875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 278.88875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 279.38875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0004",
+          "x": 49,
+          "y": 286.38875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 286.38875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 286.38875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,375.00",
+          "x": 465.1581395348837,
+          "y": 286.38875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 303.31875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 303.81875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0005",
+          "x": 49,
+          "y": 310.81875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 310.81875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 310.81875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,406.25",
+          "x": 465.1581395348837,
+          "y": 310.81875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 327.74875000000003,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 328.24875000000003,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0006",
+          "x": 49,
+          "y": 335.24875000000003,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 335.24875000000003,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 335.24875000000003,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,437.50",
+          "x": 465.1581395348837,
+          "y": 335.24875000000003,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 352.17875000000004,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 352.67875000000004,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0007",
+          "x": 49,
+          "y": 359.67875000000004,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 359.67875000000004,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 359.67875000000004,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 370.10875000000004,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,468.75",
+          "x": 465.1581395348837,
+          "y": 359.67875000000004,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 387.03875000000005,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 387.53875000000005,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0008",
+          "x": 49,
+          "y": 394.53875000000005,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 394.53875000000005,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 394.53875000000005,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,500.00",
+          "x": 465.1581395348837,
+          "y": 394.53875000000005,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 411.46875000000006,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 411.96875000000006,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0009",
+          "x": 49,
+          "y": 418.96875000000006,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 418.96875000000006,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 418.96875000000006,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,531.25",
+          "x": 465.1581395348837,
+          "y": 418.96875000000006,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 435.89875000000006,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 436.39875000000006,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0010",
+          "x": 49,
+          "y": 443.39875000000006,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 443.39875000000006,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 443.39875000000006,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,562.50",
+          "x": 465.1581395348837,
+          "y": 443.39875000000006,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 460.32875000000007,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 460.82875000000007,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0011",
+          "x": 49,
+          "y": 467.82875000000007,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 467.82875000000007,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 467.82875000000007,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,593.75",
+          "x": 465.1581395348837,
+          "y": 467.82875000000007,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 484.7587500000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 485.2587500000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0012",
+          "x": 49,
+          "y": 492.2587500000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 492.2587500000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 492.2587500000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,625.00",
+          "x": 465.1581395348837,
+          "y": 492.2587500000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 509.1887500000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 509.6887500000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0013",
+          "x": 49,
+          "y": 516.68875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 516.68875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 516.68875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,656.25",
+          "x": 465.1581395348837,
+          "y": 516.68875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 533.6187500000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 534.1187500000001,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0014",
+          "x": 49,
+          "y": 541.1187500000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 541.1187500000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 541.1187500000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 551.54875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,687.50",
+          "x": 465.1581395348837,
+          "y": 541.1187500000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 568.4787500000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 568.9787500000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0015",
+          "x": 49,
+          "y": 575.9787500000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 575.9787500000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 575.9787500000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,718.75",
+          "x": 465.1581395348837,
+          "y": 575.9787500000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 592.90875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 593.40875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0016",
+          "x": 49,
+          "y": 600.40875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 600.40875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 600.40875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,750.00",
+          "x": 465.1581395348837,
+          "y": 600.40875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 617.33875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 617.83875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0017",
+          "x": 49,
+          "y": 624.83875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 624.83875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 624.83875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,781.25",
+          "x": 465.1581395348837,
+          "y": 624.83875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 641.76875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 642.26875,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0018",
+          "x": 49,
+          "y": 649.26875,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 649.26875,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 649.26875,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,812.50",
+          "x": 465.1581395348837,
+          "y": 649.26875,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 666.1987499999999,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 666.6987499999999,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0019",
+          "x": 49,
+          "y": 673.6987499999999,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 673.6987499999999,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 673.6987499999999,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,843.75",
+          "x": 465.1581395348837,
+          "y": 673.6987499999999,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 690.6287499999999,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 691.1287499999999,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0020",
+          "x": 49,
+          "y": 698.1287499999999,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 698.1287499999999,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 698.1287499999999,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,875.00",
+          "x": 465.1581395348837,
+          "y": 698.1287499999999,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 715.0587499999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 715.5587499999998,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0021",
+          "x": 49,
+          "y": 722.5587499999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 722.5587499999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 722.5587499999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 732.9887499999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,906.25",
+          "x": 465.1581395348837,
+          "y": 722.5587499999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 749.9187499999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 750.4187499999998,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0022",
+          "x": 49,
+          "y": 757.4187499999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 757.4187499999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 757.4187499999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,937.50",
+          "x": 465.1581395348837,
+          "y": 757.4187499999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 774.3487499999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 774.8487499999998,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0023",
+          "x": 49,
+          "y": 781.8487499999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 781.8487499999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 781.8487499999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,968.75",
+          "x": 465.1581395348837,
+          "y": 781.8487499999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 798.7787499999997,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "NEXTGEN  /  Northstar Group",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Sample data · Page 1 of 3",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    },
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 42,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Order",
+          "x": 49,
+          "y": 49,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Customer",
+          "x": 132.2316279069767,
+          "y": 49,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Description",
+          "x": 266.9875968992248,
+          "y": 49,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Amount",
+          "x": 465.1581395348837,
+          "y": 49,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 65.93,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 66.43,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0024",
+          "x": 49,
+          "y": 73.43,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 73.43,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 73.43,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,000.00",
+          "x": 465.1581395348837,
+          "y": 73.43,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 90.36000000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 90.86000000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0025",
+          "x": 49,
+          "y": 97.86000000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 97.86000000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 97.86000000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,031.25",
+          "x": 465.1581395348837,
+          "y": 97.86000000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 114.79000000000002,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 115.29000000000002,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0026",
+          "x": 49,
+          "y": 122.29000000000002,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 122.29000000000002,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 122.29000000000002,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,062.50",
+          "x": 465.1581395348837,
+          "y": 122.29000000000002,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 139.22000000000003,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 139.72000000000003,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0027",
+          "x": 49,
+          "y": 146.72000000000003,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 146.72000000000003,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 146.72000000000003,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,093.75",
+          "x": 465.1581395348837,
+          "y": 146.72000000000003,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 163.65000000000003,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 164.15000000000003,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0028",
+          "x": 49,
+          "y": 171.15000000000003,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 171.15000000000003,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 171.15000000000003,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 181.58000000000004,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,125.00",
+          "x": 465.1581395348837,
+          "y": 171.15000000000003,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 198.51000000000005,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 199.01000000000005,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0029",
+          "x": 49,
+          "y": 206.01000000000005,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 206.01000000000005,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 206.01000000000005,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,156.25",
+          "x": 465.1581395348837,
+          "y": 206.01000000000005,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 222.94000000000005,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 223.44000000000005,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0030",
+          "x": 49,
+          "y": 230.44000000000005,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 230.44000000000005,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 230.44000000000005,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,187.50",
+          "x": 465.1581395348837,
+          "y": 230.44000000000005,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 247.37000000000006,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 247.87000000000006,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0031",
+          "x": 49,
+          "y": 254.87000000000006,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 254.87000000000006,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 254.87000000000006,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,218.75",
+          "x": 465.1581395348837,
+          "y": 254.87000000000006,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 271.80000000000007,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 272.30000000000007,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0032",
+          "x": 49,
+          "y": 279.30000000000007,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 279.30000000000007,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 279.30000000000007,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,250.00",
+          "x": 465.1581395348837,
+          "y": 279.30000000000007,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 296.2300000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 296.7300000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0033",
+          "x": 49,
+          "y": 303.7300000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 303.7300000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 303.7300000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,281.25",
+          "x": 465.1581395348837,
+          "y": 303.7300000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 320.6600000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 321.1600000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0034",
+          "x": 49,
+          "y": 328.1600000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 328.1600000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 328.1600000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,312.50",
+          "x": 465.1581395348837,
+          "y": 328.1600000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 345.0900000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 345.5900000000001,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0035",
+          "x": 49,
+          "y": 352.5900000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 352.5900000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 352.5900000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 363.0200000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,343.75",
+          "x": 465.1581395348837,
+          "y": 352.5900000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 379.9500000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 380.4500000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0036",
+          "x": 49,
+          "y": 387.4500000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 387.4500000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 387.4500000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,375.00",
+          "x": 465.1581395348837,
+          "y": 387.4500000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 404.3800000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 404.8800000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0037",
+          "x": 49,
+          "y": 411.8800000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 411.8800000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 411.8800000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,406.25",
+          "x": 465.1581395348837,
+          "y": 411.8800000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 428.8100000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 429.3100000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0038",
+          "x": 49,
+          "y": 436.3100000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 436.3100000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 436.3100000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,437.50",
+          "x": 465.1581395348837,
+          "y": 436.3100000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 453.2400000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 453.7400000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0039",
+          "x": 49,
+          "y": 460.7400000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 460.7400000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 460.7400000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,468.75",
+          "x": 465.1581395348837,
+          "y": 460.7400000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 477.67000000000013,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 478.17000000000013,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0040",
+          "x": 49,
+          "y": 485.17000000000013,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 485.17000000000013,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 485.17000000000013,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,500.00",
+          "x": 465.1581395348837,
+          "y": 485.17000000000013,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 502.10000000000014,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 502.60000000000014,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0041",
+          "x": 49,
+          "y": 509.60000000000014,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 509.60000000000014,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 509.60000000000014,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,531.25",
+          "x": 465.1581395348837,
+          "y": 509.60000000000014,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 526.5300000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 527.0300000000001,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0042",
+          "x": 49,
+          "y": 534.0300000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 534.0300000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 534.0300000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 544.46,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,562.50",
+          "x": 465.1581395348837,
+          "y": 534.0300000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 561.3900000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 561.8900000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0043",
+          "x": 49,
+          "y": 568.8900000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 568.8900000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 568.8900000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,593.75",
+          "x": 465.1581395348837,
+          "y": 568.8900000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 585.82,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 586.32,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0044",
+          "x": 49,
+          "y": 593.32,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 593.32,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 593.32,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,625.00",
+          "x": 465.1581395348837,
+          "y": 593.32,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 610.25,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 610.75,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0045",
+          "x": 49,
+          "y": 617.75,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 617.75,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 617.75,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,656.25",
+          "x": 465.1581395348837,
+          "y": 617.75,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 634.68,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 635.18,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0046",
+          "x": 49,
+          "y": 642.18,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 642.18,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 642.18,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,687.50",
+          "x": 465.1581395348837,
+          "y": 642.18,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 659.1099999999999,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 659.6099999999999,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0047",
+          "x": 49,
+          "y": 666.6099999999999,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 666.6099999999999,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 666.6099999999999,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,718.75",
+          "x": 465.1581395348837,
+          "y": 666.6099999999999,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 683.5399999999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 684.0399999999998,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0048",
+          "x": 49,
+          "y": 691.0399999999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 691.0399999999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 691.0399999999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,750.00",
+          "x": 465.1581395348837,
+          "y": 691.0399999999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 707.9699999999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 708.4699999999998,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0049",
+          "x": 49,
+          "y": 715.4699999999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 715.4699999999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 715.4699999999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 725.8999999999997,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,781.25",
+          "x": 465.1581395348837,
+          "y": 715.4699999999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 742.8299999999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 743.3299999999998,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0050",
+          "x": 49,
+          "y": 750.3299999999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 750.3299999999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 750.3299999999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,812.50",
+          "x": 465.1581395348837,
+          "y": 750.3299999999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 767.2599999999998,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 767.7599999999998,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0051",
+          "x": 49,
+          "y": 774.7599999999998,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 774.7599999999998,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 774.7599999999998,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,843.75",
+          "x": 465.1581395348837,
+          "y": 774.7599999999998,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 791.6899999999997,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "NEXTGEN  /  Northstar Group",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Sample data · Page 2 of 3",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    },
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 42,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Order",
+          "x": 49,
+          "y": 49,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Customer",
+          "x": 132.2316279069767,
+          "y": 49,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Description",
+          "x": 266.9875968992248,
+          "y": 49,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Amount",
+          "x": 465.1581395348837,
+          "y": 49,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 65.93,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 66.43,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0052",
+          "x": 49,
+          "y": 73.43,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 73.43,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 73.43,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,875.00",
+          "x": 465.1581395348837,
+          "y": 73.43,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 90.36000000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 90.86000000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0053",
+          "x": 49,
+          "y": 97.86000000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 97.86000000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 97.86000000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,906.25",
+          "x": 465.1581395348837,
+          "y": 97.86000000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 114.79000000000002,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 115.29000000000002,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0054",
+          "x": 49,
+          "y": 122.29000000000002,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 122.29000000000002,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 122.29000000000002,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,937.50",
+          "x": 465.1581395348837,
+          "y": 122.29000000000002,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 139.22000000000003,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 139.72000000000003,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0055",
+          "x": 49,
+          "y": 146.72000000000003,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 146.72000000000003,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 146.72000000000003,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2,968.75",
+          "x": 465.1581395348837,
+          "y": 146.72000000000003,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 163.65000000000003,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 164.15000000000003,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0056",
+          "x": 49,
+          "y": 171.15000000000003,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 171.15000000000003,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 171.15000000000003,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 181.58000000000004,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,000.00",
+          "x": 465.1581395348837,
+          "y": 171.15000000000003,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 198.51000000000005,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 199.01000000000005,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0057",
+          "x": 49,
+          "y": 206.01000000000005,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 206.01000000000005,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 206.01000000000005,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,031.25",
+          "x": 465.1581395348837,
+          "y": 206.01000000000005,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 222.94000000000005,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 223.44000000000005,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0058",
+          "x": 49,
+          "y": 230.44000000000005,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 230.44000000000005,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 230.44000000000005,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,062.50",
+          "x": 465.1581395348837,
+          "y": 230.44000000000005,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 247.37000000000006,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 247.87000000000006,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0059",
+          "x": 49,
+          "y": 254.87000000000006,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 254.87000000000006,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 254.87000000000006,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,093.75",
+          "x": 465.1581395348837,
+          "y": 254.87000000000006,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 271.80000000000007,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 272.30000000000007,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0060",
+          "x": 49,
+          "y": 279.30000000000007,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 279.30000000000007,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 279.30000000000007,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,125.00",
+          "x": 465.1581395348837,
+          "y": 279.30000000000007,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 296.2300000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 296.7300000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0061",
+          "x": 49,
+          "y": 303.7300000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 303.7300000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 303.7300000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,156.25",
+          "x": 465.1581395348837,
+          "y": 303.7300000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 320.6600000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 321.1600000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0062",
+          "x": 49,
+          "y": 328.1600000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 328.1600000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 328.1600000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,187.50",
+          "x": 465.1581395348837,
+          "y": 328.1600000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 345.0900000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 345.5900000000001,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0063",
+          "x": 49,
+          "y": 352.5900000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 352.5900000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 352.5900000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 363.0200000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,218.75",
+          "x": 465.1581395348837,
+          "y": 352.5900000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 379.9500000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 380.4500000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0064",
+          "x": 49,
+          "y": 387.4500000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 387.4500000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 387.4500000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,250.00",
+          "x": 465.1581395348837,
+          "y": 387.4500000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 404.3800000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 404.8800000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0065",
+          "x": 49,
+          "y": 411.8800000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 411.8800000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 411.8800000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,281.25",
+          "x": 465.1581395348837,
+          "y": 411.8800000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 428.8100000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 429.3100000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0066",
+          "x": 49,
+          "y": 436.3100000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 436.3100000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 436.3100000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,312.50",
+          "x": 465.1581395348837,
+          "y": 436.3100000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 453.2400000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 453.7400000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0067",
+          "x": 49,
+          "y": 460.7400000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 460.7400000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 460.7400000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,343.75",
+          "x": 465.1581395348837,
+          "y": 460.7400000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 477.67000000000013,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 478.17000000000013,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0068",
+          "x": 49,
+          "y": 485.17000000000013,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 485.17000000000013,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 485.17000000000013,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,375.00",
+          "x": 465.1581395348837,
+          "y": 485.17000000000013,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 502.10000000000014,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 502.60000000000014,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0069",
+          "x": 49,
+          "y": 509.60000000000014,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 509.60000000000014,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 509.60000000000014,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,406.25",
+          "x": 465.1581395348837,
+          "y": 509.60000000000014,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 526.5300000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 527.0300000000001,
+          "width": 511.28,
+          "height": 34.86,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0070",
+          "x": 49,
+          "y": 534.0300000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 132.2316279069767,
+          "y": 534.0300000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment kit with on-site delivery and",
+          "x": 266.9875968992248,
+          "y": 534.0300000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "installation.",
+          "x": 266.9875968992248,
+          "y": 544.46,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,437.50",
+          "x": 465.1581395348837,
+          "y": 534.0300000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 561.3900000000001,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 561.8900000000001,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0071",
+          "x": 49,
+          "y": 568.8900000000001,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 132.2316279069767,
+          "y": 568.8900000000001,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 568.8900000000001,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,468.75",
+          "x": 465.1581395348837,
+          "y": 568.8900000000001,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 585.82,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 586.32,
+          "width": 511.28,
+          "height": 24.43,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-0072",
+          "x": 49,
+          "y": 593.32,
+          "width": 69.23162790697673,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 132.2316279069767,
+          "y": 593.32,
+          "width": 120.75596899224806,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Equipment delivery",
+          "x": 266.9875968992248,
+          "y": 593.32,
+          "width": 184.17054263565888,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3,500.00",
+          "x": 465.1581395348837,
+          "y": 593.32,
+          "width": 81.12186046511627,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 610.25,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "Total: 172,125.00",
+          "x": 42,
+          "y": 622.75,
+          "width": 511.28,
+          "height": 16.94875,
+          "style": {
+            "size": 13,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Prepared by: Alex Morgan",
+          "x": 42,
+          "y": 657.69875,
+          "width": 511.28,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#79859A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Fictional sample data. The total is supplied by the data source; calculated formulas are planned for a later stage.",
+          "x": 42,
+          "y": 669.4325,
+          "width": 511.28,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#79859A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "NEXTGEN  /  Northstar Group",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Sample data · Page 3 of 3",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ]
+}

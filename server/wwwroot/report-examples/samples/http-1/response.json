@@ -1,0 +1,471 @@
+{
+  "title": "Prepared regional sales",
+  "pages": [
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "text",
+          "text": "Regional sales",
+          "x": 42,
+          "y": 42,
+          "width": 511.28,
+          "height": 28.6825,
+          "style": {
+            "size": 22,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Paid orders · minimum amount 10",
+          "x": 42,
+          "y": 82.6825,
+          "width": 511.28,
+          "height": 13.037500000000001,
+          "style": {
+            "size": 10,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 107.72,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Region",
+          "x": 50,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Revenue",
+          "x": 177.82,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Average",
+          "x": 305.64,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Orders",
+          "x": 433.46,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 134.95375,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 135.45375,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "West",
+          "x": 50,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "120.00",
+          "x": 177.82,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "120.00",
+          "x": 305.64,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1",
+          "x": 433.46,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 162.6875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 163.1875,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "East",
+          "x": 50,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "70.00",
+          "x": 177.82,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "35.00",
+          "x": 305.64,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2",
+          "x": 433.46,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 190.42125,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 190.92125,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Grand total",
+          "x": 50,
+          "y": 198.92125,
+          "width": 495.28,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 218.65499999999997,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 50,
+          "y": 226.65499999999997,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "190.00",
+          "x": 177.82,
+          "y": 226.65499999999997,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 305.64,
+          "y": 226.65499999999997,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "3",
+          "x": 433.46,
+          "y": 226.65499999999997,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 245.88874999999996,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 200,
+          "y": 258.38874999999996,
+          "width": 0.5,
+          "height": 160.26625,
+          "fill": "#94A3B8"
+        },
+        {
+          "type": "text",
+          "text": "0",
+          "x": 200,
+          "y": 422.655,
+          "width": 5.72607421875,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West",
+          "x": 42,
+          "y": 292.58843749999994,
+          "width": 150,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 200,
+          "y": 286.4553125,
+          "width": 305.7887890625,
+          "height": 24,
+          "fill": "#4F6BED"
+        },
+        {
+          "type": "text",
+          "text": "120.00",
+          "x": 513.7887890625,
+          "y": 292.58843749999994,
+          "width": 39.4912109375,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "text",
+          "text": "East",
+          "x": 42,
+          "y": 372.72156249999995,
+          "width": 150,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 200,
+          "y": 366.58843749999994,
+          "width": 178.37679361979167,
+          "height": 24,
+          "fill": "#4F6BED"
+        },
+        {
+          "type": "text",
+          "text": "70.00",
+          "x": 513.7887890625,
+          "y": 372.72156249999995,
+          "width": 39.4912109375,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Page 1 / 1",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ]
+}

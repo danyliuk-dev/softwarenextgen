@@ -1,0 +1,293 @@
+<h1 id="data-models-and-formulas">Data models and formulas</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/code-examples">Code examples</a></p>
+<h2 id="shared-models">Shared models</h2>
+<p>C# properties generally use PascalCase; Dart uses lowerCamelCase. Replace input collections when changing data.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NgSelectionRules</td>
+<td>Validates ButtonGroup options and selected IDs; Toggle returns a new selection in item order. See <a href="/docs/components/manual/NgButtonGroup">ButtonGroup</a>.</td>
+</tr>
+<tr>
+<td>NgMenuItem</td>
+<td>ID, text, disabled, visible, separator and read-only children; max 3 levels / 100 nodes. See <a href="/docs/components/manual/NgMenu">Menu</a>.</td>
+</tr>
+<tr>
+<td>NgStep</td>
+<td>Label, Disabled, Optional and nullable Valid; see <a href="/docs/components/manual/NgStepper">Stepper</a> and <a href="/docs/components/manual/NgWizard">Wizard</a>.</td>
+</tr>
+<tr>
+<td>NgPromptResponse</td>
+<td>Immutable Id, Prompt, Text; IDs increase within a session.</td>
+</tr>
+<tr>
+<td>NgPromptFeedback</td>
+<td>Response and Helpful: true, false or null to clear a vote.</td>
+</tr>
+<tr>
+<td>NgPromptSession</td>
+<td>Request state and the latest 20 responses; cancellation rejects late results. See <a href="/docs/components/manual/NgAIPrompt">AI Prompt</a>.</td>
+</tr>
+<tr>
+<td>NgOption</td>
+<td>Unique key, label, disabled flag. C#: new NgOption(value,label,disabled); Dart: NgOption(value,label,disabled:true).</td>
+</tr>
+<tr>
+<td>NgTab</td>
+<td>Label and RenderFragment (Blazor) or Widget (Flutter) content.</td>
+</tr>
+<tr>
+<td>NgDateRangePreset</td>
+<td>Id/id, Label/label, ordered Start/start and End/end dates, optional Disabled/disabled. Unique IDs per picker. Bounds and disabled-date rules apply to endpoints.</td>
+</tr>
+<tr>
+<td>NgDateRange</td>
+<td>Nullable start/end: DateOnly in Blazor, DateTime in Flutter. Form rules determine whether a partial range can be submitted.</td>
+</tr>
+<tr>
+<td>NgDataColumn&lt;T&gt;</td>
+<td>Key, Title, typed Value accessor, Format and Template/cellBuilder. Sort underlying values, not formatted text.</td>
+</tr>
+<tr>
+<td>NgTreeNode&lt;T&gt;</td>
+<td>Unique Id, Item, Children, Disabled; no cycles.</td>
+</tr>
+<tr>
+<td>NgBreadcrumbItem</td>
+<td>ID and label; the final item is the current location.</td>
+</tr>
+<tr>
+<td>NgGaugeRange</td>
+<td>From, To, Color, Label (lowercase in Dart); finite ordered bounds inside the gauge, no overlap, nonblank label and #RRGGBB color. Gaps are allowed; shared endpoints belong to the next range, Max is inclusive.</td>
+</tr>
+<tr>
+<td>NgChartSeries</td>
+<td>Name and nullable numbers matching category count; null breaks a line.</td>
+</tr>
+<tr>
+<td>NgChartSelection</td>
+<td>Zero-based series/point indices, names, numeric value and display label.</td>
+</tr>
+<tr>
+<td>NgScheduleView</td>
+<td>Week/Day in C#, week/day in Dart. Controlled agenda mode; default Week.</td>
+</tr>
+<tr>
+<td>NgScheduleEvent</td>
+<td>Unique Id, nonempty Title, Start and End with End &gt; Start.</td>
+</tr>
+<tr>
+<td>NgSheet</td>
+<td>Immutable single-sheet dimensions and address-to-raw-text dictionary.</td>
+</tr>
+<tr>
+<td>NgCellValue</td>
+<td>Text, nullable Number and nullable Error code.</td>
+</tr>
+<tr>
+<td>NgPivotRecord</td>
+<td>Unique nonblank ID, string dimensions and one nullable numeric measure.</td>
+</tr>
+<tr>
+<td>NgPivotSelection</td>
+<td>Raw row/column keys and original records in a read-only callback collection; null identifies a total, empty string a blank dimension.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="ngsheet">NgSheet</h2>
+<p>Addresses A1–Z100 are case-insensitive. A sheet has 1–100 rows and 1–26 columns. Each cell contains up to 1,000 characters; an absent in-bounds address is empty.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">C#</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="code-line" data-line="1"><span class="kt">var</span><span class="w"> </span><span class="n">sheet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">NgSheet</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="na">[&quot;A1&quot;]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;10&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;B1&quot;</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;=A1*2&quot;</span></span>
+<span class="code-line" data-line="3"><span class="p">});</span></span>
+<span class="code-line" data-line="4"><span class="kt">var</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sheet</span><span class="p">.</span><span class="n">Set</span><span class="p">(</span><span class="s">&quot;A1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;25&quot;</span><span class="p">);</span></span>
+<span class="code-line" data-line="5"><span class="kt">var</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">Raw</span><span class="p">(</span><span class="s">&quot;B1&quot;</span><span class="p">);</span><span class="w">             </span><span class="c1">// =A1*2</span></span>
+<span class="code-line" data-line="6"><span class="kt">var</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">Evaluate</span><span class="p">(</span><span class="s">&quot;B1&quot;</span><span class="p">);</span><span class="w">     </span><span class="c1">// Number = 50</span></span>
+<span class="code-line" data-line="7"><span class="kt">var</span><span class="w"> </span><span class="n">pasted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">Paste</span><span class="p">(</span><span class="s">&quot;A2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;3\t4\n=SUM(A2:B2)&quot;</span><span class="p">);</span></span></code></pre></figure>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kd">final</span><span class="w"> </span><span class="n">sheet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NgSheet</span><span class="p">(</span><span class="nl">rows:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">columns:</span><span class="w"> </span><span class="m">5</span><span class="p">,</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nl">cells:</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;A1&#39;</span><span class="o">:</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;B1&#39;</span><span class="o">:</span><span class="s1">&#39;=A1*2&#39;</span><span class="p">});</span></span>
+<span class="code-line" data-line="3"><span class="kd">final</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sheet</span><span class="p">.</span><span class="kd">set</span><span class="p">(</span><span class="s1">&#39;A1&#39;</span><span class="p">,</span><span class="s1">&#39;25&#39;</span><span class="p">);</span></span>
+<span class="code-line" data-line="4"><span class="kd">final</span><span class="w"> </span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">raw</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">);</span><span class="w">           </span><span class="c1">// =A1*2</span></span>
+<span class="code-line" data-line="5"><span class="kd">final</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="s1">&#39;B1&#39;</span><span class="p">);</span><span class="w">  </span><span class="c1">// number = 50</span></span>
+<span class="code-line" data-line="6"><span class="kd">final</span><span class="w"> </span><span class="n">pasted</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">next</span><span class="p">.</span><span class="n">paste</span><span class="p">(</span><span class="s1">&#39;A2&#39;</span><span class="p">,</span><span class="s1">&#39;3</span><span class="se">\t</span><span class="s1">4</span><span class="se">\n</span><span class="s1">=SUM(A2:B2)&#39;</span><span class="p">);</span></span></code></pre></figure>
+<p>Set and Paste return a new sheet. Rectangular TSV paste preserves formula references literally: <code>=A1</code> remains <code>=A1</code>. Out-of-bounds or oversized cells reject the whole operation. This is text paste, not XLSX/CSV import.</p>
+<h2 id="formula-language">Formula language</h2>
+<p>Formulas start with <code>=</code>. Supported syntax: dot-decimal/exponent numbers, <code>+ - * /</code>, unary signs, parentheses, cell references, ranges in function arguments and the functions below. Precedence is parentheses/unary, multiplication/division, addition/subtraction. Names and addresses are case-insensitive; arguments use commas.</p>
+<table>
+<thead>
+<tr>
+<th>Formula</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>=2+3*4</code></td>
+<td>14</td>
+</tr>
+<tr>
+<td><code>=(2+3)*4</code></td>
+<td>20</td>
+</tr>
+<tr>
+<td><code>=A1*B1</code></td>
+<td>Multiply numeric cells</td>
+</tr>
+<tr>
+<td><code>=SUM(A1:A5)</code></td>
+<td>Sum numbers, ignoring text/empty cells</td>
+</tr>
+<tr>
+<td><code>=AVERAGE(A1:A5)</code></td>
+<td>Mean of numbers; no numbers produces #DIV/0!</td>
+</tr>
+<tr>
+<td><code>=MIN(A1:A5)</code> / <code>=MAX(A1:A5)</code></td>
+<td>Extremum; an empty range returns 0</td>
+</tr>
+<tr>
+<td><code>=COUNT(A1:A5)</code></td>
+<td>Count numeric cells</td>
+</tr>
+<tr>
+<td><code>=SUM(A1:B2,10)</code></td>
+<td>Sum a rectangle and 10</td>
+</tr>
+</tbody>
+</table>
+<p>An empty direct reference evaluates to 0 in arithmetic; text produces #VALUE!. Range arguments skip text/empty cells. Scalar arguments evaluate expressions: COUNT(A1) counts computed zero for empty A1, while COUNT(A1:A1) skips it. This is a limited language, not full Excel semantics. No string/logical formulas, IF, dates, sheet/absolute references, named ranges or external code.</p>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Cause</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#FORMULA!</td>
+<td>Invalid syntax/operators/parentheses/separators</td>
+</tr>
+<tr>
+<td>#NAME?</td>
+<td>Unsupported function</td>
+</tr>
+<tr>
+<td>#REF!</td>
+<td>Invalid or out-of-bounds address</td>
+</tr>
+<tr>
+<td>#VALUE!</td>
+<td>Text used as a number</td>
+</tr>
+<tr>
+<td>#DIV/0!</td>
+<td>Division by zero or average of no numbers</td>
+</tr>
+<tr>
+<td>#CYCLE!</td>
+<td>Direct/indirect circular reference</td>
+</tr>
+<tr>
+<td>#NUM!</td>
+<td>Nonfinite result/overflow</td>
+</tr>
+<tr>
+<td>#LIMIT!</td>
+<td>More than 64 expression levels or 100 dependent cells along a path</td>
+</tr>
+</tbody>
+</table>
+<p>Errors propagate. Dependencies are cached within an evaluation. Numbers use double floating point; exact decimal financial rules need a separate business layer. Raw text is stored separately from G10/10-significant-digit display.</p>
+<h2 id="pivot-totals">Pivot totals</h2>
+<p>Sum/Average/Min/Max ignore null; no numbers displays <code>—</code>. Count includes records with null values. Totals aggregate original values: groups 10/20 and 90 produce Average 40, not (15+90)/2. NaN/Infinity and duplicate IDs are rejected. Missing dimensions equal an empty string. Selecting a total returns matching source records, or all records for the grand total. Aggregate overflow yields null displayed as <code>—</code>; normalize input if this must be distinguished from missing data.</p>
+<h2 id="ngdocument">NgDocument</h2>
+<p>Immutable Blocks contain Text, Kind, Bold, Italic, Underline and Align. Kinds: paragraph, heading1, heading2, bullet, numbered, quote. Alignment: left, center, right; C# enum names use PascalCase.</p>
+<p>Replace(index,block), InsertAfter(index), Remove(index) and Move(index,target) return a new document, using zero-based indices. Removing the last block leaves one empty paragraph. Invalid indices/limits leave the original unchanged. Update a block with C# <code>block with { Text = &quot;New text&quot; }</code> or Dart <code>block.copyWith(text: 'New text')</code>.</p>
+<p>ToJson/fromJson interchange:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Title&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">      </span><span class="nt">&quot;kind&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;heading1&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="nt">&quot;bold&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">      </span><span class="nt">&quot;italic&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">      </span><span class="nt">&quot;underline&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">      </span><span class="nt">&quot;align&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;left&quot;</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="13"><span class="p">}</span></span></code></pre></figure>
+<p>Version and blocks are required; unknown fields are rejected. Missing optional block fields use empty-paragraph defaults; null text/type/flags are invalid. Use exact camelCase enum names. Limits: 100 blocks, 10,000 UTF-16 units per block, 100,000 total, 1,000,000 input JSON units. CRLF/CR normalize to LF. HTML remains text and ToHtml escapes it. See <a href="/docs/components/manual/NgEditor">Editor</a> for draft/history rules.</p>
+<h2 id="ngdiagrammodel">NgDiagramModel</h2>
+<p>Immutable Nodes/Edges describe ID/text/geometry/shapes and ID/from/to/text/directed connections. Coordinates identify the top-left corner and are independent of zoom.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">600</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Start&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">      </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">      </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">      </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">160</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">      </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">      </span><span class="nt">&quot;shape&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ellipse&quot;</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="p">},</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="16"><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Step&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">      </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">360</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">      </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">      </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">160</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">      </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">80</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">      </span><span class="nt">&quot;shape&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;rectangle&quot;</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="24"><span class="w">  </span><span class="p">],</span></span>
+<span class="code-line" data-line="25"><span class="w">  </span><span class="nt">&quot;edges&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="26"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="27"><span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;next&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="28"><span class="w">      </span><span class="nt">&quot;from&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="29"><span class="w">      </span><span class="nt">&quot;to&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;b&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="30"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Next&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="31"><span class="w">      </span><span class="nt">&quot;directed&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span>
+<span class="code-line" data-line="32"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="33"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="34"><span class="p">}</span></span></code></pre></figure>
+<p>Required JSON fields: version/width/height/nodes/edges; nodes require id/text/x/y; edges require id/from/to. Omitted optional fields use constructor defaults. Unknown fields, invalid types/enums/IDs/geometry and JSON over 1,000,000 UTF-16 units are rejected. Empty arrays are allowed. Use the exported camelCase schema.</p>
+<p>UpsertNode/UpsertEdge/RemoveNode/RemoveEdge/Move return a validated new graph. Canvas: 200–5000 per dimension; nodes: 60–400 × 40–240, inside the canvas. At most 100 nodes/200 edges, IDs at most 64 ASCII characters, labels at most 100 UTF-16 units. Move clamps coordinates; UpsertNode rejects out-of-bounds geometry. RemoveNode removes incident edges. See <a href="/docs/components/manual/NgDiagram">Diagram</a> for interactions and limitations.</p>
+<h2 id="geographic-models">Geographic models</h2>
+<p>NgMapPoint stores latitude/longitude; NgMapView adds zoom. NgMapMarker contains ID/text/position. NgMapPath contains ID/text/copied points and a closed-polygon flag. NgMapModel copies collections and validates shared IDs and bounds. See <a href="/docs/components/manual/NgMap">Map</a> for limits, signatures, clustering and update examples.</p>
+<h2 id="chiplist-application-records">ChipList application records</h2>
+<p><code>NgChipData&lt;T&gt;</code> maps your records to a read-only list of <code>NgOption</code> values. Required selectors provide the stable ID and accessible text; optional selectors provide disabled state, removal permission and <code>NgChipAppearance</code>. Pass these mappings explicitly to ChipList. Resolve the original record with <code>GetItem(id)</code> (Blazor) or <code>getItem(id)</code> (Flutter) in event handlers or templates.</p>
+<p>This is a snapshot of mapped fields, not a deep copy of application records. Rebuild after edits or collection changes and update selected IDs together with removed records. Unknown lookup IDs throw; malformed mappings fail during construction. See <a href="/docs/components/manual/NgChipList">ChipList</a> for complete, compiled examples on both platforms.</p>
+<h2 id="button-appearance-overrides-026">Button appearance overrides (0.26)</h2>
+<p><code>NgButtonAppearance</code> has nullable <code>Size/size</code>, <code>Rounded/rounded</code>, <code>FillMode/fillMode</code> and <code>ThemeColor/themeColor</code> fields. Return it from ButtonGroup's <code>ItemAppearance/itemAppearance</code> callback. Null fields inherit the corresponding group setting; it does not change the item's ID, command/toggle kind, visibility or selected value. See the <a href="/docs/components/manual/NgButtonGroup">ButtonGroup manual</a> for supported tokens and a compiled mixed-command example.</p>
+<h3 id="navigation-presentation-027">Navigation presentation (0.27)</h3>
+<p><code>NgMenuItem</code> adds optional immutable <code>Visible/visible</code> (default true) and <code>Separator/separator</code> (default false) alongside ID, text, disabled and children. Separators need unique IDs and labels but cannot contain children or invoke actions. Hidden ancestors make their descendants unreachable. Validation includes hidden items.</p>
+<p>Drawer continues to use <code>NgOption</code>. <code>IsVisible/isVisible</code> and <code>IsSeparator/isSeparator</code> are pure predicates over those options. Their labels remain accessible names when item templates replace the displayed content. See the <a href="/docs/components/manual/NgMenu">Menu</a> and <a href="/docs/components/manual/NgDrawer">Drawer</a> manuals for complete examples and lifecycle rules.</p>
+<h3 id="stepperwizard-contexts-028">Stepper/Wizard contexts (0.28)</h3>
+<p><code>NgStepContext</code> contains the immutable step model, zero-based Index/index and Current/current flag. Indicator and label templates are display-only; model labels and validity metadata remain accessible names.</p>
+<p><code>NgWizardChange</code> describes Current/current, Target/target and IsFinish/isFinish. BeforeChange returns an asynchronous boolean; false rejects the request before validation and state callbacks.</p>
+<p><code>NgWizardActions</code> provides Value/value, Busy/busy, Finished/finished, IsLast/isLast and CanBack/CanNext/CanFinish (lower camelCase in Dart). BackAsync/NextAsync/FinishAsync in Blazor and back/next/finish in Flutter return tasks/futures using the same guarded transition pipeline. Use IsLast to select a forward action and Can… to determine whether it is enabled. Do not cache these render contexts. See the <a href="/docs/components/manual/NgWizard">Wizard manual</a> for a complete custom action bar.</p>
+<h2 id="selection-input-filtering-030">Selection input filtering (0.30)</h2>
+<p><code>NgFilterRules</code> supplies the shared local filtering contract in both libraries. <code>Validate/validate(mode, minLength)</code> accepts <code>contains</code>, <code>startsWith</code> or <code>endsWith</code> and a nonnegative minimum query length. <code>Matches/matches(label, query, mode, minLength)</code> applies that validated configuration without trimming the query. Matching is case-insensitive and follows platform string rules, not locale-specific collation.</p>
+<p><code>ValidateItems/validateItems</code> requires unique nonblank <code>NgOption.Value/value</code> IDs and nonblank labels for ComboBox and MultiSelect. Values are IDs, not display labels; renaming a record must retain its ID. Disabled selected MultiSelect records are locked during user removal/clear. The parent may replace controlled selections explicitly and is responsible for reconciling removed records and externally supplied values that exceed a configured user-selection limit.</p>
+<h3 id="spreadsheet-change-and-protection-helpers-039">Spreadsheet change and protection helpers (0.39)</h3>
+<p><code>NgSheet.Paste(origin, text, canEdit)</code> in C# / <code>paste(origin, text, canEdit: ...)</code> in Dart validates every supplied destination before returning a new sheet. The optional predicate receives uppercase addresses. A protected destination rejects the whole operation, even if the supplied value is unchanged. <code>ChangedCells(other)</code> / <code>changedCells(other)</code> returns changed raw-value addresses in row order and requires equal dimensions. Formula result changes alone do not count as raw edits.</p>
+<h2 id="local-grid-grouping-models">Local Grid grouping models</h2>
+<p>Use <code>GroupBy</code>/<code>groupBy</code> for a single string selector or <code>GroupSelectors</code>/<code>groupSelectors</code> for ordered nested selectors (maximum eight levels). They are mutually exclusive. <code>NgDataOperations.GroupTree</code> (Blazor) and <code>ngGroupTree</code> (Flutter) expose the same first-appearance grouping algorithm. Each <code>NgGridGroup&lt;T&gt;</code> contains its full <code>Path</code>/<code>path</code>, encoded <code>Id</code>/<code>id</code>, <code>Key</code>/<code>key</code>, zero-based <code>Depth</code>/<code>depth</code>, filtered <code>Items</code>/<code>items</code> and <code>Children</code>/<code>children</code>.</p>
+<p><code>NgDataOperations.GroupId(new[]{&quot;Chair&quot;,&quot;Available&quot;})</code> and <code>ngGroupId(['Chair','Available'])</code> both produce <code>5:Chair9:Available</code>. Store these opaque full-path IDs in the controlled collapsed set. Empty keys and punctuation are supported. IDs remain stable across search, sorting and paging. Change the source version when changing grouping rules, and let the application decide whether to reset its collapsed set.</p>
+<p><code>NgGroupAggregate&lt;T&gt;</code> takes a title, a nullable numeric selector, an operation (<code>sum</code>, <code>average</code>, <code>min</code>, <code>max</code>, <code>count</code>) and an optional formatter. Blazor uses positional record arguments; Flutter uses named <code>operation</code> and <code>format</code>. Each aggregate is computed over original filtered records at its group level, not over page rows or child averages. Null and nonfinite values are ignored. Count means the number of finite numeric values; group header counts mean records. This uses double precision and is not a decimal accounting engine. See the <a href="/docs/components/manual/NgDataGrid">Grid manual</a> for state and paging contracts.</p>
+<h2 id="remote-grouped-records">Remote grouped records</h2>
+<p><code>NgGroupedDataRequest</code> adds ordered <code>GroupKeys</code>/<code>groupKeys</code> to page, page size, search and sorts. <code>NgGroupedItem&lt;T&gt;</code> pairs one record with its full path. <code>NgRemoteGroup</code> contains a group path, full filtered count and <code>NgGroupSummary</code> values (title and nullable double). <code>NgGroupedDataResult&lt;T&gt;</code> returns page items, the full filtered total and exactly the metadata needed for that page. Validated display groups expose <code>Count</code>/<code>count</code> separately from <code>Items</code>/<code>items</code>: in remote mode Items contains only downloaded records, while Count and Summaries are supplied by the server. See <a href="/docs/components/manual/remote-grouped-data">Remote grouped data</a> for complete JSON and behavior contracts.</p>
+<h2 id="grid-editing">Grid editing</h2>
+<p><code>NgGridEditing&lt;T&gt;</code>, <code>NgGridEditField</code> and <code>NgGridEditOperation</code> define drafts and application-owned asynchronous persistence. See <a href="/docs/components/manual/grid-editing">Grid editing</a> for validation, cancellation, concurrency and source refresh.</p>
+<h2 id="grid-export">Grid export</h2>
+<p><code>NgGridExport&lt;T&gt;</code>, <code>NgGridExportScope</code>, <code>NgGridExportRequest</code>, <code>NgGridExportFile</code> and <code>NgGridCsv</code> define bounded CSV/TSV generation and delivery. See <a href="/docs/components/manual/grid-export">Grid export</a> for scope, remote completeness, encoding, limits and cancellation.</p>

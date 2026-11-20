@@ -1,0 +1,68 @@
+<h1 id="grid-editing">Grid editing</h1>
+<p>Available in Blazor and Flutter Web since 0.67. See the <a href="/docs/components/manual/NgDataGrid">runnable Grid example</a> for both complete implementations.</p>
+<h2 id="connect-your-records">Connect your records</h2>
+<p>Pass <code>Editing</code> / <code>editing</code> an <code>NgGridEditing&lt;T&gt;</code> configuration. Without it, the Grid remains a read-only data view with optional application row actions. Editing adds Create record and per-record Edit/Delete buttons, alongside existing row actions. A single inline editor appears below the table; it is not a modal dialog. Delete opens a confirmation panel before calling persistence.</p>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fields / fields</td>
+<td>Nonempty list of <code>NgGridEditField(key, label, required)</code>; keys must be nonblank and unique. Fields are text inputs.</td>
+</tr>
+<tr>
+<td>Draft / draft</td>
+<td>Receives the current record for update, or null/default for create. Returns field-key/string-value pairs. Keep this callback pure.</td>
+</tr>
+<tr>
+<td>Validate / validate</td>
+<td>Optional synchronous validation over a read-only snapshot; return null to accept or a safe message to reject. Skipped for delete.</td>
+</tr>
+<tr>
+<td>Commit / commit</td>
+<td>Asynchronous callback <code>(operation, id, values[, cancellationToken])</code>; operation is Create/Update/Delete in C#, create/update/delete in Dart. ID is null for create and the original stable row ID otherwise. Return null only after persistence succeeds; return a safe validation/conflict message to keep the draft open.</td>
+</tr>
+<tr>
+<td>AllowCreate / allowCreate</td>
+<td>Defaults true.</td>
+</tr>
+<tr>
+<td>ReadOnly / readOnly</td>
+<td>Defaults false; blocks starting edits and submitting, including previously captured actions. Cancel remains available while idle.</td>
+</tr>
+<tr>
+<td>CanUpdate / canUpdate, CanDelete / canDelete</td>
+<td>Optional current-record predicates, true by default. UI controls only; authorize again in persistence.</td>
+</tr>
+</tbody>
+</table>
+<p>The Grid copies the dictionary/map returned by Draft. Editing changes only this private string draft; it never mutates the input record or collection. Commit receives a read-only copy, so subsequent edits cannot change an in-flight request. Create must allocate a unique stable ID in the application. Update should preserve the original ID. Delete receives an empty values map. C# value-type records receive default(T) for create; use a reference/nullable model when that distinction matters.</p>
+<p>Required checks trim whitespace without rewriting input. Custom validation can parse numbers, dates and cross-field constraints. Validation runs before Commit and never runs for delete. All messages render as plain text. Thrown exceptions become the generic ErrorText; exception details are not displayed. Return only messages safe for end users. An empty string is still an error; success is specifically null.</p>
+<h2 id="persistence-and-refresh">Persistence and refresh</h2>
+<p>For local Items, Commit updates the application collection and notifies the parent as usual. For remote ReadData or ReadGroupedData, Commit performs the write and the Grid rereads the current query after success. Filtering, sorting and page size are retained. Group counts/summaries are recomputed by the local pipeline or server. If the last page disappears, the existing read pipeline clamps paging and fetches the corrected page. A created or updated record can legitimately be hidden by the current search, sort order or collapsed group; success does not jump to it.</p>
+<p>The editor closes after a successful write, even when the subsequent read fails. In that case use the Grid's read Retry action: it retries the read, not the completed write. Selection and collapsed paths remain application-owned. Prune deleted selection IDs in your application if needed; the Grid does not silently normalize them.</p>
+<p>While Commit is pending, editor inputs, Save/Delete confirmation, Cancel and starting another edit are disabled. A second invocation cannot submit another write. Returned validation messages and failures retain the draft for correction, retry or cancel. Search/paging remain available: a remote edit whose row is no longer loaded cannot be submitted until that row is loaded again. Local edits may be submitted even if a filter hides their record, provided it still exists and is permitted. Removing a record or locking permissions disables submission.</p>
+<p>Changing DataVersion or replacing a read adapter discards the draft and invalidates pending completions. Removing Editing does the same. Use DataVersion when switching storage, changing editor field schemas or replacing persistence rules. Rebuilding a configuration with the same logical rules is supported without losing the draft. Blazor also cancels the pending write token; Flutter ignores obsolete futures. Disposal ignores subsequent results. Cancellation/invalidation cannot roll back a write already accepted by a server.</p>
+<h2 id="application-responsibilities">Application responsibilities</h2>
+<p>The component supplies a complete single-record editing workflow, not a database transaction engine. Persistence owns authorization, uniqueness, conversion, concurrency/version checks and storage. Use an idempotency key or equivalent backend contract when a failed network response leaves write success uncertain; clicking retry cannot guarantee exactly-once delivery. A version conflict should return a safe message and preserve the draft until the user cancels/reloads or your application resolves it.</p>
+<p>The gallery uses disposable in-memory records scoped to its page; reloading resets them. Both demos exercise delayed persistence, failures and duplicate-name validation. The grouped HTTP fixture remains read-only. No production records or public sites are modified by this demo.</p>
+<h2 id="presentation-and-localization">Presentation and localization</h2>
+<p>CreateText, UpdateText, DeleteText, SaveText, CancelText, ConfirmDeleteText, RequiredText, ErrorText and SavingText (lower camel case in Flutter) localize every built-in editor message/action. Field labels come from descriptors. Row action accessible names combine the translated action and stable ID. The form uses standard keyboard text inputs/buttons and live error/status announcements. Required fields expose ARIA required in Blazor; Flutter marks them visually with an asterisk. No physical screen-reader or native/mobile certification is claimed.</p>
+<h2 id="cell-editing-and-custom-editors">Cell editing and custom editors</h2>
+<p>Enable <code>CellEditing</code> / <code>cellEditing</code> on the editing configuration. Each column whose key matches a field key gains a labelled Edit button. It opens that field inside the cell; Save, Cancel and error/status messages remain in the panel below the table. Only one record or cell can be edited at a time. Create and the row Edit action still open the full-record panel. Unmatched columns remain display-only.</p>
+<p>The component takes a full draft snapshot even for a cell edit. Only the active field changes; required checks and custom validation still inspect all fields, and Commit receives the entire record draft. A cross-field error can require cancelling and using the row editor. The component does not implement patch persistence or merge concurrent server edits. Use application version checks to detect conflicts.</p>
+<p><code>EditorTemplate</code> / <code>editorBuilder</code> optionally replaces each default text input. Its <code>NgGridEditorContext</code> contains Field/field, Value/value, Disabled/disabled and SetValue/setValue. Use the field key to choose a numeric input, select, date editor or other control. Values remain strings; parsing and storage belong to the application. Supply a label and honor Disabled. The callback additionally rejects changes while saving, after permissions are revoked, after cancellation or from an obsolete edit session. Custom controls own their keyboard behavior and focus. Saving and cancellation use explicit buttons; typing Enter or leaving a cell does not automatically persist it.</p>
+<p>Search, sorting, paging and virtualization can move the active cell out of view. The draft and action panel remain available; return to the row to edit the field again, or cancel. Remote submission requires the record to remain in the loaded window. Fixed row heights still apply: custom editors must fit the configured row height. Cell editing does not implement spreadsheet arrow-key navigation, variable row heights, file uploads or database providers.</p>
+<p>The runnable editable inventory uses custom text/numeric controls, protected rows, delayed failures and retries on both Web platforms. The default text editor remains available when no custom builder is provided.</p>
+<h2 id="batch-editing">Batch editing</h2>
+<p>Since 0.73, supplying <code>CommitBatch</code> / <code>commitBatch</code> enables a bounded queue of edits. The existing <code>Commit</code> / <code>commit</code> remains required for configuration compatibility but is never called in batch mode. The runnable inventory has a Batch editing checkbox. Switching this mode discards the active draft and pending changes.</p>
+<p>Apply to batch validates and stages a full record draft. The original records, current query, grouping and exports remain unchanged until persistence succeeds. Pending changes lists every operation, ID and field value. Edit reopens a staged create/update; Undo change removes one entry; Discard all removes the queue. Cancelling an active editor retains any earlier queued version. Repeated edits of one existing ID consolidate into one change, including successive cell edits. Confirmed deletion replaces an update; undo the deletion before editing that record again. Creates have no record ID until the application assigns one.</p>
+<p><code>NgGridChange</code> exposes Key/key, Operation/operation, Id/id and Values/values. The key identifies one pending entry and survives revisions/retries within the queue. Do not treat it as a durable server transaction identifier. Save changes passes an immutable list with immutable full-record string maps; delete values are empty. <code>MaxPendingChanges</code> / <code>maxPendingChanges</code> defaults to 100 and must be 1–500. At the limit existing entries can still be revised or removed. Oversized newly staged changes are rejected with BatchLimitText/batchLimitText.</p>
+<p>Save changes rechecks all required fields, custom validators and current permissions before invoking the batch callback exactly once. For local data, every update/delete must still exist in Items. For remote data, the current loaded record is used when available; otherwise the original queued record supplies the permission predicate. Thus a batch can span pages/windows, but off-page predicates are only a UI check against an earlier snapshot. The server must reauthorize and check versions for every record. Missing or newly protected local records keep the queue and show BatchConflictText/batchConflictText; undo affected entries before retrying.</p>
+<p>The application must validate and commit the whole list atomically. Return null only after the entire transaction succeeds, or a safe message after rejecting it. There is no per-record fallback, partial-success protocol or automatic rollback. Use server transactions, concurrency tokens and an application-owned idempotency contract to handle ambiguous network failures. The demo validates a private working copy, including final-state unique names, before replacing the collection once.</p>
+<p>During saving, all queue mutations and new editors are disabled. A message or exception preserves the entire queue for correction and retry. Success clears it and refreshes the query once; a read failure does not restore or resend the completed writes. DataVersion changes, reader replacement, removal of Editing, mode changes and disposal invalidate pending work and clear the queue. Rebuilding an equivalent configuration preserves it. Blazor cancels the token; Flutter ignores obsolete futures. Invalidation cannot undo server writes already accepted.</p>
+<p>PendingText/pendingText, StageText/stageText, SaveBatchText/saveBatchText, DiscardText/discardText, UndoText/undoText, BatchLimitText/batchLimitText and BatchConflictText/batchConflictText localize batch controls and messages. Existing create/update/delete labels describe each queued operation. The queue is in-memory only; navigation or reload discards it. Spreadsheet keyboard navigation and durable offline mutation queues remain separate features.</p>

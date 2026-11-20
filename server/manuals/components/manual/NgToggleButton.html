@@ -1,0 +1,300 @@
+<h1 id="ngtogglebutton-toggle-button">NgToggleButton — Toggle button</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Switch a single setting on or off while keeping the action label visible. Examples include a preview border, a pinned item or a formatting option.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgToggleButton#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgToggleButton#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="controlled-selection-and-click-events">Controlled selection and click events</h3>
+<p>Value/value is application-owned. Store ValueChanged/onChanged and pass the new value back. OnClick/onClick is an independent activation notification: selection is requested first, then click runs. Blazor awaits the selection callback; Flutter callbacks are synchronous. If selection handling throws, the click callback is not reached. A click-only toggle stays interactive but never changes its own value. With neither callback, or Disabled/disabled=true, it is disabled. Disable the control while an application request is pending; automatic async-operation locking is not supplied.</p>
+<h3 id="content-and-accessible-names">Content and accessible names</h3>
+<p>Label/label remains required, nonblank and limited to 120 UTF-16 code units. ChildContent/child replaces visible content; Leading/leading supplies a decorative icon, image or avatar. These slots must contain display content, not nested buttons, links or inputs. AriaLabel/semanticLabel optionally overrides the main accessible name. Keep visible wording in the name. Blazor AriaLabelledBy overrides the label when its IDs resolve; AriaDescribedBy supplies help. Flutter uses semanticIdentifier/semanticHint. Names and hints must be nonblank when supplied. Templates do not replace the explicit name.</p>
+<p>Id/Class/Title are Blazor DOM hooks. Flutter has no equivalent CSS-class contract; use its widget layout and semantics APIs. Blazor exports button/aria-pressed, Flutter retains Material's native checked semantics. These are platform-specific contracts, not a screen-reader certification.</p>
+<h3 id="focus-and-visibility">Focus and visibility</h3>
+<p>TabIndex/tabIndex accepts 0 (default) or -1 only. -1 skips Tab traversal without disabling pointer activation or explicit focus. Blazor FocusAsync() is available through @ref after interactive rendering; hidden or disabled controls do not receive focus. Flutter accepts an application-owned FocusNode; create it once, requestFocus(), and dispose it after removing its widget. Each enabled group item remains a separate Tab stop; Enter/Space activates it. There is no arrow-key radiogroup contract.</p>
+<p>Visible/visible=false removes the action from layout, keyboard traversal and semantics. It does not reset the parent's selected state. If the application hides the focused action, it must choose the next focus target. Re-showing a button restores its controlled state, not its old focus.</p>
+<h3 id="shared-appearance-and-per-item-overrides">Shared appearance and per-item overrides</h3>
+<p>Size/size accepts sm, md, lg. Rounded/rounded accepts sm, md, lg, full. FillMode/fillMode accepts solid, outline, flat, link, clear. ThemeColor/themeColor accepts base, primary, secondary, tertiary, info, success, warning, error, dark, light, inverse. Invalid tokens throw. Defaults are md/md/outline/primary, preserving Nextgen's selection emphasis. Colors adapt to the active theme; dark/light are readable theme tokens, not fixed black/white swatches. Exact theme pixels and ThemeBuilder compatibility are not claimed.</p>
+<p>Solid fills the button, outline outlines it, flat omits the resting border/background, link adds underlined text, and clear uses neutral text. Selected toggles retain a distinct filled state in every mode; Flutter also shows a check mark so custom bold content cannot hide selection, while Blazor adds an inset selected outline. Hover and focus remain separate from selection. Disabled styles indicate non-interactivity. A link fill is visual styling and does not turn a button into a navigation link.</p>
+<p>ButtonGroup applies these settings to every item. ItemAppearance/itemAppearance may return NgButtonAppearance with nullable fields; null fields inherit group values. Use this for a command's accent without changing other items. Tokens apply to commands and toggles equally. The Formatting commands and choices demo combines all appearance controls, per-item accents, icons, mixed actions, hidden selection, disabled controls and vertical layout.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;preview-help&quot;</span><span class="p">&gt;</span>Toggle the preview outline.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgToggleButton</span> <span class="err">@</span><span class="na">ref</span><span class="o">=</span><span class="s">&quot;toggle&quot;</span> <span class="na">Id</span><span class="o">=</span><span class="s">&quot;preview-toggle&quot;</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Preview outline&quot;</span> <span class="na">AriaDescribedBy</span><span class="o">=</span><span class="s">&quot;preview-help&quot;</span></span>
+<span class="code-line" data-line="3">    <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;clicks++&quot;</span> <span class="na">Size</span><span class="o">=</span><span class="s">&quot;lg&quot;</span> <span class="na">Rounded</span><span class="o">=</span><span class="s">&quot;full&quot;</span> <span class="na">FillMode</span><span class="o">=</span><span class="s">&quot;outline&quot;</span> <span class="na">ThemeColor</span><span class="o">=</span><span class="s">&quot;success&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4">  <span class="p">&lt;</span><span class="nt">Leading</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>★<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">Leading</span><span class="p">&gt;&lt;</span><span class="nt">ChildContent</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>Preview outline<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">ChildContent</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;/</span><span class="nt">NgToggleButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;toggle!.FocusAsync().AsTask()&quot;</span><span class="p">&gt;</span>Focus preview<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected: @selected. Activations: @clicks<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="n">@code</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgToggleButton</span><span class="o">?</span><span class="w"> </span><span class="n">toggle</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">selected</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">clicks</span><span class="p">;</span><span class="w"> </span><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kt">int</span><span class="w"> </span><span class="n">clicks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kd">final</span><span class="w"> </span><span class="n">toggleFocus</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FocusNode</span><span class="p">();</span></span>
+<span class="code-line" data-line="4"><span class="nd">@override</span></span>
+<span class="code-line" data-line="5"><span class="kt">void</span><span class="w"> </span><span class="n">dispose</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">toggleFocus</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span><span class="w"> </span><span class="k">super</span><span class="p">.</span><span class="n">dispose</span><span class="p">();</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="6"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="n">NgToggleButton</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Preview outline&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticIdentifier:</span><span class="w"> </span><span class="s1">&#39;preview-toggle&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticHint:</span><span class="w"> </span><span class="s1">&#39;Toggle the preview outline.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nl">value:</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">),</span><span class="w"> </span><span class="nl">onClick:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">clicks</span><span class="o">++</span><span class="p">),</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="nl">focusNode:</span><span class="w"> </span><span class="n">toggleFocus</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="w"> </span><span class="s1">&#39;lg&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">rounded:</span><span class="w"> </span><span class="s1">&#39;full&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">fillMode:</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">themeColor:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="nl">leading:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">star</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="w"> </span><span class="m">16</span><span class="p">),</span><span class="w"> </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Preview outline&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="n">TextButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="w"> </span><span class="n">toggleFocus</span><span class="p">.</span><span class="n">requestFocus</span><span class="p">,</span><span class="w"> </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Focus preview&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected: </span><span class="si">$</span><span class="n">selected</span><span class="s1">. Activations: </span><span class="si">$</span><span class="n">clicks</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="13"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Id</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Class</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Heading for the section or dialog.</td>
+</tr>
+<tr>
+<td><code>AriaLabel</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Optional nonblank main-chip accessible name; labelled-by takes precedence. Visible text and removal names are unchanged.</td>
+</tr>
+<tr>
+<td><code>AriaLabelledBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for the accessible name; takes precedence over Label.</td>
+</tr>
+<tr>
+<td><code>AriaDescribedBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for contextual guidance; see target-element rules.</td>
+</tr>
+<tr>
+<td><code>TabIndex</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+<tr>
+<td><code>Visible</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Rounded</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>FillMode</code></td>
+<td><code>string</code></td>
+<td>&quot;outline&quot;</td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>ThemeColor</code></td>
+<td><code>string</code></td>
+<td>&quot;primary&quot;</td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>Leading</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ChildContent</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>Razor content; for a wizard, a RenderFragment&lt;int&gt; receiving the active index.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>required</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;bool&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>OnClick</code></td>
+<td><code>EventCallback</code></td>
+<td>not set</td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>bool</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>visible</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;bool&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>onClick</code></td>
+<td><code>VoidCallback?</code></td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>rounded</code></td>
+<td><code>String</code></td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>fillMode</code></td>
+<td><code>String</code></td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>themeColor</code></td>
+<td><code>String</code></td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>semanticLabel</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank native accessible name for the main chip; null uses label.</td>
+</tr>
+<tr>
+<td><code>semanticIdentifier</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank automation identifier in the Flutter semantics tree; not a widget Key or DOM id.</td>
+</tr>
+<tr>
+<td><code>semanticHint</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank contextual guidance in the semantics tree; not a visible tooltip.</td>
+</tr>
+<tr>
+<td><code>leading</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>child</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>focusNode</code></td>
+<td><code>FocusNode?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>tabIndex</code></td>
+<td><code>int</code></td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgToggleButton</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onClick</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">visible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">fillMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">themeColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;primary&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticIdentifier</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticHint</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">leading</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">child</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">focusNode</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tabIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

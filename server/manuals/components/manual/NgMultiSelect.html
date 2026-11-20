@@ -1,0 +1,258 @@
+<h1 id="ngmultiselect-multiple-selection">NgMultiSelect — Multiple selection</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Select several NgOption keys and remove selected items.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgMultiSelect#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgMultiSelect#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="controlled-selection">Controlled selection</h3>
+<p>Value/value is an array/list of option IDs. Items require unique nonempty IDs and nonempty labels. The parent stores emitted copies and passes them back; never mutate an emitted list or source collection in place. Flutter validation reads the current controlled value, including parent-driven changes. In Blazor use model data annotations for required/minimum selection; Flutter exposes required. MaxSelected/maxSelected must be positive if supplied and limits user additions, not externally supplied values.</p>
+<p>Disabled options are locked: they cannot be added, removed through a chip, or cleared by bulk actions. An already-selected disabled ID counts toward the limit. Unknown selected IDs are shown as their raw ID and can be removed; the application decides how to reconcile removed records. ReadOnly/readOnly freezes selection while still allowing the list to be filtered. Disabled/enabled=false also disables filtering.</p>
+<h3 id="search-templates-and-bulk-actions">Search, templates and bulk actions</h3>
+<p>FilterMode/filterMode accepts contains, startsWith or endsWith; MinLength/minLength defaults to 0. Placeholder and EmptyText/emptyText customize search and no-match guidance. Filtering never removes selections. ItemTemplate/itemBuilder and TagTemplate/tagBuilder decorate list items and selected chips while retaining accessible model labels. Use short noninteractive content.</p>
+<p>ShowActions/showActions adds Select filtered and Clear selection. Select filtered takes every enabled match plus the existing selection, preserving order and removing duplicates. If the combined selection exceeds MaxSelected, the entire action is rejected with a message: no partial selection. Clear selection removes every unlocked selection, including those hidden by the filter, and retains disabled selections. These bulk actions are original Nextgen behavior, not a claim of third-party API compatibility.</p>
+<h3 id="remaining-scope">Remaining scope</h3>
+<p>This implementation is an inline checklist with selected chips, not a popup MultiSelect. Remote data, virtualization, grouping, custom values, summary tags, popup timing/close behavior, localization of every action/status, complete keyboard-focus management and screen-reader/native certification remain open. Case folding follows each platform, not culture-specific collation.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Read only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;locked&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgMultiSelect</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Services&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;services&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">MaxSelected</span><span class="o">=</span><span class="s">&quot;3&quot;</span> <span class="na">ShowActions</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;locked&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;No matching services&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">ItemTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;service&quot;</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>@service.Label<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;</span><span class="nt">small</span><span class="p">&gt;</span> · service<span class="p">&lt;/</span><span class="nt">small</span><span class="p">&gt;&lt;/</span><span class="nt">ItemTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">TagTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;service&quot;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>✓ @service.Label<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">TagTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;/</span><span class="nt">NgMultiSelect</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected IDs: @string.Join(&quot;, &quot;,selected)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="n">@code</span><span class="w"> </span><span class="p">{</span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">locked</span><span class="p">;</span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;locked&quot;</span><span class="p">];</span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgOption</span><span class="p">[]</span><span class="w"> </span><span class="n">services</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;Alpha&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="s">&quot;Beta&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;g&quot;</span><span class="p">,</span><span class="s">&quot;Gamma&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;locked&quot;</span><span class="p">,</span><span class="s">&quot;Mandatory&quot;</span><span class="p">,</span><span class="k">true</span><span class="p">)];}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">locked</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;locked&#39;</span><span class="p">];</span></span>
+<span class="code-line" data-line="2"><span class="kd">final</span><span class="w"> </span><span class="n">services</span><span class="o">=</span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;Alpha&#39;</span><span class="p">),</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;Beta&#39;</span><span class="p">),</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;g&#39;</span><span class="p">,</span><span class="s1">&#39;Gamma&#39;</span><span class="p">),</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span><span class="s1">&#39;Mandatory&#39;</span><span class="p">,</span><span class="nl">disabled:</span><span class="kc">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="3"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="4"><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Read only&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">locked</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">locked</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="5"><span class="n">NgMultiSelect</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Services&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">selected</span><span class="p">,</span><span class="nl">items:</span><span class="n">services</span><span class="p">,</span><span class="nl">maxSelected:</span><span class="m">3</span><span class="p">,</span><span class="nl">showActions:</span><span class="kc">true</span><span class="p">,</span><span class="nl">readOnly:</span><span class="n">locked</span><span class="p">,</span><span class="nl">emptyText:</span><span class="s1">&#39;No matching services&#39;</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">selected</span><span class="o">=</span><span class="n">v</span><span class="p">),</span><span class="nl">itemBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">o</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">${</span><span class="n">o</span><span class="p">.</span><span class="n">label</span><span class="si">}</span><span class="s1"> · service&#39;</span><span class="p">),</span><span class="nl">tagBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">o</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;✓ </span><span class="si">${</span><span class="n">o</span><span class="p">.</span><span class="n">label</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="6"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected IDs: </span><span class="si">${</span><span class="n">selected</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Options&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgOption&gt;</code></td>
+<td>[]</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>MaxSelected</code></td>
+<td><code>int?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>ShowActions</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>FilterMode</code></td>
+<td><code>string</code></td>
+<td>&quot;contains&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>MinLength</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Placeholder</code></td>
+<td><code>string</code></td>
+<td>&quot;Filter options…&quot;</td>
+<td>Hint displayed for empty input.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No matches&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ItemTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>TagTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>string[]</code></td>
+<td>model value</td>
+<td>Current field value.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;string[]&gt;</code></td>
+<td>not set</td>
+<td>Value change callback.</td>
+</tr>
+<tr>
+<td><code>ValueExpression</code></td>
+<td><code>Expression&lt;Func&lt;string[]&gt;&gt;</code></td>
+<td>required</td>
+<td>Supplied by @bind-Value; pass explicitly with manual binding.</td>
+</tr>
+<tr>
+<td><code>AdditionalAttributes</code></td>
+<td>HTML attribute dictionary</td>
+<td>null</td>
+<td>Extra HTML/ARIA attributes.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>List&lt;String&gt;</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgOption&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;List&lt;String&gt;&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>maxSelected</code></td>
+<td><code>int?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td><code>bool</code></td>
+<td>Require a nonempty/selected value during form validation.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>showActions</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>filterMode</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>placeholder</code></td>
+<td><code>String</code></td>
+<td>Hint displayed for empty input.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>minLength</code></td>
+<td><code>int</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>itemBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>tagBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgMultiSelect</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Options&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">maxSelected</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="kd">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">filterMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;contains&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">minLength</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">placeholder</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Filter options…&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No matches&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tagBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

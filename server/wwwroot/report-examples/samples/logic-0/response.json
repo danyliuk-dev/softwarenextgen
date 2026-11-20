@@ -1,0 +1,229 @@
+{
+  "title": "Inventory selection",
+  "pages": [
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "text",
+          "text": "Selected items: 3",
+          "x": 42,
+          "y": 42,
+          "width": 511.28,
+          "height": 23.4675,
+          "style": {
+            "size": 18,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 77.4675,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Item",
+          "x": 50,
+          "y": 85.4675,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Quantity",
+          "x": 305.64,
+          "y": 85.4675,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 104.70125,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 105.20125,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "Monitor",
+          "x": 50,
+          "y": 113.20125,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "8",
+          "x": 305.64,
+          "y": 113.20125,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 132.435,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 132.935,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "Desk",
+          "x": 50,
+          "y": 140.935,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "2",
+          "x": 305.64,
+          "y": 140.935,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 160.16875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 160.66875,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "Chair",
+          "x": 50,
+          "y": 168.66875,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "12",
+          "x": 305.64,
+          "y": 168.66875,
+          "width": 239.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 187.90249999999997,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Page 1 / 1",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ]
+}

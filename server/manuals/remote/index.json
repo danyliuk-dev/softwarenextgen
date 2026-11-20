@@ -1,0 +1,18 @@
+[
+  {
+    "Title": "Nextgen Remote",
+    "Path": "overview"
+  },
+  {
+    "Title": "Install Nextgen Remote",
+    "Path": "installation"
+  },
+  {
+    "Title": "Start a remote session",
+    "Path": "getting-started"
+  },
+  {
+    "Title": "Permissions and troubleshooting",
+    "Path": "permissions"
+  }
+]

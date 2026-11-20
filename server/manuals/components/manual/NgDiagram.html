@@ -1,0 +1,260 @@
+<h1 id="ngdiagram-interactive-diagram">NgDiagram — Interactive diagram</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Display and edit a graph of nodes and directed or undirected connections.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgDiagram#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgDiagram#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="selection-and-movement">Selection and movement</h3>
+<p>Click a node or connection to select it. The other selection type is first cleared through its callback with null. Store both selected IDs. Unknown IDs are not highlighted; remove stale selection when deleting data. Dragging previews a new position, and only pointer release proposes coordinates through ValueChanged/onChanged. Accept by returning the proposed graph; rejection retains the original coordinates and removes the drag preview. Selection is a separate proposal and may still change when movement is rejected. Escape cancels drag. Tab focuses nodes; Enter/Space selects; arrows move 10 units, Shift+arrow moves 1. Movement stays inside the canvas. Flutter exposes keyboard-selectable Connections; Blazor SVG connections are focusable.</p>
+<h3 id="labels-and-empty-state">Labels and empty state</h3>
+<p>NodeLabel/nodeLabel and EdgeLabel/edgeLabel format plain-text display and accessible names without changing raw IDs, coordinates or JSON. Full labels are used in accessible names and tooltips/list entries; canvas labels may be shortened to fit. EmptyText/emptyText replaces the empty-graph message. The default values retain existing labels. These are not arbitrary templates.</p>
+<h3 id="zoom-and-viewport">Zoom and viewport</h3>
+<p>Zoom changes by 25 percentage points, within 25–200%. Fit width fits the entire canvas width; 100% resets zoom. The viewport is 420 logical/CSS pixels tall, with internal scrolling. Zoom does not alter model coordinates or JSON. Fit diagram fits node bounds in both axes with 24 px padding and centers by scrolling; it preserves selection and works in ReadOnly. Empty graphs disable it. Minimum zoom can still require scrolling for large graphs; canvas boundaries constrain centering and long connection labels may extend beyond bounds. Fitting is explicit, not automatic layout.</p>
+<p>NgDiagramModel.FitView/fitView(viewportWidth,viewportHeight) returns NgDiagramView (Zoom/ScrollX/ScrollY or lowerCamelCase). Sizes must be finite and positive. An empty graph returns 100% and zero scroll.</p>
+<h3 id="model-and-persistence">Model and persistence</h3>
+<p>Value is immutable. Store the new graph from callbacks; an independent replacement cancels active drag. ReadOnly or a missing ValueChanged/onChanged disables movement but retains selection, zoom and scrolling. SelectionReadOnly/selectionReadOnly independently disables node and edge selection; movement can remain enabled. Missing selection callbacks disable their respective selection action without clearing the other selection. A successful selection first requests clearing the opposite ID; both IDs remain parent-owned. Any parent update cancels active drag and invalidates captured actions, including replacement graphs reusing node IDs. Zoom also cancels drag. Blazor rechecks graph identity and permissions after awaiting selection callbacks, before proposing a move. Host-side asynchronous responses still need ordering against newer data. The application owns create/edit/delete actions and their permissions. The gallery shows a properties panel, connections, 20-change history and import; NgDiagram itself has no undo history.</p>
+<p>UpsertNode/UpsertEdge add or replace by ID. RemoveNode also removes incident edges; RemoveEdge keeps nodes. Move(id,x,y) clamps coordinates to the canvas and returns a new model. For example: graph = graph.Move(&quot;start&quot;,80,120), or graph = graph.move('start',80,120). ToJson/toJson and FromJson/fromJson use the shared version-1 Nextgen schema, not third-party JSON. Catch invalid imports and retain the previous graph. No automatic file storage or upload.</p>
+<h3 id="geometry-and-limits">Geometry and limits</h3>
+<p>Shapes: rectangle, ellipse, diamond (PascalCase enum names in C#). Nodes store ID, text, top-left X/Y and width/height (default 160×80). Labels are visually shortened but available in tooltips/accessibility/properties. Connections run straight between shape boundaries along the centers; directed connections have an end arrow. On-canvas connection labels shorten to 24 characters.</p>
+<p>Canvas dimensions: 200–5000 (default 1000×600); up to 100 nodes and 200 edges. Nodes: 60–400 × 40–240, fully inside the canvas. IDs: 1–64 ASCII letters/digits/_/-, unique separately for nodes and edges. Node text is nonempty and at most 100 UTF-16 units; edge text 0–100. Coordinates are finite. Edges require two different existing nodes. Cycles and parallel edges are allowed; workflow rules belong to the application. Overlaps are not resolved automatically; coincident centers yield a zero-length line.</p>
+<p>No automatic layout, obstacle routing, connector drawing, pointer resizing, groups, multiple selection, image/templates, export, minimap, pinch zoom or collaboration. Blazor loads diagram.js automatically from static web assets and requires interactive rendering; if drag fails, check the module and ValueChanged handling. Native/mobile and screen-reader audits remain separate.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;readOnly=!readOnly&quot;</span><span class="p">&gt;</span>Toggle move lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;selectionReadOnly=!selectionReadOnly&quot;</span><span class="p">&gt;</span>Toggle selection lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;accept=!accept&quot;</span><span class="p">&gt;</span>Toggle acceptance<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;graph=Sample(120,140)&quot;</span><span class="p">&gt;</span>Replace graph<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;graph=graph.Nodes.Count==0?Sample():new()&quot;</span><span class="p">&gt;</span>Toggle empty graph<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Movement: @(readOnly?&quot;locked&quot;:&quot;enabled&quot;) · Selection: @(selectionReadOnly?&quot;locked&quot;:&quot;enabled&quot;) · Acceptance: @(accept?&quot;enabled&quot;:&quot;rejected&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Start position: @(graph.Nodes.Count==0?&quot;none&quot;:$&quot;{graph.Nodes[0].X}, {graph.Nodes[0].Y}&quot;) · Move proposals: @moves<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">NgDiagram</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Process&quot;</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;graph&quot;</span> <span class="na">ValueChanged</span><span class="o">=</span><span class="s">&quot;Change&quot;</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span> <span class="na">SelectionReadOnly</span><span class="o">=</span><span class="s">&quot;selectionReadOnly&quot;</span></span>
+<span class="code-line" data-line="11">    <span class="na">NodeLabel</span><span class="o">=</span><span class="s">&quot;@(n=&gt;$&quot;</span><span class="na">Task</span> <span class="err">{</span><span class="na">n</span><span class="err">.</span><span class="na">Text</span><span class="err">}&quot;)&quot;</span> <span class="na">EdgeLabel</span><span class="o">=</span><span class="s">&quot;@(e=&gt;$&quot;</span><span class="na">Flow</span> <span class="err">{</span><span class="na">e</span><span class="err">.</span><span class="na">Text</span><span class="err">}&quot;)&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;Nothing to connect&quot;</span></span>
+<span class="code-line" data-line="12">    <span class="err">@</span><span class="na">bind-SelectedNodeId</span><span class="o">=</span><span class="s">&quot;selectedNode&quot;</span> <span class="err">@</span><span class="na">bind-SelectedEdgeId</span><span class="o">=</span><span class="s">&quot;selectedEdge&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="13"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Node: @(selectedNode??&quot;none&quot;) · Connection: @(selectedEdge??&quot;none&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="14"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">selectedNode</span><span class="p">,</span><span class="w"> </span><span class="n">selectedEdge</span><span class="p">;</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="p">,</span><span class="n">selectionReadOnly</span><span class="p">;</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">accept</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">moves</span><span class="p">;</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">NgDiagramModel</span><span class="w"> </span><span class="n">graph</span><span class="o">=</span><span class="n">Sample</span><span class="p">();</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NgDiagramModel</span><span class="w"> </span><span class="nf">Sample</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span><span class="o">=&gt;</span><span class="k">new</span><span class="p">([</span></span>
+<span class="code-line" data-line="21"><span class="w">        </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;start&quot;</span><span class="p">,</span><span class="s">&quot;Start&quot;</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">Shape</span><span class="p">:</span><span class="n">NgDiagramShape</span><span class="p">.</span><span class="n">Ellipse</span><span class="p">),</span></span>
+<span class="code-line" data-line="22"><span class="w">        </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;work&quot;</span><span class="p">,</span><span class="s">&quot;Processing&quot;</span><span class="p">,</span><span class="mi">360</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="p">],[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;next&quot;</span><span class="p">,</span><span class="s">&quot;start&quot;</span><span class="p">,</span><span class="s">&quot;work&quot;</span><span class="p">,</span><span class="s">&quot;Continue&quot;</span><span class="p">)]);</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Change</span><span class="p">(</span><span class="n">NgDiagramModel</span><span class="w"> </span><span class="n">next</span><span class="p">){</span><span class="n">moves</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">graph</span><span class="o">=</span><span class="n">next</span><span class="p">;}</span></span>
+<span class="code-line" data-line="25"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">NgDiagramModel</span><span class="w"> </span><span class="n">sample</span><span class="p">([</span><span class="kt">double</span><span class="w"> </span><span class="n">x</span><span class="o">=</span><span class="m">40</span><span class="p">,</span><span class="kt">double</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="m">100</span><span class="p">])</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgDiagramModel</span><span class="p">(</span><span class="nl">nodes:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="n">NgDiagramNode</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Start&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="nl">shape:</span><span class="w"> </span><span class="n">NgDiagramShape</span><span class="p">.</span><span class="n">ellipse</span><span class="p">),</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">NgDiagramNode</span><span class="p">(</span><span class="s1">&#39;work&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Processing&#39;</span><span class="p">,</span><span class="w"> </span><span class="m">360</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">),</span></span>
+<span class="code-line" data-line="4"><span class="p">],</span><span class="w"> </span><span class="nl">edges:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgDiagramEdge</span><span class="p">(</span><span class="s1">&#39;next&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;start&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;work&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">text:</span><span class="w"> </span><span class="s1">&#39;Continue&#39;</span><span class="p">)]);</span></span>
+<span class="code-line" data-line="5"><span class="kd">late</span><span class="w"> </span><span class="n">NgDiagramModel</span><span class="w"> </span><span class="n">graph</span><span class="o">=</span><span class="n">sample</span><span class="p">();</span></span>
+<span class="code-line" data-line="6"><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">selectedNode</span><span class="p">,</span><span class="w"> </span><span class="n">selectedEdge</span><span class="p">;</span></span>
+<span class="code-line" data-line="7"><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">selectionReadOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">accept</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="8"><span class="kt">int</span><span class="w"> </span><span class="n">moves</span><span class="o">=</span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="9"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">runSpacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=!</span><span class="n">readOnly</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle move lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">selectionReadOnly</span><span class="o">=!</span><span class="n">selectionReadOnly</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle selection lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">accept</span><span class="o">=!</span><span class="n">accept</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle acceptance&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">graph</span><span class="o">=</span><span class="n">sample</span><span class="p">(</span><span class="m">120</span><span class="p">,</span><span class="m">140</span><span class="p">)),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Replace graph&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">graph</span><span class="o">=</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">.</span><span class="n">isEmpty</span><span class="o">?</span><span class="n">sample</span><span class="p">()</span><span class="o">:</span><span class="n">NgDiagramModel</span><span class="p">()),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle empty graph&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="16"><span class="w">  </span><span class="p">]),</span></span>
+<span class="code-line" data-line="17"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Movement: </span><span class="si">${</span><span class="n">readOnly</span><span class="o">?</span><span class="s2">&quot;locked&quot;</span><span class="o">:</span><span class="s2">&quot;enabled&quot;</span><span class="si">}</span><span class="s1"> · Selection: </span><span class="si">${</span><span class="n">selectionReadOnly</span><span class="o">?</span><span class="s2">&quot;locked&quot;</span><span class="o">:</span><span class="s2">&quot;enabled&quot;</span><span class="si">}</span><span class="s1"> · Acceptance: </span><span class="si">${</span><span class="n">accept</span><span class="o">?</span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="s2">&quot;rejected&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Start position: </span><span class="si">${</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">.</span><span class="n">isEmpty</span><span class="o">?</span><span class="s2">&quot;none&quot;</span><span class="o">:</span><span class="s2">&quot;${graph.nodes.first.x.round()</span><span class="si">}</span><span class="s1">, </span><span class="si">${</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">.</span><span class="n">first</span><span class="p">.</span><span class="n">y</span><span class="p">.</span><span class="n">round</span><span class="p">()</span><span class="si">}</span><span class="s1">&quot;} · Move proposals: </span><span class="si">$</span><span class="n">moves</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="19"><span class="w">  </span><span class="n">NgDiagram</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Process&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">graph</span><span class="p">,</span><span class="w"> </span><span class="nl">readOnly:</span><span class="n">readOnly</span><span class="p">,</span><span class="w"> </span><span class="nl">selectionReadOnly:</span><span class="n">selectionReadOnly</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="nl">nodeLabel:</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">=&gt;</span><span class="s1">&#39;Task </span><span class="si">${</span><span class="n">n</span><span class="p">.</span><span class="n">text</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="nl">edgeLabel:</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">=&gt;</span><span class="s1">&#39;Flow </span><span class="si">${</span><span class="n">e</span><span class="p">.</span><span class="n">text</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span><span class="nl">emptyText:</span><span class="s1">&#39;Nothing to connect&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{</span><span class="n">moves</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">graph</span><span class="o">=</span><span class="n">v</span><span class="p">;}),</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="nl">selectedNodeId:</span><span class="w"> </span><span class="n">selectedNode</span><span class="p">,</span><span class="w"> </span><span class="nl">selectedEdgeId:</span><span class="w"> </span><span class="n">selectedEdge</span><span class="p">,</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="nl">onSelectedNodeIdChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selectedNode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">),</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="nl">onSelectedEdgeIdChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selectedEdge</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="25"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Node: </span><span class="si">${</span><span class="n">selectedNode</span><span class="o">??</span><span class="s2">&quot;none&quot;</span><span class="si">}</span><span class="s1"> · Connection: </span><span class="si">${</span><span class="n">selectedEdge</span><span class="o">??</span><span class="s2">&quot;none&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="26"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Diagram&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>NgDiagramModel</code></td>
+<td>required</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;NgDiagramModel&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>SelectedNodeId</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectedNodeIdChanged</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectedEdgeId</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectedEdgeIdChanged</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>SelectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>NodeLabel</code></td>
+<td><code>Func&lt;NgDiagramNode,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EdgeLabel</code></td>
+<td><code>Func&lt;NgDiagramEdge,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No nodes yet.&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>NgDiagramModel</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;NgDiagramModel&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>selectedNodeId</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectedEdgeId</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onSelectedNodeIdChanged</code></td>
+<td><code>ValueChanged&lt;String?&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onSelectedEdgeIdChanged</code></td>
+<td><code>ValueChanged&lt;String?&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>selectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>nodeLabel</code></td>
+<td><code>String Function(NgDiagramNode)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>edgeLabel</code></td>
+<td><code>String Function(NgDiagramEdge)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgDiagram</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Diagram&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectedNodeId</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectedEdgeId</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onSelectedNodeIdChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onSelectedEdgeIdChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">nodeLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">edgeLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No nodes yet.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

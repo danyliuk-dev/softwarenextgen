@@ -1,0 +1,338 @@
+<h1 id="ngmap-interactive-map">NgMap — Interactive map</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Display geographic markers, paths and polygons over an optional raster basemap.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgMap#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgMap#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="hosting-and-tiles">Hosting and tiles</h3>
+<p>Blazor requires interactive rendering and static assets. With UseStaticFiles map .mjs to text/javascript for the clustering module (gallery Program.cs). Leaflet 1.9.4 is packaged in map-viewer and Flutter assets; no CDN/script tags are needed. Flutter implements Web; native shows an unsupported-platform message.</p>
+<p>TileUrlTemplate must contain {z}, {x}, {y}; relative and HTTP(S) URLs are supported. Empty source shows a grid and your objects without a basemap. Attribution is required for a configured provider; AttributionUrl adds a link. Attribution/object labels are plain text. Choose a provider supporting zoom 0–19 and your usage terms. Custom headers, bearer tokens, TMS and vector tiles are not supported.</p>
+<p>For OpenStreetMap keep attribution, normal Referrer and browser cache; do not bulk-prefetch or download offline. The public service has no SLA; review the provider terms and <a href="https://operations.osmfoundation.org/policies/tiles/">tile policy</a>. Object labels are not sent to the provider, but IP, Referrer and tile coordinates are. Host CSP must permit local frames/scripts/styles, Leaflet inline styles and provider images.</p>
+<h3 id="data-model">Data model</h3>
+<p>NgMapPoint accepts latitude first, longitude second: finite latitude ±85.05112878, longitude ±180. NgMapMarker has ID, label and position. NgMapPath is a straight polyline with at least 2 points, or a closed polygon with at least 3; closing is automatic. These are geographic lines, not road routing. No date-line crossing, holes or multipolygons.</p>
+<p>NgMapModel copies collections and exposes read-only data. IDs are unique across markers and paths: 1–64 ASCII letters/digits/_/-. Labels: 1–200 characters, not only whitespace. Limits: 500 markers, 100 paths/polygons, 5,000 total path points. Invalid input raises ArgumentException/ArgumentError. Replace the model to update; there is no automatic persistence/loading.</p>
+<h3 id="view-and-events">View and events</h3>
+<p>View defines center and integer zoom 0–19 (initial 0,0,2). Drag pans; wheel/double-click/+/- zoom. Focused maps accept arrows and +/-. Fit data fits all objects with padding and zoom at most 14; empty models disable it. Data changes do not auto-fit. The center is limited to world bounds.</p>
+<p>When ViewChanged/onViewChanged is supplied, View is controlled: return the proposed view to accept navigation, or rebuild with the previous View to reject it. A rejected view is restored without a feedback callback. With no view callback, navigation is local; changing the supplied View still resets it. Parent-driven view updates do not emit view events. Flutter hosts must rebuild after acceptance or rejection. Async host responses need ordering against newer state. SelectedId is one object ID or null; selection callbacks report marker/path IDs or null after Clear selection. Unknown IDs appear unselected without correcting parent state. Selection requires SelectedIdChanged/onSelectedIdChanged and is parent-controlled: a rejected proposal leaves highlighting and popup unchanged. Objects buttons are keyboard accessible and open accepted object popups without automatic panning; use Fit data to bring distant objects into view; objects are also clickable directly. OnMapClick reports a coordinate only for free background, not object clicks. To add a marker, build a new NgMapModel with the old items and a uniquely identified marker. No address/geocoding is returned.</p>
+<p>Height: 400–1200, default 520. Below 540 px the Objects list moves under the map and scrolls horizontally. Label also names the iframe. Blazor Dark is explicit; Flutter reads Theme. Theme/model updates preserve the iframe; controlled views reconcile to the supplied View on each update, while local navigation keeps its view when the supplied View is unchanged; provider imagery is not inverted.</p>
+<h3 id="independent-interaction-locks">Independent interaction locks</h3>
+<p>NavigationReadOnly/navigationReadOnly disables user pan, wheel/touch/double-click/keyboard zoom, zoom controls and Fit data. Parent view updates still apply. SelectionReadOnly/selectionReadOnly disables object selection, cluster member selection and Clear selection; missing selection callbacks have the same effect. MapClickReadOnly/mapClickReadOnly independently suppresses background-click callbacks; missing click callbacks also suppress events. All locks default to false.</p>
+<p>An updated configuration cancels active navigation. Events carry a configuration revision: old iframe messages cannot select reused IDs or change a replacement view. Invalid message shapes, out-of-range coordinates and messages after disposal are ignored. EmptyText/emptyText customizes the object-list empty message. Cluster zoom respects navigation locks; coincident points or locked navigation can still show the chooser when selection is enabled. The example uses no basemap and makes no tile requests.</p>
+<h3 id="clustering">Clustering</h3>
+<p>ClusterMarkers defaults to false. ClusterRadius is an integer 20–120 CSS px, default 60, validated even when clustering is off. Distance is screen distance at the current zoom, not meters. Markers sort by ID and group around the first point; neighbor chains do not merge indefinitely. Input ordering and panning do not change membership; zoom recalculates groups. Date-line points are not clustered together.</p>
+<p>Activating a cluster zooms at least one level, up to 19. Coincident points or maximum zoom open a scrollable member chooser. Choosing a member triggers normal selection and displays its individual marker/popup. Clusters have no public object ID and do not trigger background clicks. A selected marker stays outside clusters; Clear selection rejoins it, so a cluster count excludes the selected marker while the total includes every marker. Objects selection behaves the same way.</p>
+<p>Clusters support Tab/Enter and popup buttons. Data/clustering updates preserve the view but may close a regrouped popup; theme changes retain groups. Paths are not clustered. The 500-marker model limit still applies: this is not server aggregation. Dense markers and Same location gallery scenarios demonstrate it without external tiles.</p>
+<h3 id="status-and-omissions">Status and omissions</h3>
+<p>No objects, No basemap configured, Loading tiles, Tiles loaded and Some map tiles unavailable distinguish data and provider states. Objects/selection still work when tiles fail. Navigation/source changes request new tiles. One raster basemap only; no geocoding, routing, GeoJSON import, bubble layers, geometry editing, export or offline mode. Filter large datasets in the application before supplying them.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;navigationLocked=!navigationLocked&quot;</span><span class="p">&gt;</span>Toggle navigation lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;selectionLocked=!selectionLocked&quot;</span><span class="p">&gt;</span>Toggle selection lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;clickLocked=!clickLocked&quot;</span><span class="p">&gt;</span>Toggle click lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;accept=!accept&quot;</span><span class="p">&gt;</span>Toggle acceptance<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;map=Sample(true)&quot;</span><span class="p">&gt;</span>Replace objects<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;map=map.Markers.Count==0?Sample():new()&quot;</span><span class="p">&gt;</span>Toggle empty map<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;view=new(50.4501,30.5234,10)&quot;</span><span class="p">&gt;</span>Reset view<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected: @(selected??&quot;none&quot;) · View zoom: @view.Zoom · Selection requests: @selections · View requests: @views · Map clicks: @clicks<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Acceptance: @(accept?&quot;enabled&quot;:&quot;rejected&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="p">&lt;</span><span class="nt">NgMap</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Delivery map&quot;</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;map&quot;</span> <span class="na">View</span><span class="o">=</span><span class="s">&quot;view&quot;</span> <span class="na">ViewChanged</span><span class="o">=</span><span class="s">&quot;ViewChanged&quot;</span> <span class="na">SelectedId</span><span class="o">=</span><span class="s">&quot;@selected&quot;</span> <span class="na">SelectedIdChanged</span><span class="o">=</span><span class="s">&quot;Select&quot;</span></span>
+<span class="code-line" data-line="13">    <span class="na">OnMapClick</span><span class="o">=</span><span class="s">&quot;Clicked&quot;</span> <span class="na">ClusterMarkers</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">NavigationReadOnly</span><span class="o">=</span><span class="s">&quot;navigationLocked&quot;</span> <span class="na">SelectionReadOnly</span><span class="o">=</span><span class="s">&quot;selectionLocked&quot;</span></span>
+<span class="code-line" data-line="14">    <span class="na">MapClickReadOnly</span><span class="o">=</span><span class="s">&quot;clickLocked&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;No delivery points&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="15"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">selected</span><span class="p">;</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">navigationLocked</span><span class="p">,</span><span class="n">selectionLocked</span><span class="p">,</span><span class="n">clickLocked</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">accept</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="19"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">selections</span><span class="p">,</span><span class="n">views</span><span class="p">,</span><span class="n">clicks</span><span class="p">;</span></span>
+<span class="code-line" data-line="20"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgMapView</span><span class="w"> </span><span class="n">view</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4501</span><span class="p">,</span><span class="mf">30.5234</span><span class="p">,</span><span class="mi">13</span><span class="p">);</span></span>
+<span class="code-line" data-line="21"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgMapModel</span><span class="w"> </span><span class="n">map</span><span class="o">=</span><span class="n">Sample</span><span class="p">();</span></span>
+<span class="code-line" data-line="22"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NgMapModel</span><span class="w"> </span><span class="nf">Sample</span><span class="p">(</span><span class="kt">bool</span><span class="w"> </span><span class="n">updated</span><span class="o">=</span><span class="k">false</span><span class="p">)</span><span class="o">=&gt;</span><span class="k">new</span><span class="p">([</span></span>
+<span class="code-line" data-line="23"><span class="w">   </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;office&quot;</span><span class="p">,</span><span class="n">updated</span><span class="o">?</span><span class="s">&quot;Office updated&quot;</span><span class="p">:</span><span class="s">&quot;Office&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4501</span><span class="p">,</span><span class="mf">30.5234</span><span class="p">)),</span></span>
+<span class="code-line" data-line="24"><span class="w">   </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;depot&quot;</span><span class="p">,</span><span class="s">&quot;Depot&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4501</span><span class="p">,</span><span class="mf">30.5234</span><span class="p">)),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;park&quot;</span><span class="p">,</span><span class="s">&quot;Park&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4466</span><span class="p">,</span><span class="mf">30.5410</span><span class="p">))</span></span>
+<span class="code-line" data-line="25"><span class="w"> </span><span class="p">],[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;line&quot;</span><span class="p">,</span><span class="s">&quot;Delivery line&quot;</span><span class="p">,[</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4501</span><span class="p">,</span><span class="mf">30.5234</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mf">50.4466</span><span class="p">,</span><span class="mf">30.5410</span><span class="p">)])]);</span></span>
+<span class="code-line" data-line="26"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Select</span><span class="p">(</span><span class="kt">string?</span><span class="w"> </span><span class="n">id</span><span class="p">){</span><span class="n">selections</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">selected</span><span class="o">=</span><span class="n">id</span><span class="p">;}</span></span>
+<span class="code-line" data-line="27"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ViewChanged</span><span class="p">(</span><span class="n">NgMapView</span><span class="w"> </span><span class="n">next</span><span class="p">){</span><span class="n">views</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">view</span><span class="o">=</span><span class="n">next</span><span class="p">;}</span></span>
+<span class="code-line" data-line="28"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Clicked</span><span class="p">(</span><span class="n">NgMapPoint</span><span class="w"> </span><span class="n">point</span><span class="p">){</span><span class="n">clicks</span><span class="o">++</span><span class="p">;}</span></span>
+<span class="code-line" data-line="29"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">NgMapModel</span><span class="w"> </span><span class="n">sample</span><span class="p">([</span><span class="kt">bool</span><span class="w"> </span><span class="n">updated</span><span class="o">=</span><span class="kc">false</span><span class="p">])</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgMapModel</span><span class="p">(</span><span class="nl">markers:</span><span class="p">[</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="n">NgMapMarker</span><span class="p">(</span><span class="s1">&#39;office&#39;</span><span class="p">,</span><span class="n">updated</span><span class="o">?</span><span class="s1">&#39;Office updated&#39;</span><span class="o">:</span><span class="s1">&#39;Office&#39;</span><span class="p">,</span><span class="n">NgMapPoint</span><span class="p">(</span><span class="m">50.4501</span><span class="p">,</span><span class="m">30.5234</span><span class="p">)),</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="n">NgMapMarker</span><span class="p">(</span><span class="s1">&#39;depot&#39;</span><span class="p">,</span><span class="s1">&#39;Depot&#39;</span><span class="p">,</span><span class="n">NgMapPoint</span><span class="p">(</span><span class="m">50.4501</span><span class="p">,</span><span class="m">30.5234</span><span class="p">)),</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="n">NgMapMarker</span><span class="p">(</span><span class="s1">&#39;park&#39;</span><span class="p">,</span><span class="s1">&#39;Park&#39;</span><span class="p">,</span><span class="n">NgMapPoint</span><span class="p">(</span><span class="m">50.4466</span><span class="p">,</span><span class="m">30.5410</span><span class="p">)),</span></span>
+<span class="code-line" data-line="5"><span class="p">],</span><span class="nl">paths:</span><span class="p">[</span><span class="n">NgMapPath</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">,</span><span class="s1">&#39;Delivery line&#39;</span><span class="p">,[</span><span class="n">NgMapPoint</span><span class="p">(</span><span class="m">50.4501</span><span class="p">,</span><span class="m">30.5234</span><span class="p">),</span><span class="n">NgMapPoint</span><span class="p">(</span><span class="m">50.4466</span><span class="p">,</span><span class="m">30.5410</span><span class="p">)])]);</span></span>
+<span class="code-line" data-line="6"><span class="kd">late</span><span class="w"> </span><span class="n">NgMapModel</span><span class="w"> </span><span class="n">map</span><span class="o">=</span><span class="n">sample</span><span class="p">();</span></span>
+<span class="code-line" data-line="7"><span class="n">NgMapView</span><span class="w"> </span><span class="n">view</span><span class="o">=</span><span class="n">NgMapView</span><span class="p">(</span><span class="nl">latitude:</span><span class="m">50.4501</span><span class="p">,</span><span class="nl">longitude:</span><span class="m">30.5234</span><span class="p">,</span><span class="nl">zoom:</span><span class="m">13</span><span class="p">);</span></span>
+<span class="code-line" data-line="8"><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">selected</span><span class="p">;</span></span>
+<span class="code-line" data-line="9"><span class="kt">bool</span><span class="w"> </span><span class="n">navigationLocked</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">selectionLocked</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">clickLocked</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">accept</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="10"><span class="kt">int</span><span class="w"> </span><span class="n">selections</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">views</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="n">clicks</span><span class="o">=</span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="11"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">runSpacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">navigationLocked</span><span class="o">=!</span><span class="n">navigationLocked</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle navigation lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">selectionLocked</span><span class="o">=!</span><span class="n">selectionLocked</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle selection lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">clickLocked</span><span class="o">=!</span><span class="n">clickLocked</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle click lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">accept</span><span class="o">=!</span><span class="n">accept</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle acceptance&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">map</span><span class="o">=</span><span class="n">sample</span><span class="p">(</span><span class="kc">true</span><span class="p">)),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Replace objects&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">map</span><span class="o">=</span><span class="n">map</span><span class="p">.</span><span class="n">markers</span><span class="p">.</span><span class="n">isEmpty</span><span class="o">?</span><span class="n">sample</span><span class="p">()</span><span class="o">:</span><span class="n">NgMapModel</span><span class="p">()),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle empty map&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">view</span><span class="o">=</span><span class="n">NgMapView</span><span class="p">(</span><span class="nl">latitude:</span><span class="m">50.4501</span><span class="p">,</span><span class="nl">longitude:</span><span class="m">30.5234</span><span class="p">,</span><span class="nl">zoom:</span><span class="m">10</span><span class="p">)),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Reset view&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="20"><span class="w">  </span><span class="p">]),</span></span>
+<span class="code-line" data-line="21"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected: </span><span class="si">${</span><span class="n">selected</span><span class="o">??</span><span class="s2">&quot;none&quot;</span><span class="si">}</span><span class="s1"> · View zoom: </span><span class="si">${</span><span class="n">view</span><span class="p">.</span><span class="n">zoom</span><span class="si">}</span><span class="s1"> · Selection requests: </span><span class="si">$</span><span class="n">selections</span><span class="s1"> · View requests: </span><span class="si">$</span><span class="n">views</span><span class="s1"> · Map clicks: </span><span class="si">$</span><span class="n">clicks</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="22"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Acceptance: </span><span class="si">${</span><span class="n">accept</span><span class="o">?</span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="s2">&quot;rejected&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="23"><span class="w">  </span><span class="n">NgMap</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Delivery map&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">map</span><span class="p">,</span><span class="nl">view:</span><span class="n">view</span><span class="p">,</span><span class="nl">selectedId:</span><span class="n">selected</span><span class="p">,</span><span class="nl">clusterMarkers:</span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="nl">navigationReadOnly:</span><span class="n">navigationLocked</span><span class="p">,</span><span class="nl">selectionReadOnly:</span><span class="n">selectionLocked</span><span class="p">,</span><span class="nl">mapClickReadOnly:</span><span class="n">clickLocked</span><span class="p">,</span><span class="nl">emptyText:</span><span class="s1">&#39;No delivery points&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="25"><span class="w">    </span><span class="nl">onSelectedIdChanged:</span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">selections</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">selected</span><span class="o">=</span><span class="n">id</span><span class="p">;}),</span></span>
+<span class="code-line" data-line="26"><span class="w">    </span><span class="nl">onViewChanged:</span><span class="p">(</span><span class="n">next</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">views</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">view</span><span class="o">=</span><span class="n">next</span><span class="p">;}),</span></span>
+<span class="code-line" data-line="27"><span class="w">    </span><span class="nl">onMapClick:</span><span class="p">(</span><span class="n">point</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">clicks</span><span class="o">++</span><span class="p">)),</span></span>
+<span class="code-line" data-line="28"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Map&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>NgMapModel</code></td>
+<td>new()</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>View</code></td>
+<td><code>NgMapView</code></td>
+<td>new()</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ViewChanged</code></td>
+<td><code>EventCallback&lt;NgMapView&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectedId</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>SelectedIdChanged</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>Selected item ID for the parent to store.</td>
+</tr>
+<tr>
+<td><code>OnMapClick</code></td>
+<td><code>EventCallback&lt;NgMapPoint&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>TileUrlTemplate</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Attribution</code></td>
+<td><code>string</code></td>
+<td>&quot;&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>AttributionUrl</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ClusterMarkers</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ClusterRadius</code></td>
+<td><code>int</code></td>
+<td>60</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Dark</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>NavigationReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>MapClickReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No objects&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Height</code></td>
+<td><code>int</code></td>
+<td>520</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>NgMapModel</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>view</code></td>
+<td><code>NgMapView?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectedId</code></td>
+<td><code>String?</code></td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>tileUrlTemplate</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>attributionUrl</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>attribution</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>double</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>clusterMarkers</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>navigationReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>mapClickReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>clusterRadius</code></td>
+<td><code>int</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onViewChanged</code></td>
+<td><code>ValueChanged&lt;NgMapView&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onSelectedIdChanged</code></td>
+<td><code>ValueChanged&lt;String?&gt;?</code></td>
+<td>Selected item ID for the parent to store.</td>
+</tr>
+<tr>
+<td><code>onMapClick</code></td>
+<td><code>ValueChanged&lt;NgMapPoint&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgMap</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Map&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">view</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectedId</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tileUrlTemplate</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">attribution</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">attributionUrl</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">520</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">clusterMarkers</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">navigationReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">mapClickReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No objects&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">clusterRadius</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">60</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onViewChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onSelectedIdChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onMapClick</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

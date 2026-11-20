@@ -1,0 +1,163 @@
+<h1 id="nglineargauge-linear-gauge">NgLinearGauge — Linear gauge</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Display a value within a numeric range.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgLinearGauge#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgLinearGauge#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>Min must be less than Max; all numbers must be finite. Even finite bounds whose difference overflows are supported. Drawing clamps outside values; the displayed original value and Above maximum/Below minimum status preserve the supplied reading. Ranges/ranges accepts NgGaugeRange(From, To, Color, Label), lowercase fields in Flutter. Colors must be six-digit hex (#RRGGBB), labels nonblank, ranges inside the scale with From &lt; To and no overlap. Input order is immaterial; validation sorts a copy. Gaps are allowed and use the theme primary color. Shared endpoints belong to the next range; Max belongs to the range ending at Max. Active color uses the clamped value. Stripes/arcs and a text legend show all ranges. ValueFormatter/valueFormatter formats current value, bounds and legend as plain text; Unit is appended only to the current value. Defaults preserve six significant digits, including fractional values. Replace lists when updating Flutter inputs. This is a read-only single-scale indicator; pointers, ticks, animation and export are not implemented.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;toolbar&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;value=42.5&quot;</span><span class="p">&gt;</span>Normal<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;value=72.5&quot;</span><span class="p">&gt;</span>Elevated<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;value=95&quot;</span><span class="p">&gt;</span>High<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;value=125&quot;</span><span class="p">&gt;</span>Above maximum<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;value=-10&quot;</span><span class="p">&gt;</span>Below minimum<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;showRanges=!showRanges&quot;</span><span class="p">&gt;</span>Toggle ranges<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">NgLinearGauge</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Load&quot;</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;value&quot;</span> <span class="na">Ranges</span><span class="o">=</span><span class="s">&quot;@(showRanges?ranges:[])&quot;</span> <span class="na">ValueFormatter</span><span class="o">=</span><span class="s">&quot;Format&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="10"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="11"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">double</span><span class="w"> </span><span class="k">value</span><span class="o">=</span><span class="mf">72.5</span><span class="p">;</span></span>
+<span class="code-line" data-line="12"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">showRanges</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">Format</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s">&quot;F1&quot;</span><span class="p">,</span><span class="n">System</span><span class="p">.</span><span class="n">Globalization</span><span class="p">.</span><span class="n">CultureInfo</span><span class="p">.</span><span class="n">InvariantCulture</span><span class="p">);</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgGaugeRange</span><span class="p">[]</span><span class="w"> </span><span class="n">ranges</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="s">&quot;#187444&quot;</span><span class="p">,</span><span class="s">&quot;Normal&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span><span class="mi">85</span><span class="p">,</span><span class="s">&quot;#b66d16&quot;</span><span class="p">,</span><span class="s">&quot;Elevated&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">85</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="s">&quot;#b42318&quot;</span><span class="p">,</span><span class="s">&quot;High&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="15"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">double</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">72.5</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kt">bool</span><span class="w"> </span><span class="n">showRanges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kd">final</span><span class="w"> </span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgGaugeRange</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">60</span><span class="p">,</span><span class="s1">&#39;#187444&#39;</span><span class="p">,</span><span class="s1">&#39;Normal&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">NgGaugeRange</span><span class="p">(</span><span class="m">60</span><span class="p">,</span><span class="m">85</span><span class="p">,</span><span class="s1">&#39;#b66d16&#39;</span><span class="p">,</span><span class="s1">&#39;Elevated&#39;</span><span class="p">),</span><span class="w"> </span><span class="n">NgGaugeRange</span><span class="p">(</span><span class="m">85</span><span class="p">,</span><span class="m">100</span><span class="p">,</span><span class="s1">&#39;#b42318&#39;</span><span class="p">,</span><span class="s1">&#39;High&#39;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="4"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="w"> </span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="w"> </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">runSpacing:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kd">final</span><span class="w"> </span><span class="n">entry</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;Normal&#39;</span><span class="o">:</span><span class="m">42.5</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Elevated&#39;</span><span class="o">:</span><span class="m">72.5</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;High&#39;</span><span class="o">:</span><span class="m">95.0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Above maximum&#39;</span><span class="o">:</span><span class="m">125.0</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Below minimum&#39;</span><span class="o">:-</span><span class="m">10.0</span><span class="p">}.</span><span class="n">entries</span><span class="p">)</span></span>
+<span class="code-line" data-line="7"><span class="w">   </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">value</span><span class="o">=</span><span class="n">entry</span><span class="p">.</span><span class="n">value</span><span class="p">),</span><span class="w"> </span><span class="nl">child:</span><span class="n">Text</span><span class="p">(</span><span class="n">entry</span><span class="p">.</span><span class="n">key</span><span class="p">)),</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">showRanges</span><span class="o">=!</span><span class="n">showRanges</span><span class="p">),</span><span class="w"> </span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle ranges&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="9"><span class="w"> </span><span class="p">]),</span></span>
+<span class="code-line" data-line="10"><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">SizedBox</span><span class="p">(</span><span class="nl">height:</span><span class="m">16</span><span class="p">),</span></span>
+<span class="code-line" data-line="11"><span class="w"> </span><span class="n">NgLinearGauge</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Load&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">value</span><span class="p">,</span><span class="nl">ranges:</span><span class="n">showRanges</span><span class="o">?</span><span class="nl">ranges:</span><span class="k">const</span><span class="w"> </span><span class="p">[],</span><span class="nl">valueFormatter:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="p">.</span><span class="n">toStringAsFixed</span><span class="p">(</span><span class="m">1</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Ranges</code></td>
+<td><code>IReadOnlyList&lt;NgGaugeRange&gt;</code></td>
+<td>[]</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ValueFormatter</code></td>
+<td><code>Func&lt;double,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Progress&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>double</code></td>
+<td>0</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>Min</code></td>
+<td><code>double</code></td>
+<td>0</td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>Max</code></td>
+<td><code>double</code></td>
+<td>100</td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>Unit</code></td>
+<td><code>string</code></td>
+<td>&quot;%&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>double</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td><code>double</code></td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td><code>double</code></td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>ranges</code></td>
+<td><code>List&lt;NgGaugeRange&gt;</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>valueFormatter</code></td>
+<td><code>String Function(double)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgLinearGauge</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Progress&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">unit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;%&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">ranges</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[],</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">valueFormatter</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

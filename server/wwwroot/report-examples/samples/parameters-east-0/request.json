@@ -1,0 +1,92 @@
+{
+  "template": {
+    "version": 1,
+    "title": "Regional inventory",
+    "parameters": {
+      "region": {
+        "type": "string",
+        "default": "East"
+      },
+      "minimum": {
+        "type": "number",
+        "default": 0
+      }
+    },
+    "blocks": [
+      {
+        "type": "text",
+        "text": "{{parameters.region}} · Inventory",
+        "style": {
+          "size": 22,
+          "bold": true
+        }
+      },
+      {
+        "type": "text",
+        "text": "Minimum quantity: {{parameters.minimum}}"
+      },
+      {
+        "type": "table",
+        "source": "items",
+        "filters": [
+          {
+            "field": "region",
+            "operator": "eq",
+            "parameter": "region"
+          },
+          {
+            "field": "quantity",
+            "operator": "gte",
+            "parameter": "minimum"
+          }
+        ],
+        "columns": [
+          {
+            "title": "Item",
+            "field": "item"
+          },
+          {
+            "title": "Region",
+            "field": "region"
+          },
+          {
+            "title": "Qty",
+            "field": "quantity"
+          },
+          {
+            "title": "Value",
+            "expression": "row.quantity * row.price",
+            "format": "N2"
+          }
+        ]
+      }
+    ]
+  },
+  "data": {
+    "items": [
+      {
+        "item": "Monitor",
+        "region": "East",
+        "quantity": 8,
+        "price": 240
+      },
+      {
+        "item": "Desk",
+        "region": "West",
+        "quantity": 2,
+        "price": 450
+      },
+      {
+        "item": "Chair",
+        "region": "East",
+        "quantity": 12,
+        "price": 120
+      }
+    ]
+  },
+  "parameters": {
+    "region": "East",
+    "minimum": 0
+  },
+  "useSnapshot": true
+}

@@ -1,0 +1,129 @@
+<h1 id="net-client-and-blazor-viewer">.NET client and Blazor viewer</h1>
+<p>The installed SDK includes two prebuilt NuGet libraries:</p>
+<ul>
+<li><code>NextgenReports.Client</code>: HTTP session, JSON/.NET object input, SVG preview,
+layout JSON, explicit data refresh, PDF/HTML/XLSX/DOCX download and structured errors.</li>
+<li><code>NextgenReports.Blazor</code>: an <strong>Interactive Server</strong> component with page navigation,
+zoom, cancellation, export controls, both Office modes and loading/error states.</li>
+</ul>
+<p>The report engine runs in Studio/server. Neither library embeds a native rendering
+engine in the browser. WebAssembly/Auto modes and mobile/offline execution are not implemented or
+verified by this integration. The separate <a href="/docs/reports/desktop">Linux desktop shell</a> hosts Studio. Flutter is covered by the separate
+<a href="/docs/reports/flutter-integration">Flutter/Dart SDK guide</a>.</p>
+<h2 id="run-the-example">Run the example</h2>
+<p>Open the public topic preview on this page, or the matching offline topic example in <strong>Help → Developer guide &amp; code examples</strong>. Use the installed Studio for authoring and export.</p>
+<p>For your own .NET 10 application, copy the installed <code>SDK</code> folder to <code>vendor/nextgen-sdk</code> and start the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>. Set your application's report-server URL to the loopback URL you chose. No demo project or product build is required.</p>
+<h2 id="use-the-http-client">Use the HTTP client</h2>
+<p>Add the ready-built client from the installed local feed:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>NextgenReports.Client<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.2.1<span class="w"> </span>--source<span class="w"> </span>./vendor/nextgen-sdk/NuGet</span></code></pre></figure>
+<p>No PDF, database, browser or third-party NuGet dependency is needed by this client.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">C#</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="code-line" data-line="1"><span class="k">using</span><span class="w"> </span><span class="nn">System.Text.Json</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="k">using</span><span class="w"> </span><span class="nn">NextgenReports.Client</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"></span>
+<span class="code-line" data-line="4"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportClient</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">&quot;http://127.0.0.1:5274/&quot;</span><span class="p">));</span></span>
+<span class="code-line" data-line="5"><span class="kt">var</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">GetSessionAsync</span><span class="p">(</span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="6"><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">session</span><span class="p">.</span><span class="n">Enabled</span><span class="p">)</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">LoginAsync</span><span class="p">(</span><span class="n">userName</span><span class="p">,</span><span class="w"> </span><span class="n">password</span><span class="p">,</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="8"></span>
+<span class="code-line" data-line="9"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonDocument</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="n">ReadAllText</span><span class="p">(</span><span class="s">&quot;report.nrtemplate&quot;</span><span class="p">));</span></span>
+<span class="code-line" data-line="10"><span class="kt">var</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportInput</span><span class="p">.</span><span class="n">FromObjects</span><span class="p">(</span><span class="n">template</span><span class="p">.</span><span class="n">RootElement</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Chair&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Amount</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">42.25m</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">},</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">company</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Example company&quot;</span><span class="w"> </span><span class="p">});</span></span>
+<span class="code-line" data-line="13"><span class="kt">var</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">ReportFormat</span><span class="p">.</span><span class="n">Pdf</span><span class="p">,</span><span class="w"> </span><span class="n">token</span><span class="p">:</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="14"><span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllBytesAsync</span><span class="p">(</span><span class="s">&quot;report.pdf&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">Content</span><span class="p">,</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span></code></pre></figure>
+<p>The template must declare the <code>company</code> parameter and bind the fields <code>Name</code> and
+<code>Amount</code> with matching case. <code>FromObjects</code> preserves default .NET property names;
+pass your own <code>JsonSerializerOptions</code> only if you also use the corresponding names
+in the template. No SQL/HTTP refresh happens implicitly.</p>
+<p>For existing JSON, construct <code>new ReportInput(templateJson, dataJson, parametersJson)</code>.
+The constructor clones all JSON elements, so their source <code>JsonDocument</code> can be
+disposed. Template/data must be objects; parameters must be an object or omitted.
+Treat each input as a snapshot and construct a new one after editing values.</p>
+<p>Other operations:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">C#</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="code-line" data-line="1"><span class="kt">var</span><span class="w"> </span><span class="n">preview</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">PreviewAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="2"><span class="c1">// preview.Pages: numbered SVG bytes and a data URL; one render for the entire report.</span></span>
+<span class="code-line" data-line="3"><span class="kt">var</span><span class="w"> </span><span class="n">layout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">PreviewDocumentAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="4"><span class="c1">// JsonElement containing the full ReportDocument protocol, including drawing commands.</span></span>
+<span class="code-line" data-line="5"><span class="kt">var</span><span class="w"> </span><span class="n">refreshed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">RefreshDataAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">cancellationToken</span><span class="p">);</span></span>
+<span class="code-line" data-line="6"><span class="kt">var</span><span class="w"> </span><span class="n">updated</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReportInput</span><span class="p">(</span><span class="n">input</span><span class="p">.</span><span class="n">Template</span><span class="p">,</span><span class="w"> </span><span class="n">refreshed</span><span class="p">.</span><span class="n">GetProperty</span><span class="p">(</span><span class="s">&quot;data&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">input</span><span class="p">.</span><span class="n">Parameters</span><span class="p">,</span><span class="w"> </span><span class="n">useSnapshot</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">);</span></span>
+<span class="code-line" data-line="7"><span class="kt">var</span><span class="w"> </span><span class="n">word</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">updated</span><span class="p">,</span><span class="w"> </span><span class="n">ReportFormat</span><span class="p">.</span><span class="n">Docx</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="nf">ReportExportOptions</span><span class="p">(</span><span class="n">OfficeMode</span><span class="p">.</span><span class="n">Pages</span><span class="p">,</span><span class="w"> </span><span class="n">FirstPage</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">LastPage</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">Dpi</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">),</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="n">cancellationToken</span><span class="p">);</span></span></code></pre></figure>
+<p><code>RefreshDataAsync</code> uses the host's configured sources and returns a candidate
+snapshot; explicitly construct a new input to use it. Credentials and connection
+strings remain in the host catalog. See <a href="/docs/reports/data-sources">data sources</a>.
+<code>ReportExportOptions</code> applies only to Office; PDF and HTML export the whole report.</p>
+<p>Handle <code>ReportApiException</code>: <code>StatusCode</code>, <code>Message</code>, and optional
+<code>ParameterErrors</code> (the server's JSON structure) retain validation and role errors.
+401 requires a fresh login; 403 can mean permissions or an invalid CSRF token.
+The client never automatically replays a failed POST or stores your password.
+Transport errors use <code>HttpRequestException</code>; cancellation/timeouts use
+<code>OperationCanceledException</code>; invalid/oversized responses use <code>InvalidDataException</code>
+or <code>JsonException</code>. Dispose the client when its user session ends.</p>
+<h2 id="add-the-blazor-component">Add the Blazor component</h2>
+<p>Add the viewer package from the same feed (its client dependency is included there):</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>NextgenReports.Blazor<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.2.1<span class="w"> </span>--source<span class="w"> </span>./vendor/nextgen-sdk/NuGet</span></code></pre></figure>
+<p>Register <strong>one client per interactive circuit</strong>, not a singleton or pooled shared
+cookie handler:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">C#</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="code-line" data-line="1"><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddRazorComponents</span><span class="p">().</span><span class="n">AddInteractiveServerComponents</span><span class="p">();</span></span>
+<span class="code-line" data-line="2"><span class="n">builder</span><span class="p">.</span><span class="n">Services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">(</span><span class="n">_</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">ReportClient</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="n">reportServerUrl</span><span class="p">)));</span></span></code></pre></figure>
+<p>Configure <code>AddRazorComponents().AddInteractiveServerComponents()</code>, <code>app.MapStaticAssets()</code> and <code>app.MapRazorComponents&lt;App&gt;().AddInteractiveServerRenderMode()</code> in your host. Load <code>_framework/blazor.web.js</code> in the host document and use <code>@rendermode InteractiveServer</code> on the viewer page (or its parent routes).
+Include the library stylesheet in the host document:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">HTML</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="HTML code example"><code class="language-html"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;_content/NextgenReports.Blazor/viewer.css&quot;</span> <span class="p">/&gt;</span></span></code></pre></figure>
+<p>Then render it on an interactive page:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="n">@using</span><span class="w"> </span><span class="n">NextgenReports</span><span class="p">.</span><span class="n">Client</span></span>
+<span class="code-line" data-line="2"><span class="n">@using</span><span class="w"> </span><span class="n">NextgenReports</span><span class="p">.</span><span class="n">Blazor</span></span>
+<span class="code-line" data-line="3"><span class="n">@inject</span><span class="w"> </span><span class="n">ReportClient</span><span class="w"> </span><span class="n">Client</span></span>
+<span class="code-line" data-line="4"></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">ReportViewer</span> <span class="na">Client</span><span class="o">=</span><span class="s">&quot;Client&quot;</span> <span class="na">Input</span><span class="o">=</span><span class="s">&quot;input&quot;</span> <span class="na">OnLoaded</span><span class="o">=</span><span class="s">&quot;Loaded&quot;</span> <span class="na">OnError</span><span class="o">=</span><span class="s">&quot;Failed&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="6"></span>
+<span class="code-line" data-line="7"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">ReportInput</span><span class="o">?</span><span class="w"> </span><span class="n">input</span><span class="p">;</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Loaded</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">pages</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* Update your application status. */</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Failed</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* Show or record an application error. */</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="11"><span class="p">}</span></span></code></pre></figure>
+<p>Your host supplies the input, parameter form and login flow. The component does not
+reproduce Studio's designer, parameter-dialog scripts, search or drill-down. Assign
+a new input object to trigger regeneration. <strong>Generate</strong> reruns the current input;
+<strong>Cancel</strong> stops waiting and sends request cancellation. Disposal and replacement
+inputs cancel outstanding work; a stale request cannot replace a newer preview.
+<code>@ref</code> callers may also await <code>ReloadAsync()</code>.</p>
+<p>The download JavaScript module is imported from
+<code>_content/NextgenReports.Blazor/viewer.js</code>. Configure static web assets in the host
+(the installed NuGet package carries these assets). Allow same-origin JS and <code>data:</code> images in
+any host CSP. CSS uses <code>.nr-*</code> classes and optional variables <code>--nr-text</code>,
+<code>--nr-background</code>, <code>--nr-control</code>, <code>--nr-border</code>, <code>--nr-canvas</code>, <code>--nr-muted</code>,
+<code>--nr-error</code> for application theming.</p>
+<h2 id="limits-and-deployment">Limits and deployment</h2>
+<ul>
+<li><code>ReportClient.Create</code> uses an isolated CookieContainer, disabled redirects and a
+three-minute HttpClient timeout. HTTPS is required except for loopback HTTP.
+Custom HttpClient callers must provide equivalent cookie/redirect isolation;
+the constructor does not own that client unless <code>ownsHttpClient: true</code> is set.</li>
+<li>Author/Admin may generate from submitted input. Viewer accounts cannot use POST
+generation APIs; use Studio's saved reports/scheduled downloads for those users.</li>
+<li>Preview is one SVG archive, at most 100 pages, 25 MB per SVG and 100 MB expanded.
+All successful responses are bounded to 100 MB by the client; error bodies to
+64 KB. Pages are kept in memory. Large reports should use direct PDF export.</li>
+<li>Preview SVG has outlined text: it looks like the engine output but is not a
+selectable-text or screen-reader transcript. Page navigation has text labels;
+use editable Office/HTML output when the underlying text is needed.</li>
+<li>Download regenerates from the successful input snapshot. Time-dependent scripts
+can differ from the preview. Opted-in HTTP connections refresh on each request unless ReportInput uses
+useSnapshot:true; use a refreshed input with that flag for matching preview/download.</li>
+<li>Cancellation is cooperative; it cannot reverse work already completed by the host.</li>
+<li>A local-mode Studio grants local callers generation access. In your own remotely
+accessible app, authenticate and authorize users before invoking it; use server
+accounts/HTTPS for remote Studio. Do not expose the demo as an open proxy.</li>
+<li>Verified on Linux/iMac with Interactive Server and visible Chrome. WebAssembly,
+macOS, Windows, remote HTTPS deployment and package-registry publication are not
+verified. NuGet packages are supplied by the installer in a local feed; no public registry is required.</li>
+</ul>
+<p>Razor library asset handling follows <a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/components/class-libraries?view=aspnetcore-10.0">Microsoft's RCL documentation</a>.
+Downloads use <code>DotNetStreamReference</code> and an object URL as described in
+<a href="https://learn.microsoft.com/en-us/aspnet/core/blazor/file-downloads">Blazor file downloads</a>.</p>
+<p>For automatic HTTP sources, <code>PreviewDocumentAsync</code> returns <code>sourceSnapshot</code> after
+a successful refresh. Construct <code>new ReportInput(input.Template, layout.GetProperty(&quot;sourceSnapshot&quot;), input.Parameters, useSnapshot: true)</code> to
+reuse it for exports. <code>ReportInput.FromObjects</code> also accepts <code>useSnapshot</code>. The
+flag defaults to false and affects automatic refresh only; RefreshDataAsync remains
+an explicit fetch. See the <a href="/docs/reports/http-connections">HTTP guide</a>.</p>

@@ -1,0 +1,104 @@
+<h1 id="code-examples">Code examples</h1>
+<p><a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/index">All component manuals</a></p>
+<p>Every component manual contains <strong>Blazor example</strong> and <strong>Flutter example</strong> sections with real API calls. The galleries' <strong>Code examples</strong> screen displays these same maintained snippets, including Copy buttons; choose a component and a framework. Use the installed SDK as described in <a href="/docs/components/manual/getting-started">Getting started</a>.</p>
+<h2 id="choose-a-task">Choose a task</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Examples and full contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install and create an application</td>
+<td><a href="/docs/components/manual/getting-started">Getting started</a></td>
+</tr>
+<tr>
+<td>Submit validated data</td>
+<td><a href="/docs/components/manual/NgForm">NgForm</a>, <a href="/docs/components/manual/NgDateRangePicker">NgDateRangePicker</a></td>
+</tr>
+<tr>
+<td>Toggle settings and formatting</td>
+<td><a href="/docs/components/manual/NgToggleButton">NgToggleButton</a>, <a href="/docs/components/manual/NgButtonGroup">NgButtonGroup</a></td>
+</tr>
+<tr>
+<td>Add workspace commands and navigation</td>
+<td><a href="/docs/components/manual/NgMenu">NgMenu</a>, <a href="/docs/components/manual/NgDrawer">NgDrawer</a></td>
+</tr>
+<tr>
+<td>Build a multi-step workflow</td>
+<td><a href="/docs/components/manual/NgWizard">NgWizard</a>, <a href="/docs/components/manual/NgStepper">NgStepper</a></td>
+</tr>
+<tr>
+<td>Display and select business records</td>
+<td><a href="/docs/components/manual/NgDataGrid">NgDataGrid</a>, <a href="/docs/components/manual/NgTreeList">NgTreeList</a></td>
+</tr>
+<tr>
+<td>Aggregate local data</td>
+<td><a href="/docs/components/manual/NgPivotGrid">NgPivotGrid</a>, <a href="/docs/components/manual/NgChart">NgChart</a></td>
+</tr>
+<tr>
+<td>Calculate and edit worksheet values</td>
+<td><a href="/docs/components/manual/NgSpreadsheet">NgSpreadsheet</a>, <a href="/docs/components/manual/models#formula-language">formula reference</a></td>
+</tr>
+<tr>
+<td>Save structured documents</td>
+<td><a href="/docs/components/manual/NgEditor">NgEditor</a>, <a href="/docs/components/manual/models#ngdocument">document model</a></td>
+</tr>
+<tr>
+<td>Edit a process diagram</td>
+<td><a href="/docs/components/manual/NgDiagram">NgDiagram</a></td>
+</tr>
+<tr>
+<td>Display an existing PDF</td>
+<td><a href="/docs/components/manual/NgPdfViewer">NgPdfViewer</a></td>
+</tr>
+<tr>
+<td>Add geographic objects and respond to clicks</td>
+<td><a href="/docs/components/manual/NgMap">NgMap</a></td>
+</tr>
+<tr>
+<td>Connect an application-owned AI handler</td>
+<td><a href="/docs/components/manual/NgAIPrompt">NgAIPrompt</a>, <a href="/docs/components/manual/NgPromptBox">NgPromptBox</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="complete-working-source">Complete working source</h2>
+<p>Snippets focus on one component. For a complete page with state, errors, themes and actions, use the matching gallery source:</p>
+<table>
+<thead>
+<tr>
+<th>Workflow</th>
+<th>Blazor</th>
+<th>Flutter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Foundation</td>
+<td><span>Home.razor</span></td>
+<td><span>main.dart</span></td>
+</tr>
+<tr>
+<td>Multi-step application</td>
+<td><span>Steps.razor</span></td>
+<td><span>steps_gallery.dart</span></td>
+</tr>
+<tr>
+<td>AI request lifecycle</td>
+<td><span>AI.razor</span></td>
+<td><span>ai_gallery.dart</span></td>
+</tr>
+<tr>
+<td>Map selection and updates</td>
+<td><span>Map.razor</span></td>
+<td><span>map_gallery.dart</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="nextgenreportengine-is-a-separate-library">NextgenReportEngine is a separate library</h2>
+<p>NgPdfViewer displays an existing PDF; it does not generate reports. NextgenReportEngine owns report templates, data preparation, rendering and exports. Its Developer guide covers C#, HTTP, Blazor and Flutter integration. Keep report generation in that engine and pass the resulting hosted PDF URL to NgPdfViewer. The Components AI examples likewise do not invoke a report engine or a paid AI provider.</p>
+<h2 id="validate-your-integration">Validate your integration</h2>
+<p>Check an empty value, a valid submission, invalid input, callback-driven updates, asynchronous failure/retry, dark theme and a narrow viewport. Do not copy demo delays or local-only saves into a production service: replace them with your authenticated backend and appropriate idempotency/cancellation.</p>
+<p>Code blocks in the local manual and both demo browsers use syntax colors for keywords, strings, comments, tags, types and numbers. <strong>Copy code</strong> copies the original source, including indentation and line breaks.</p>

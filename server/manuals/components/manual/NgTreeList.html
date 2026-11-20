@@ -1,0 +1,450 @@
+<h1 id="ngtreelist-tree-list">NgTreeList — Tree list</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Combine hierarchical rows with typed columns.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgTreeList#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgTreeList#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>HasChildren/hasChildren marks an unloaded branch. LoadChildren/loadChildren returns its children on the first explicit expansion; a failed expansion displays ErrorText/errorText and can be retried. Keep lazy branches initially collapsed. LoadingText/loadingText is shown while waiting. Children are cached for collapse/reopen, including an empty result which turns the branch into a leaf. Duplicate/cyclic IDs across the resolved tree are rejected as load errors. Search examines loaded nodes only and does not fetch descendants. Replace the immutable root collection, loader, or DataVersion/dataVersion to invalidate the cache and pending results; keep references stable across selection/expansion rebuilds. Blazor sends cancellation; Flutter discards stale futures without transport cancellation. Selection and expansion remain parent-controlled; locks and disabled nodes are rechecked after loading. Returned children do not mutate the parent root collection. Templates and custom empty text remain supported. Virtualization, drag/drop, complete keyboard/screen-reader parity remain open. Checkboxes/checkboxes enables independent multi-checking through CheckedIds/checkedIds and CheckedIdsChanged/onCheckedChanged. Store the proposed fresh set in the parent; rejecting it keeps the previous display. CheckingReadOnly/checkingReadOnly and CanCheck/canCheck protect checking independently of row selection and expansion. Disabled nodes cannot change. CheckLabel/checkLabel supplies a localized accessible checkbox label. Checks preserve unknown, filtered and collapsed IDs and never mutate the supplied set. Checking a lazy parent does not load or check children. Each checkbox is keyboard reachable; Space changes that checkbox without selecting or expanding its row. CheckChildren/checkChildren (default false) enables a cascade over the parent record plus its eligible, already loaded descendants. The checkbox is checked when all those IDs are present, unchecked when none are, and mixed otherwise. Clicking mixed checks the complete eligible branch; clicking checked clears it. One callback contains the whole proposed set. Disabled nodes and CanCheck/canCheck=false nodes are subtree barriers, preserving all IDs below them. Filtering and collapsing do not narrow this branch operation. CheckingReadOnly does not change the aggregate display. Independently checking every child does not check the parent record: its own ID also participates. Newly loaded descendants do not inherit marks and can turn a previously checked parent mixed without emitting a callback. Changing the cascade mode, predicate, source or loaded children only recomputes display; it does not normalize parent data. Unknown IDs and excluded branches are retained. Full-remote checking, upward ID normalization, automatic pruning and fetching unseen descendants remain application policy. Flutter partialCheckText supplies a localized spoken value for a mixed checkbox (default Partially checked). The current Flutter Web SDK renders a mixed checkbox visually and reports CheckedState.mixed internally, but its legacy DOM checkbox role maps aria-checked to false. The explicit spoken value preserves the partial-state information; exact Web ARIA mixed-state parity and physical screen-reader verification remain open. Blazor uses native indeterminate plus aria-checked=mixed. ShowCheckActions/showCheckActions (default false) displays Check loaded nodes and Clear loaded checks. These actions always cover the complete eligible loaded forest, independently of search, collapse and CheckChildren/checkChildren. They never load new children. Protected/disabled roots and subtrees are excluded; unknown IDs and existing protected checks are preserved. One fresh set is proposed per action; the parent can accept or reject it. Empty/no-op actions, CheckingReadOnly and absent checking callbacks disable the buttons. Stale actions recheck current data, permissions and visibility settings. CheckLoadedText/checkLoadedText and ClearLoadedText/clearLoadedText localize the two button labels. Loading new children updates action availability without changing checked IDs.</p>
+<h3 id="virtual-scrolling">Virtual scrolling</h3>
+<p>Virtualize/virtualize enables fixed-height windowed rendering. RowHeight/rowHeight defaults to 48; ViewportHeight/viewportHeight defaults to 384. Local Grid covers the filtered result; remote Grid retains its current-page adapter and pager; trees virtualize expanded loaded nodes. See <a href="/docs/components/manual/virtual-data">Virtual data</a> for complete selection, export, focus, layout and performance contracts and 10,000-record runnable demos. Continuous remote range loading remains separate.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Selection read-only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selectionReadOnly&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Expansion read-only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;expansionReadOnly&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Fail requests&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;fail&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Checking read-only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;checkingReadOnly&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Protect Design&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;protectDesign&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Reject check changes&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;rejectChecks&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Cascade loaded children&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;cascade&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;Reset&quot;</span><span class="p">&gt;</span>Reset tree<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">NgTreeList</span> <span class="na">TItem</span><span class="o">=</span><span class="s">&quot;string&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;nodes&quot;</span> <span class="na">Columns</span><span class="o">=</span><span class="s">&quot;columns&quot;</span> <span class="na">LoadChildren</span><span class="o">=</span><span class="s">&quot;Load&quot;</span> <span class="na">Checkboxes</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">ShowCheckActions</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">CheckChildren</span><span class="o">=</span><span class="s">&quot;cascade&quot;</span> <span class="na">CheckedIds</span><span class="o">=</span><span class="s">&quot;checkedIds&quot;</span> <span class="na">CheckedIdsChanged</span><span class="o">=</span><span class="s">&quot;AcceptChecks&quot;</span> <span class="na">CheckingReadOnly</span><span class="o">=</span><span class="s">&quot;checkingReadOnly&quot;</span> <span class="na">CanCheck</span><span class="o">=</span><span class="s">&quot;CanCheckNode&quot;</span> <span class="na">DataVersion</span><span class="o">=</span><span class="s">&quot;version&quot;</span> <span class="err">@</span><span class="na">bind-ExpandedIds</span><span class="o">=</span><span class="s">&quot;expanded&quot;</span> <span class="err">@</span><span class="na">bind-SelectedId</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">SelectionReadOnly</span><span class="o">=</span><span class="s">&quot;selectionReadOnly&quot;</span> <span class="na">ExpansionReadOnly</span><span class="o">=</span><span class="s">&quot;expansionReadOnly&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;No teams found.&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Checked IDs: @string.Join(&quot;, &quot;,checkedIds.Order())<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected team: @(selected??&quot;none&quot;) · Child requests: @requests<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">rejectChecks</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">cascade</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">AcceptChecks</span><span class="p">(</span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">next</span><span class="p">){</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">rejectChecks</span><span class="p">)</span><span class="n">checkedIds</span><span class="o">=</span><span class="n">next</span><span class="p">;}</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">CanCheckNode</span><span class="p">(</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="o">=&gt;!</span><span class="n">protectDesign</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">Id</span><span class="o">!=</span><span class="s">&quot;a&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">checkingReadOnly</span><span class="p">,</span><span class="n">protectDesign</span><span class="o">=</span><span class="k">true</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">checkedIds</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;offscreen&quot;</span><span class="p">];</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">selectionReadOnly</span><span class="p">,</span><span class="n">expansionReadOnly</span><span class="p">,</span><span class="n">fail</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">version</span><span class="p">,</span><span class="n">requests</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string?</span><span class="w"> </span><span class="n">selected</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">expanded</span><span class="o">=</span><span class="p">[];</span></span>
+<span class="code-line" data-line="19"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">[]</span><span class="w"> </span><span class="n">nodes</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;root&quot;</span><span class="p">,</span><span class="s">&quot;Projects&quot;</span><span class="p">,</span><span class="n">HasChildren</span><span class="p">:</span><span class="k">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="20"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgDataColumn</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">[]</span><span class="w"> </span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="s">&quot;Name&quot;</span><span class="p">,</span><span class="n">s</span><span class="o">=&gt;</span><span class="n">s</span><span class="p">)];</span></span>
+<span class="code-line" data-line="21"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Reset</span><span class="p">(){</span><span class="n">version</span><span class="o">++</span><span class="p">;</span><span class="n">expanded</span><span class="o">=</span><span class="p">[];</span><span class="n">selected</span><span class="o">=</span><span class="k">null</span><span class="p">;</span><span class="n">checkedIds</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;offscreen&quot;</span><span class="p">];}</span></span>
+<span class="code-line" data-line="22"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">Load</span><span class="p">(</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">node</span><span class="p">,</span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">token</span><span class="p">){</span></span>
+<span class="code-line" data-line="23"><span class="w">   </span><span class="n">requests</span><span class="o">++</span><span class="p">;</span><span class="k">await</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">Delay</span><span class="p">(</span><span class="mi">350</span><span class="p">,</span><span class="n">token</span><span class="p">);</span><span class="k">await</span><span class="w"> </span><span class="n">InvokeAsync</span><span class="p">(</span><span class="n">StateHasChanged</span><span class="p">);</span><span class="k">if</span><span class="p">(</span><span class="n">fail</span><span class="p">)</span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InvalidOperationException</span><span class="p">(</span><span class="s">&quot;Demo failure&quot;</span><span class="p">);</span></span>
+<span class="code-line" data-line="24"><span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">Id</span><span class="o">==</span><span class="s">&quot;root&quot;</span><span class="o">?</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="s">&quot;Design&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="s">&quot;Engineering&quot;</span><span class="p">,</span><span class="n">HasChildren</span><span class="p">:</span><span class="k">true</span><span class="p">)]:[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;api&quot;</span><span class="p">,</span><span class="s">&quot;API&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;web&quot;</span><span class="p">,</span><span class="s">&quot;Web&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="25"><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="26"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kd">final</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;&gt;</span><span class="p">[</span><span class="k">const</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="p">(</span><span class="s1">&#39;root&#39;</span><span class="p">,</span><span class="s1">&#39;Projects&#39;</span><span class="p">,</span><span class="nl">hasChildren:</span><span class="w"> </span><span class="kc">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="2"><span class="n">Set</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">checkedIds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s2">&quot;offscreen&quot;</span><span class="p">};</span></span>
+<span class="code-line" data-line="3"><span class="kt">bool</span><span class="w"> </span><span class="n">checkingReadOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">protectDesign</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span><span class="n">rejectChecks</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">cascade</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="4"><span class="n">Set</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">expanded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{};</span></span>
+<span class="code-line" data-line="5"><span class="kt">String</span><span class="o">?</span><span class="w"> </span><span class="n">selected</span><span class="p">;</span></span>
+<span class="code-line" data-line="6"><span class="kt">bool</span><span class="w"> </span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">expansionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">fail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="7"><span class="kt">int</span><span class="w"> </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">requests</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="8"><span class="n">Future</span><span class="o">&lt;</span><span class="n">List</span><span class="o">&lt;</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">load</span><span class="p">(</span><span class="n">NgTreeNode</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="n">requests</span><span class="o">++</span><span class="p">;</span><span class="w"> </span><span class="kd">await</span><span class="w"> </span><span class="n">Future</span><span class="o">&lt;</span><span class="kt">void</span><span class="o">&gt;</span><span class="p">.</span><span class="n">delayed</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">Duration</span><span class="p">(</span><span class="nl">milliseconds:</span><span class="w"> </span><span class="m">350</span><span class="p">));</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mounted</span><span class="p">)</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{});</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fail</span><span class="p">)</span><span class="w"> </span><span class="k">throw</span><span class="w"> </span><span class="n">StateError</span><span class="p">(</span><span class="s1">&#39;Demo failure&#39;</span><span class="p">);</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">node</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;root&#39;</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="p">[</span><span class="k">const</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;Design&#39;</span><span class="p">),</span><span class="k">const</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;Engineering&#39;</span><span class="p">,</span><span class="nl">hasChildren:</span><span class="kc">true</span><span class="p">)]</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="k">const</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="p">(</span><span class="s1">&#39;api&#39;</span><span class="p">,</span><span class="s1">&#39;API&#39;</span><span class="p">),</span><span class="k">const</span><span class="w"> </span><span class="n">NgTreeNode</span><span class="p">(</span><span class="s1">&#39;web&#39;</span><span class="p">,</span><span class="s1">&#39;Web&#39;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="13"><span class="p">}</span></span>
+<span class="code-line" data-line="14"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="w"> </span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Selection read-only&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">selectionReadOnly</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">selectionReadOnly</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Expansion read-only&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">expansionReadOnly</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">expansionReadOnly</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Fail requests&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">fail</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">fail</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Checking read-only&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">checkingReadOnly</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">checkingReadOnly</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="19"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Protect Design&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">protectDesign</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">protectDesign</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="20"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Reject check changes&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">rejectChecks</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">rejectChecks</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="21"><span class="w"> </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Cascade loaded children&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">cascade</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">cascade</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="22"><span class="w"> </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">version</span><span class="o">++</span><span class="p">;</span><span class="n">expanded</span><span class="o">=</span><span class="p">{};</span><span class="n">selected</span><span class="o">=</span><span class="kc">null</span><span class="p">;</span><span class="n">checkedIds</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;offscreen&quot;</span><span class="p">};}),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Reset tree&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="23"><span class="w"> </span><span class="n">NgTreeList</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">(</span><span class="nl">items:</span><span class="n">nodes</span><span class="p">,</span><span class="nl">columns:</span><span class="w"> </span><span class="p">[</span><span class="n">NgDataColumn</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="s1">&#39;Name&#39;</span><span class="p">,(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">s</span><span class="p">)],</span><span class="w"> </span><span class="nl">loadChildren:</span><span class="n">load</span><span class="p">,</span><span class="nl">dataVersion:</span><span class="n">version</span><span class="p">,</span><span class="nl">checkboxes:</span><span class="kc">true</span><span class="p">,</span><span class="nl">showCheckActions:</span><span class="kc">true</span><span class="p">,</span><span class="nl">checkChildren:</span><span class="n">cascade</span><span class="p">,</span><span class="nl">checkedIds:</span><span class="n">checkedIds</span><span class="p">,</span><span class="nl">onCheckedChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">){</span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">rejectChecks</span><span class="p">)</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">checkedIds</span><span class="o">=</span><span class="n">v</span><span class="p">);},</span><span class="nl">checkingReadOnly:</span><span class="n">checkingReadOnly</span><span class="p">,</span><span class="nl">canCheck:</span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="o">=&gt;!</span><span class="n">protectDesign</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">id</span><span class="o">!=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="24"><span class="w">   </span><span class="nl">expandedIds:</span><span class="n">expanded</span><span class="p">,</span><span class="nl">onExpandedChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">expanded</span><span class="o">=</span><span class="n">v</span><span class="p">),</span><span class="nl">selectedId:</span><span class="n">selected</span><span class="p">,</span><span class="nl">onSelected:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">selected</span><span class="o">=</span><span class="n">v</span><span class="p">),</span></span>
+<span class="code-line" data-line="25"><span class="w">   </span><span class="nl">selectionReadOnly:</span><span class="n">selectionReadOnly</span><span class="p">,</span><span class="nl">expansionReadOnly:</span><span class="n">expansionReadOnly</span><span class="p">,</span><span class="nl">emptyText:</span><span class="s1">&#39;No teams found.&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="26"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Checked IDs: </span><span class="si">${</span><span class="p">(</span><span class="n">checkedIds</span><span class="p">.</span><span class="n">toList</span><span class="p">()..</span><span class="n">sort</span><span class="p">()).</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="27"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected team: </span><span class="si">${</span><span class="n">selected</span><span class="o">??</span><span class="s2">&quot;none&quot;</span><span class="si">}</span><span class="s1"> · Child requests: </span><span class="si">$</span><span class="n">requests</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="28"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SelectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ExpansionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyTemplate</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No matching items.&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Hierarchy&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Columns</code></td>
+<td><code>IReadOnlyList&lt;NgDataColumn&lt;TItem&gt;&gt;</code></td>
+<td>[]</td>
+<td>Column definitions; see the data model and example.</td>
+</tr>
+<tr>
+<td><code>ExpandedIds</code></td>
+<td><code>HashSet&lt;string&gt;</code></td>
+<td>[]</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ExpandedIdsChanged</code></td>
+<td><code>EventCallback&lt;HashSet&lt;string&gt;&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectedId</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>SelectedIdChanged</code></td>
+<td><code>EventCallback&lt;string?&gt;</code></td>
+<td>not set</td>
+<td>Selected item ID for the parent to store.</td>
+</tr>
+<tr>
+<td><code>Virtualize</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Opt-in fixed-height virtual rendering. Local Grid covers the result; remote Grid retains pages; trees cover loaded expanded nodes. See Virtual data.</td>
+</tr>
+<tr>
+<td><code>RowHeight</code></td>
+<td><code>float</code></td>
+<td>48</td>
+<td>Fixed virtual row height, default 48 pixels; finite and at least 40. Templates must fit.</td>
+</tr>
+<tr>
+<td><code>ViewportHeight</code></td>
+<td><code>float</code></td>
+<td>384</td>
+<td>Virtual scroll viewport height, default 384 pixels; finite and at least one row.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgTreeNode&lt;T&gt;&gt;</code></td>
+<td>[]</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>LoadChildren</code></td>
+<td><code>Func&lt;NgTreeNode&lt;T&gt;,CancellationToken,Task&lt;IReadOnlyList&lt;NgTreeNode&lt;T&gt;&gt;&gt;&gt;?</code></td>
+<td>not set</td>
+<td>Async child adapter for unloaded HasChildren branches; first explicit expansion.</td>
+</tr>
+<tr>
+<td><code>DataVersion</code></td>
+<td><code>object?</code></td>
+<td>not set</td>
+<td>Change to invalidate pending reads and cached data; keep stable otherwise.</td>
+</tr>
+<tr>
+<td><code>LoadingText</code></td>
+<td><code>string</code></td>
+<td>&quot;Loading children…&quot;</td>
+<td>Localized loading status.</td>
+</tr>
+<tr>
+<td><code>ErrorText</code></td>
+<td><code>string</code></td>
+<td>&quot;Unable to load children. Expand to retry.&quot;</td>
+<td>Localized failure status; raw service errors are not rendered.</td>
+</tr>
+<tr>
+<td><code>ShowCheckActions</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Show explicit check/clear actions for all eligible loaded nodes. Default false.</td>
+</tr>
+<tr>
+<td><code>CheckLoadedText</code></td>
+<td><code>string</code></td>
+<td>&quot;Check loaded nodes&quot;</td>
+<td>Localized check-loaded button label.</td>
+</tr>
+<tr>
+<td><code>ClearLoadedText</code></td>
+<td><code>string</code></td>
+<td>&quot;Clear loaded checks&quot;</td>
+<td>Localized clear-loaded button label.</td>
+</tr>
+<tr>
+<td><code>CheckChildren</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Cascade over the parent record and eligible loaded descendants; mixed checks the full branch. Default false.</td>
+</tr>
+<tr>
+<td><code>Checkboxes</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Show independent node checkboxes (default false).</td>
+</tr>
+<tr>
+<td><code>CheckedIds</code></td>
+<td><code>HashSet&lt;string&gt;</code></td>
+<td>[]</td>
+<td>Parent-owned checked IDs; hidden/unknown IDs are preserved.</td>
+</tr>
+<tr>
+<td><code>CheckedIdsChanged</code></td>
+<td><code>EventCallback&lt;HashSet&lt;string&gt;&gt;</code></td>
+<td>not set</td>
+<td>Proposed fresh set; store to accept or ignore to reject.</td>
+</tr>
+<tr>
+<td><code>CheckingReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Lock checking independently of selection and expansion.</td>
+</tr>
+<tr>
+<td><code>CanCheck</code></td>
+<td><code>Func&lt;NgTreeNode&lt;T&gt;,bool&gt;?</code></td>
+<td>not set</td>
+<td>Pure node predicate; false protects existing checked state.</td>
+</tr>
+<tr>
+<td><code>CheckLabel</code></td>
+<td><code>Func&lt;T,string&gt;?</code></td>
+<td>not set</td>
+<td>Localized checkbox accessible name from the item.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>virtualize</code></td>
+<td><code>bool</code></td>
+<td>Opt-in fixed-height virtual rendering. Local Grid covers the result; remote Grid retains pages; trees cover loaded expanded nodes. See Virtual data.</td>
+</tr>
+<tr>
+<td><code>rowHeight</code></td>
+<td><code>double</code></td>
+<td>Fixed virtual row height, default 48 pixels; finite and at least 40. Templates must fit.</td>
+</tr>
+<tr>
+<td><code>viewportHeight</code></td>
+<td><code>double</code></td>
+<td>Virtual scroll viewport height, default 384 pixels; finite and at least one row.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgTreeNode&lt;T&gt;&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>loadChildren</code></td>
+<td><code>Future&lt;List&lt;NgTreeNode&lt;T&gt;&gt;&gt; Function(NgTreeNode&lt;T&gt;)?</code></td>
+<td>Async child adapter for unloaded HasChildren branches; first explicit expansion.</td>
+</tr>
+<tr>
+<td><code>dataVersion</code></td>
+<td><code>Object?</code></td>
+<td>Change to invalidate pending reads and cached data; keep stable otherwise.</td>
+</tr>
+<tr>
+<td><code>loadingText</code></td>
+<td><code>String</code></td>
+<td>Localized loading status.</td>
+</tr>
+<tr>
+<td><code>errorText</code></td>
+<td><code>String</code></td>
+<td>Localized failure status; raw service errors are not rendered.</td>
+</tr>
+<tr>
+<td><code>columns</code></td>
+<td><code>List&lt;NgDataColumn&lt;T&gt;&gt;</code></td>
+<td>Column definitions; see the data model and example.</td>
+</tr>
+<tr>
+<td><code>expandedIds</code></td>
+<td><code>Set&lt;String&gt;</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onExpandedChanged</code></td>
+<td><code>ValueChanged&lt;Set&lt;String&gt;&gt;</code></td>
+<td>Requested open state; store it with setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>onSelected</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectedId</code></td>
+<td><code>String?</code></td>
+<td>Current selected item ID; the parent owns this value.</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>expansionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>checkboxes</code></td>
+<td><code>bool</code></td>
+<td>Show independent node checkboxes (default false).</td>
+</tr>
+<tr>
+<td><code>checkingReadOnly</code></td>
+<td><code>bool</code></td>
+<td>Lock checking independently of selection and expansion.</td>
+</tr>
+<tr>
+<td><code>checkChildren</code></td>
+<td><code>bool</code></td>
+<td>Cascade over the parent record and eligible loaded descendants; mixed checks the full branch. Default false.</td>
+</tr>
+<tr>
+<td><code>partialCheckText</code></td>
+<td><code>String</code></td>
+<td>Flutter spoken value for mixed checks; default Partially checked. See Web ARIA limitation.</td>
+</tr>
+<tr>
+<td><code>showCheckActions</code></td>
+<td><code>bool</code></td>
+<td>Show explicit check/clear actions for all eligible loaded nodes. Default false.</td>
+</tr>
+<tr>
+<td><code>checkLoadedText</code></td>
+<td><code>String</code></td>
+<td>Localized check-loaded button label.</td>
+</tr>
+<tr>
+<td><code>clearLoadedText</code></td>
+<td><code>String</code></td>
+<td>Localized clear-loaded button label.</td>
+</tr>
+<tr>
+<td><code>checkedIds</code></td>
+<td><code>Set&lt;String&gt;</code></td>
+<td>Parent-owned checked IDs; hidden/unknown IDs are preserved.</td>
+</tr>
+<tr>
+<td><code>onCheckedChanged</code></td>
+<td><code>ValueChanged&lt;Set&lt;String&gt;&gt;?</code></td>
+<td>Proposed fresh set; store with setState to accept.</td>
+</tr>
+<tr>
+<td><code>canCheck</code></td>
+<td><code>bool Function(NgTreeNode&lt;T&gt;)?</code></td>
+<td>Pure node predicate; false protects existing checked state.</td>
+</tr>
+<tr>
+<td><code>checkLabel</code></td>
+<td><code>String Function(T)?</code></td>
+<td>Localized checkbox accessible name from the item.</td>
+</tr>
+<tr>
+<td><code>emptyBuilder</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgTreeList</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">virtualize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rowHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">48</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">viewportHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">384</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">loadChildren</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">dataVersion</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">loadingText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Loading children…&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">errorText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Unable to load children. Expand to retry.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">columns</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">expandedIds</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">onExpandedChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onSelected</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectedId</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Hierarchy&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showCheckActions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkLoadedText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Check loaded nodes&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">clearLoadedText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Clear loaded checks&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">partialCheckText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Partially checked&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkChildren</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkboxes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkingReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkedIds</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{},</span></span>
+<span class="code-line" data-line="25"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onCheckedChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="26"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">canCheck</span><span class="p">,</span></span>
+<span class="code-line" data-line="27"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">checkLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="28"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="29"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">expansionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="30"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="31"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No matching items.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="32"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

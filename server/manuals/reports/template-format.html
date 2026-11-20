@@ -1,0 +1,1029 @@
+<h1 id="template-format-v1">Template format v1</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>Templates use UTF-8 JSON and the <code>.nrtemplate</code> extension; legacy <code>.json</code> templates
+can also be opened. Unknown properties and block types are rejected. Dimensions
+are in points: 72 pt = 1 inch.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Orders&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">595.28</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">841.89</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;margin&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nt">&quot;header&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{parameters.company}}&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="nt">&quot;footer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Page {page} of {pages}&quot;</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">},</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="nt">&quot;company&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">      </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">      </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example&quot;</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="17"><span class="w">  </span><span class="p">},</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="nt">&quot;images&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span></span>
+<span class="code-line" data-line="19"><span class="w">  </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="21"><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{data.title}}&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="23"><span class="w">      </span><span class="nt">&quot;style&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="24"><span class="w">        </span><span class="nt">&quot;size&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">24</span><span class="p">,</span></span>
+<span class="code-line" data-line="25"><span class="w">        </span><span class="nt">&quot;bold&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span>
+<span class="code-line" data-line="26"><span class="w">      </span><span class="p">}</span></span>
+<span class="code-line" data-line="27"><span class="w">    </span><span class="p">},</span></span>
+<span class="code-line" data-line="28"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="29"><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="30"><span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;orders&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="31"><span class="w">      </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="32"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="33"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Number&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="34"><span class="w">          </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="35"><span class="w">          </span><span class="nt">&quot;weight&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span></span>
+<span class="code-line" data-line="36"><span class="w">        </span><span class="p">},</span></span>
+<span class="code-line" data-line="37"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="38"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Amount&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="39"><span class="w">          </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;amount&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="40"><span class="w">          </span><span class="nt">&quot;weight&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="41"><span class="w">          </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;N2&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="42"><span class="w">          </span><span class="nt">&quot;align&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;right&quot;</span></span>
+<span class="code-line" data-line="43"><span class="w">        </span><span class="p">}</span></span>
+<span class="code-line" data-line="44"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="45"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="46"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="47"><span class="p">}</span></span></code></pre></figure>
+<h2 id="bindings">Bindings</h2>
+<ul>
+<li><code>{{parameters.name}}</code>: string, number, boolean or string[] parameter.</li>
+<li><code>{{data.customer.name}}</code>: scalar field in the input object.</li>
+<li>Table <code>source</code>: array path; column <code>field</code>: path relative to each row.</li>
+<li>N0–N6 and F0–F6 format table numbers; dates arrive as strings.</li>
+<li><code>{page}</code> and <code>{pages}</code> apply only to page headers/footers.</li>
+<li>Missing fields, missing required parameters and unknown parameters cause errors.</li>
+</ul>
+<h2 id="blocks">Blocks</h2>
+<p><code>text</code> has text, style and spaceAfter. Text wraps and flows onto following pages;
+explicit newlines remain, while repeated spaces collapse.</p>
+<p><code>table</code> has source, columns, style, padding, headerColor and stripeColor. Column
+widths are proportional to weight; headings repeat on new pages. Row height uses
+the tallest cell. Long tokens split by Unicode text elements, not UTF-16 units.</p>
+<p><code>image</code> has resource, width and height. Resource names a base64 PNG/JPEG entry in
+images without a data: prefix. Images retain their aspect ratio and are centered.</p>
+<p><code>pageBreak</code> starts a page; initial, repeated and trailing breaks do not create
+empty pages. All blocks accept spaceAfter, which has no useful effect on pageBreak.
+Style fields are size, bold, color (#RRGGBB) and align (left/center/right).</p>
+<h2 id="limits">Limits</h2>
+<p>At most 1,000 blocks, 100,000 rows/table, 10,000 pages, 50 columns, one million
+characters per text, and 8 MB base64 per image resource. Studio requests are bounded
+to 12 MB. A table heading must leave room for a data row. Headers/footers must fit
+on one line within the page width.</p>
+<h2 id="fixed-text-image-and-table-frames">Fixed text, image and table frames</h2>
+<p>Text, image and table blocks may specify frame:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Heading&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;frame&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nt">&quot;x&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nt">&quot;y&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">250</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="10"><span class="p">}</span></span></code></pre></figure>
+<p>The origin is the top-left content corner of the current page, after margins.
+Frames must fit inside that content area. Missing frame and frame:null are equivalent.
+A fixed block does not advance the flow cursor; spaceAfter is ignored. Text wraps
+inside its frame and fails on height overflow. Images fit while retaining aspect
+ratio. All table rows must fit the fixed frame; use Flow for automatic pagination.
+See <code>samples/positioned-table.nrtemplate</code> and its data file.</p>
+<p>Block order determines painting order; overlap is allowed. pageBreak rejects frame.
+A preceding flowing table may advance the current page before a fixed block is drawn.
+In Design, Positioning → fixed exposes geometry, drag handles and resizing. Dragging
+uses a 2 pt grid and stays inside the page; Undo/Redo treats one gesture as one edit.
+Check final positions and overlaps in Preview/PDF. See <code>samples/positioned.nrtemplate</code>.</p>
+<p>Layout → Align to page supports Left/Center/Right and Top/Middle/Bottom. Focus the
+handle and use arrows for 1 pt or Shift+arrows for 10 pt movement. Duplicate offsets
+by 12 pt, reversing near an edge; a full-width/height block cannot move along that
+axis. Every command supports Undo.</p>
+<h2 id="typescript-logic">TypeScript logic</h2>
+<p>Optional logic declares language:&quot;typescript&quot;, apiVersion:1 and source (at most
+64,000 characters). Source is checked before execution. Supported handlers:
+validateParameters, beforeRender, afterRender, dialogLoad, parameterChanged,
+dialogButtonClick, dialogPageChanged and dialogPageChanging.
+See the <a href="/docs/reports/report-logic-manual">scripting manual</a>.</p>
+<h2 id="parameter-input-dialog">Parameter input dialog</h2>
+<p>Studio: <strong>Run with parameters</strong> opens a private draft of the input values.
+Cancel discards changes; Generate preview runs the same server validation and
+TypeScript events as normal generation. Field errors keep the dialog open.
+Successful generation copies values back to the workspace.</p>
+<p>In <strong>Page → Parameters</strong>, set <strong>Label</strong>, <strong>Help text</strong>, and <strong>Multiline text</strong>.
+Template definitions accept optional label (up to 200 characters), help
+(up to 2000 characters), and control (see Extended Toolbox fields and components below).
+Multiline is only valid for string parameters. Auto uses a text input, number
+input or checkbox according to the parameter type. These properties affect
+presentation, not the value types or TypeScript API.
+A visual dialog layout is available. dialogLoad and parameterChanged handlers can
+return parameter patches and a message; see the scripting manual for draft semantics.</p>
+<p>Dropdown: a string parameter with control &quot;select&quot; and options [&quot;North&quot;, &quot;South&quot;].
+Options may contain 0–200 unique, nonblank strings of at most 500 characters,
+without line breaks. Matching is exact and case-sensitive.
+Only select, list, radio and checkedList controls may have nonempty options. Required dropdowns reject empty
+values; optional dropdowns allow the empty string. Defaults and supplied values
+are checked against options during binding, before report scripts run.</p>
+<h2 id="visual-parameter-dialog">Visual parameter dialog</h2>
+<p>Optional root property dialog contains title, width, height and components.
+Dimensions are CSS pixels: width 280–1200, height 120–1200.
+Each component has a unique id, kind (see the component kinds below), text,
+x, y, width (minimum 80), height (minimum 32).
+Fields require parameter referencing an existing parameter; each binding is unique.
+Labels must not have a parameter binding. Components must fit inside the form.
+Up to 100 components are allowed. The component order determines keyboard order.
+The parameter definition determines the actual control and validation.
+Only components listed in dialog.components appear in the custom dialog.
+Unplaced parameters retain existing/default values but are not automatically shown.
+Without a dialog, Studio generates a field for each parameter. Form layout does not
+affect CLI/API rendering; the engine validates its structure and bindings.
+Small screens stack controls within their containers. Load, Change and Custom Click handlers are supported; see report-logic-manual.md.</p>
+<h3 id="component-anchors">Component anchors</h3>
+<p>Optional component anchors is a unique array of &quot;left&quot;, &quot;top&quot;, &quot;right&quot;, &quot;bottom&quot;;
+default [&quot;left&quot;,&quot;top&quot;], empty is allowed. The Studio designer applies anchors
+when changing Form width/height, then saves the resolved integer geometry.
+Opposite anchors stretch a dimension; trailing-only anchors move the coordinate
+by the size delta; neither anchor moves it by half the delta (rounded).
+Invalid resulting bounds/minimum size reject the complete resize.
+Runtime displays saved geometry; small-screen stacking remains independent.</p>
+<h2 id="extended-toolbox-fields-and-components">Extended Toolbox fields and components</h2>
+<p>Parameter type also supports string[]. Control may be auto, multiline, password,
+date, time, datetime, color, select, list, radio, checkedList or range.
+checkedList requires type string[]; range requires number and finite minimum &lt;
+maximum. Other non-auto controls require string. Choice controls allow 0–200
+unique options. Minimum/maximum may be supplied only for numeric parameters.</p>
+<p>Dialog component kinds also include panel, group, button, link, image, progress,
+separator, table and tree. Optional parentId names a panel/group/tabpage; cycles are
+rejected. Coordinates remain relative to the form and children must fit their
+parent. Optional settings: action (submit/reset/cancel/custom/next/back), href, resource, source,
+value (0–100). Only fields bind parameter. Source is a dotted input-data path,
+resource is an embedded image key. See <a href="/docs/reports/toolbox">Toolbox</a> for runtime limits.</p>
+<p>Tab containers use <code>kind: &quot;tabs&quot;</code>; their direct children must be <code>kind: &quot;tabpage&quot;</code>
+with <code>parentId</code> referencing the container. At least one page is required.
+Pages must fit below the 36 px tab header. Fields bind parameters inside pages
+using the same global form coordinates. See <a href="/docs/reports/toolbox#tabbed-forms">tabbed forms</a>.</p>
+<p>Masked string parameters use <code>control: &quot;masked&quot;</code> and a required <code>mask</code> property,
+for example <code>&quot;mask&quot;: &quot;LL-000&quot;, &quot;default&quot;: &quot;AB-123&quot;</code>. All values passed through
+the API must include mask literals. The bounded mask grammar is documented in
+<a href="/docs/reports/toolbox#maskedtextbox">MaskedTextBox</a>; no arbitrary regex is evaluated.</p>
+<p>Custom dialog buttons use <code>kind: &quot;button&quot;, action: &quot;custom&quot;</code>. Their unique <code>id</code>
+is passed as <code>DialogButtonContext.componentId</code> to <code>dialogButtonClick</code>.</p>
+<p>Dialog event results may include <code>components: Record&lt;string, { visible?: boolean; enabled?: boolean }&gt;</code>.
+This is transient runtime state, not a template property. Missing properties preserve
+state; containers affect descendants. Unknown/duplicate IDs, non-boolean values,
+unsupported properties and individual TabPage updates are rejected atomically.
+Closing/resetting clears state. Hidden/disabled parameter values remain subject to
+report validation. Tab selection supports dialogPageChanged(ctx: DialogPageContext); componentId identifies the selected TabPage. Use dialogPageChanging for cancellable user navigation.</p>
+<p>DialogUpdate.options maps parameter names to string arrays for select/list/radio/checkedList.
+Each array replaces that parameter's choices (0–200 unique, nonblank single-line
+strings, max 500 characters each). The same patch may include a selected value in
+parameters; it must belong to the new choices (empty draft selections are allowed).
+Without an explicit value, still-valid selections are retained and removed choices
+are cleared. CheckedList retains its intersection in option order.
+Options are draft state until Generate succeeds. Studio sends an effective template
+with these choices for preview/PDF, retains the committed choices in the sidebar,
+and materializes them in saved projects without rewriting the design template.
+Saved template-only files retain the original choices and event handlers.
+Empty lists still enforce requiredness at generation; optional empty choices work.</p>
+<p>Navigation actions <code>next</code> and <code>back</code> require kind <code>button</code> with a TabPage ancestor.
+They navigate sibling pages of the nearest enclosing TabControl in template order.
+Next validates the current page's browser field constraints; Back does not validate.
+Boundary buttons are disabled. Successful navigation emits dialogPageChanged;
+Generate still validates all parameters on the server. Direct tab selection remains available.</p>
+<p>TabControl supports optional boolean <code>sequential</code> (default false). When true,
+forward tab headers are disabled; Next validates the current page and advances
+one sibling page. Back and earlier headers remain available; returning re-blocks
+forward headers. Validation-error reveals may open any page. This is UI navigation
+only; Generate and server validation remain independent. True is rejected on
+components other than tabs. Each nested TabControl has its own setting.</p>
+<p><code>POST /api/dialog/event</code> accepts <code>event: &quot;dialogPageChanging&quot;</code> with componentId
+(destination) and previousComponentId (source), distinct TabPages in the same
+TabControl. The handler returns DialogNavigationResult: optional boolean cancel
+and optional message (max 2000 characters); all other response fields are rejected.
+Allowed transitions then invoke dialogPageChanged. Initial selection and automatic
+validation reveals bypass this event. It does not replace final report validation.</p>
+<h2 id="table-grouping-and-sums">Table grouping and sums</h2>
+<p>Optional table <code>groupBy</code> is a nonempty row-relative scalar field path. Omit it
+(or set null) with empty groupFields for no grouping. Groups preserve first occurrence order after optional sorting, and rows
+preserve that order within each group. Strings are case-sensitive; number 1
+and 1.0 share a group, string &quot;1&quot; is separate. Null is a valid key; missing keys,
+objects and arrays are errors. Up to three distinct grouping paths are supported: groupBy followed by groupFields.</p>
+<p>Column <code>sum: true</code> (default false) adds decimal aggregates. Every selected value
+must be a JSON number representable as decimal; missing/null/string values and
+overflow fail generation. Formatting is applied after summation. Table flags
+<code>showGroupTotals</code> and <code>showGrandTotal</code> default to true. Without aggregates
+neither creates rows. Empty arrays have zero Sum/Count grand totals and blank Average/Min/Max. Without grouping fields,
+only a grand total is available. Non-aggregate total cells remain blank; a full-width
+caption precedes the numeric row. Column formats and alignment apply to totals.</p>
+<p>Column and active group headings repeat on page breaks; total captions and values
+stay together. Fixed tables must fit their frame. Example: <code>samples/grouped-orders.nrtemplate</code>
+and <code>samples/grouped-orders.data.json</code>; expected grand totals 13 and 310.30.</p>
+<h3 id="column-aggregate">Column aggregate</h3>
+<p>Prefer <code>aggregate: &quot;sum&quot; | &quot;average&quot; | &quot;min&quot; | &quot;max&quot; | &quot;count&quot;</code>; omit or use null
+for none. Legacy <code>sum: true</code> remains supported when aggregate is absent/null or
+&quot;sum&quot;. Combining it with another aggregate is an error; clear legacy sum when
+changing aggregate. One aggregate per column; duplicate a column for several.</p>
+<p>Sum/average/min/max require decimal numbers in every row. Average divides the
+sum of original rows by their count (grand average is not an average of group
+averages); decimal sum overflow is an error even when the average might fit.
+Min/max do not sum. Count counts rows including null/string values, not distinct
+or non-null values; the field must still exist for normal row rendering.
+Column number formats apply to both rows and totals, so leave the format unset
+for a string field with count. Empty sum/count are 0; empty average/min/max are
+blank. All aggregates share subtotal/grand-total switches and pagination rules.</p>
+<h3 id="table-sorting">Table sorting</h3>
+<p>Optional <code>sortBy</code> is one nonempty row-relative dotted field path; omit/null keeps
+source order. <code>sortDirection</code> is <code>&quot;asc&quot;</code> (default) or <code>&quot;desc&quot;</code>. Sorting is stable,
+occurs before grouping and affects only this table, without mutating input data.
+Groups follow first occurrence in the sorted rows; equal sort keys retain source
+order in both directions. Set sortBy equal to groupBy to order groups by key.</p>
+<p>All non-null keys must have the same type: decimal number, string or boolean.
+Numbers compare numerically; strings use case-sensitive ordinal comparison,
+independent of locale; false precedes true ascending. Null sorts first ascending
+and last descending. Missing keys, mixed non-null types, arrays/objects and
+numbers outside decimal range fail. Date strings sort as text. No sorting by
+aggregated values; use sorts for additional keys or beforeRender for advanced ordering.
+Example: add <code>&quot;sortBy&quot;: &quot;amount&quot;, &quot;sortDirection&quot;: &quot;asc&quot;</code> to the table in
+samples/grouped-orders.nrtemplate: groups East/South/North, grand total 310.30.</p>
+<h3 id="table-filter">Table filter</h3>
+<p>Optional <code>filter</code> (omit/null disables) is <code>{ &quot;field&quot;: &quot;amount&quot;, &quot;operator&quot;: &quot;gte&quot;, &quot;value&quot;: 80 }</code>. Field is row-relative, including dotted paths. Operators: eq
+(default), ne, gt, gte, lt, lte, contains, isNull, isNotNull. Non-unary operators
+require a string/decimal/boolean value or parameter reference; contains requires string; ordered
+comparisons accept text/numbers, not boolean. Unary null operators ignore value.</p>
+<p>Filter runs before sorting/grouping/aggregation, on every source row. It changes
+only this table, not input data. All totals use surviving rows. No matches behave
+like an empty source. Missing filter paths fail, including with isNull. Non-null
+field values must match the literal type; no coercion. Numbers compare as decimal;
+strings and contains are ordinal/case-sensitive. Empty contains matches all
+non-null strings. Null matches ne and isNull, but no ordinary equality/ordered/
+contains comparison; isNotNull matches any non-null value. Other operators reject
+objects/arrays and out-of-range numeric values. Invalid definitions fail even
+for empty sources. Use filters/filterMatch for flat AND/OR combinations; nested conditions require beforeRender. Example: grouped-orders amount gte 80 gives total 205.50, quantity 3.</p>
+<h3 id="parameter-bound-filter-values">Parameter-bound filter values</h3>
+<p>Use <code>&quot;filter&quot;: {&quot;field&quot;:&quot;amount&quot;, &quot;operator&quot;:&quot;gte&quot;, &quot;parameter&quot;:&quot;minAmount&quot;}</code>
+instead of a constant value. <code>parameter</code> names a declared scalar report parameter,
+not a dotted path. A non-null constant <code>value</code> and <code>parameter</code> cannot coexist.
+Null-check operators cannot reference parameters. Definitions reject unknown
+names, string[] types and incompatible operators (contains requires string;
+ordered comparisons require string/number). At run time the engine resolves
+current/default parameter values without mutating the template, then validates
+and filters even when the source is empty. Missing optional number/boolean values
+are errors; empty string is valid text, not a signal to disable filtering.
+Decimal range/type rules remain unchanged. Project files preserve the binding
+and supplied run parameters; Preview/PDF use the same resolved values.</p>
+<p>Example: samples/parameter-filter.nrtemplate with samples/grouped-orders.data.json.
+Default minAmount=80 gives 205.50; supplied 100 gives 125.50; 0 gives 310.30.</p>
+<h3 id="combining-table-filters">Combining table filters</h3>
+<p><code>filters</code> is an array of additional TableFilter objects (default empty).
+<code>filterMatch</code> is <code>&quot;all&quot;</code> (default, AND) or <code>&quot;any&quot;</code> (OR). The existing optional
+<code>filter</code> remains supported and participates as the first condition; <code>filters</code>
+may also be used alone. Maximum 20 conditions total across both properties.
+Null lists/elements, unsupported match modes and over-limit combinations fail.
+With no conditions both modes include every row. OR never duplicates rows.</p>
+<p>Each condition can use its own constant or parameter. Definitions and parameter
+values are validated even for empty sources. Every condition is evaluated on
+every source row without short-circuiting, so missing fields/type errors are not
+hidden by another match. The resulting rows are sorted, grouped and aggregated.
+No nested groups or mixed AND/OR trees. Example: samples/combined-filters.nrtemplate
+with grouped-orders.data.json gives 125.50 in all mode, 280.00 in any mode.</p>
+<h3 id="multiple-sort-fields">Multiple sort fields</h3>
+<p><code>sorts</code> is an ordered array of <code>{ &quot;field&quot;: &quot;amount&quot;, &quot;direction&quot;: &quot;asc&quot; }</code>.
+Direction defaults to asc; desc is also supported. The existing optional sortBy /
+sortDirection is the highest-priority key, followed by sorts in array order.
+The array can be used alone. At most five keys total across both forms; null
+lists/elements, empty paths and invalid directions fail, including on empty data.</p>
+<p>Each next key refines ties only; complete ties preserve source order. Types are
+validated independently per key across all filtered rows, including low-priority
+keys that do not affect the final order. Null/ordinal/decimal rules apply to each
+key. Filtering precedes sorting, and grouping preserves the resulting order.
+No keys means source order; sorting never changes the input JSON. Example:
+samples/multi-sort.nrtemplate with grouped-orders.data.json orders customer asc,
+then amount asc: East Clip/Cable, North Chair/Monitor, South Lamp/Desk.</p>
+<h3 id="nested-table-groups">Nested table groups</h3>
+<p><code>groupFields: [&quot;order&quot;, &quot;category&quot;]</code> adds inner levels after optional <code>groupBy</code>.
+The list alone can define all levels. At most three distinct, nonempty dotted
+paths are allowed in total; null lists and repeated fields are errors. Scalar key
+rules above apply independently at every level. Equal child keys under different
+parents stay separate. Every level preserves first occurrence after filtering and
+sorting. Parent aggregates use original rows, including weighted row averages,
+never aggregates of child totals. Nested subtotal captions identify their level/key.
+All active ancestor headings repeat on page breaks and stay with the first row
+fragment. <code>showGroupTotals</code> controls every level; <code>showGrandTotal</code> is independent.
+Example: <code>samples/nested-groups.nrtemplate</code> + <code>samples/nested-groups.data.json</code>:
+North order A 125.00, B 40.00, North 165.00; South A 80.00, B 10.00,
+South 90.00; grand total quantity 10, amount 255.00. This is grouping of a flat
+array, not master-detail or a nested data source.</p>
+<h2 id="numeric-table-column-expressions">Numeric table column expressions</h2>
+<p>Optional column <code>expression</code> overrides <code>field</code>; field may be omitted or empty when
+expression is present. Clear/omit expression (or set null) to use the normal field.
+Example: <code>{&quot;title&quot;:&quot;Net&quot;,&quot;expression&quot;:&quot;round(row.quantity * row.price * (1 - parameters.discount), 2)&quot;,&quot;format&quot;:&quot;F2&quot;,&quot;aggregate&quot;:&quot;sum&quot;}</code>.</p>
+<p>Decimal-only grammar: literals with a dot (no exponent), <code>row.path</code>, declared number
+<code>parameters.name</code>, unary +/- and binary + - * / %, parentheses, abs(x), min(a,b),
+max(a,b), round(x,digits). Standard arithmetic precedence, left associative binary
+operators. round requires integer digits 0–6 and uses midpoint away from zero.
+References/functions are case-sensitive. Row path parts use ASCII letters/digits/_
+and start with a letter or underscore. Limit 512 characters, 128 AST nodes, 32
+nested expressions. Comparisons, numeric logic and conditional/null functions are
+described below. No JS execution, strings, dates, JSON booleans, arrays, other
+calculated columns or aggregate references.
+Scripting need not be enabled. Syntax and number-parameter declarations are checked
+even for empty arrays. Evaluation applies only to rows surviving filters; absent,
+non-number, out-of-decimal-range, divide-by-zero and overflow fail generation.
+Null must be handled explicitly using coalesce/isNull or equality with null.</p>
+<p>Filters/sorts/groups use source fields; expressions do not create source fields.
+Numeric aggregates use expression results at every group level and grand total;
+Count still counts rows. Decimal calculations precede display formatting; use round
+explicitly for rounding each row before aggregation. No pagination-dependent values.
+Example template/data: samples/calculated-columns.nrtemplate and
+samples/calculated-columns.data.json. discount default 0.1 gives total 325.17;
+override 0.2 gives 289.04. Russian and built-in manuals include authoring steps.</p>
+<h2 id="master-detail-tables">Master-detail tables</h2>
+<p>Optional table <code>masterSource</code> is a path to a parent array in the current data
+context (report root outside repeat sections). When set, <code>source</code> resolves a child
+array within each parent; otherwise it uses the current context. <code>masterHeader</code>
+(default &quot;Details&quot;, empty hides it) supports <code>{{master.path}}</code>, current-context
+<code>{{data.path}}</code>, report-root <code>{{root.path}}</code> and <code>{{parameters.name}}</code>. Master references
+are available only in this header. Fixed frames with masterSource are rejected.</p>
+<p>Each parent is rendered as a separate flow table in original parent order.
+Filters/sorts/groups/expressions run independently on its children; every aggregate
+resets per parent. Grand total is the parent's total, with no cross-parent total.
+Parent headings repeat with column/active group headings after page breaks, and
+stay with the first row fragment. SpaceAfter separates parents and follows the
+block. Empty children render headers/empty aggregate values; empty masters render
+no tables. Limits: 10,000 object parents, 100,000 combined detail rows before
+filtering, masterHeader length 10,000. Every parent must have its child array;
+missing/null arrays and missing header fields are errors. Nested child paths are
+allowed, but recursively nested master-detail blocks and joins are not supported.
+Use beforeRender to join independent arrays or prepare shared calculations.</p>
+<p>Example: samples/master-detail.nrtemplate + samples/master-detail.data.json.
+Expected parent totals: SO-101 281.30, SO-102 80.00, empty SO-103 0.00.</p>
+<h2 id="chart-block">Chart block</h2>
+<p><code>{&quot;type&quot;:&quot;chart&quot;,&quot;source&quot;:&quot;regions&quot;,&quot;categoryField&quot;:&quot;name&quot;,&quot;valueField&quot;:&quot;net&quot;,&quot;title&quot;:&quot;Net sales&quot;,&quot;height&quot;:260,&quot;format&quot;:&quot;F2&quot;}</code>.
+The chart uses shared vector rectangle/line/text commands in SVG Preview and PDF.
+Defaults: source items, categoryField category, valueField value, empty title,
+chartKind bar, orientation horizontal, height 280pt, format F2, barColor #4F6BED, negativeColor #C45555, style size 9.
+Format is null or N0–N6/F0–F6; null uses the decimal's general representation.
+Title supports data/parameters bindings. Style controls font size/bold/color;
+label/number alignment is fixed. Frame is unsupported; spaceAfter applies normally.</p>
+<p>Source must be an array of at most 30 rows. Category/value paths are row-relative;
+values must be decimal JSON numbers, categories scalar (null → (null)). Missing
+fields, nonnumeric values, arrays/objects as categories and invalid settings fail.
+Each row is an independent bar in source order, including duplicate categories.
+There is no built-in aggregation/filter/sort/formula/master binding. Prepare data
+in beforeRender when needed. Empty source displays No data.</p>
+<p>Scale includes zero. Signed bars share a zero axis; zero values omit the bar.
+Lengths use original values; numeric formatting only affects labels. Chart height
+must fit one page's content area; it moves whole to a new page when needed. Labels
+wrap within their row; insufficient height/width fails rather than clipping.
+Maximum title length 10,000. One legacy series or up to three explicit series, horizontal/vertical bars or categorical lines. Pie/donut composition charts are described below; other chart types are not supported.
+Example: samples/bar-chart.nrtemplate + samples/bar-chart.data.json.</p>
+<h3 id="vertical-columns">Vertical columns</h3>
+<p>Set <code>orientation: &quot;vertical&quot;</code>; the only other supported value is <code>horizontal</code>
+(default for existing templates). Values/null/unknown strings outside this enum fail.
+Positive bars extend upward from the zero line and negative bars downward. All-zero,
+positive-only and negative-only data keep a zero-inclusive scale. Zero bars are omitted.
+Formatted values occupy a centered band above the plot; category labels wrap in
+equal-width slots below it. Duplicate categories remain independent and source order
+is preserved. No axes with date/numeric spacing, extra tick marks or aggregation.</p>
+<p>The plot reserves a left gutter for zero, 8pt between value/category labels and the
+plot, and at least 40pt plot height. Each category slot must be at least 16pt wide,
+and formatted values must fit on one line with 4pt side padding. Too many categories,
+long labels or wide values fail with an actionable error; widen the page, increase
+height, reduce font/precision or shorten/reduce categories as appropriate. A chart
+stays on one page. Colors, title bindings, formatting, empty-data behavior and all
+other chart constraints apply unchanged. Example: samples/column-chart.nrtemplate
+with samples/bar-chart.data.json.</p>
+<h3 id="categorical-line-chart">Categorical line chart</h3>
+<p>Set <code>chartKind: &quot;line&quot;</code>; <code>bar</code> is the default. Unknown/null kinds are rejected.
+Line charts always use categories left-to-right and values vertically, regardless
+of the stored valid orientation (retained for switching back to bars). Category
+spacing is equal; this is not an XY/time-scale chart. Points connect in source
+order, with straight 1.5pt segments in barColor. Every point has a 4pt square marker;
+negative markers use negativeColor, nonnegative markers use barColor. Zero points
+are included. One record has one marker and no segment; empty data shows No data.</p>
+<p>The scale includes zero. Markers are inset 2pt from the plot edges to stay inside.
+Values appear above the plot and categories below, using the same width/height
+checks as vertical bars. Missing/null/non-numeric values fail rather than creating
+gaps. There is no smoothing, date spacing, sorting, aggregation or area fill. Multiple series use the series list below. Format affects labels only. The chart moves whole to a new page.
+Example: samples/line-chart.nrtemplate + samples/bar-chart.data.json.</p>
+<p>Preview documents now include <code>type: &quot;line&quot;</code> commands with x1/y1/x2/y2 (points),
+color (#RRGGBB) and strokeWidth (points), in addition to text/rect/image commands.
+External Preview consumers must support this command to display line-chart segments.</p>
+<h3 id="multiple-chart-series">Multiple chart series</h3>
+<p>Optional <code>series</code> is an array of up to three objects, each with <code>title</code> (default
+Value), <code>valueField</code> (value), <code>format</code> (F2 or null for general decimal format), and
+<code>color</code> (#4F6BED). Titles must be distinct nonempty strings up to 100 characters
+(case-sensitive); fields are dotted paths relative to each source record. Formats
+are N0–N6/F0–F6 or null, colors #RRGGBB. Null arrays/items are rejected.
+Missing/empty series preserves the legacy single-value layout. A nonempty list
+replaces valueField/format/barColor/negativeColor, which the renderer ignores in
+that mode. The schema still validates any explicitly supplied legacy properties.</p>
+<p>All series share source/categoryField and a zero-inclusive scale. Grouped bars
+are side by side by default (or arranged vertically within each horizontal category).
+barMode enables value stacking or percentage normalization as described below. Lines connect each series independently in source order.
+Each series retains its color for positive/negative/zero markers and value labels.
+NegativeColor applies only in legacy mode. Use distinct colors for readability.
+One legend entry per series appears above the chart, including when there is no
+data. Titles wrap; legend height is included in the block height. Even a list of
+one series shows its legend. The whole chart moves to a new page when required.</p>
+<p>Vertical/line values occupy one line per series above the plot, in legend order;
+categories are below. Horizontal values align to the individual bars. Missing,
+null or nonnumeric values fail; there are no gaps. Width/height errors are explicit,
+without clipping or shrinking. Maximum 30 source records still applies; multiple
+series/legend may require more height or fewer categories. No dual axes, mixed
+chart types, interpolation, sorting or automatic aggregation.</p>
+<p>Designer Add series preserves the legacy value/format/color as the first series
+and adds a second. Move/remove controls manage order; at least one explicit series
+remains. Use single series transfers the remaining field/format/color to legacy
+properties and removes the legend (the saved NegativeColor becomes active again).
+Undo/Redo and project export preserve series. Example: samples/chart-series.nrtemplate</p>
+<ul>
+<li>samples/chart-series.data.json: grouped bars, columns and lines across three pages.</li>
+</ul>
+<h3 id="stacked-and-percentage-bars">Stacked and percentage bars</h3>
+<p><code>barMode</code> is <code>grouped</code> (default), <code>stacked</code> or <code>percent</code>. Unknown/null modes fail.
+It is active only for bar charts with a nonempty series list. Lines and legacy
+single-value charts ignore the saved valid mode; returning to bars restores it.
+Designer disables Bar mode for lines/legacy charts. Use single series resets mode
+to grouped when converting back to legacy fields.</p>
+<p>In stacked mode, each category has one bar composed of series segments. Positive
+values accumulate from zero right/up, negative values separately left/down, in
+series order. The global scale uses the largest positive and negative category
+sums, not the largest individual value. Series colors/legend remain unchanged.
+Zero values have labels but no segments. Labels show original formatted values,
+outside the segments (in legend order at right or above the plot).</p>
+<p>In percent mode, positive values in each category divide by that category's positive
+sum, negative values by the magnitude of its negative sum. Each nonempty side thus
+reaches +100% or -100% independently; mixed-sign categories can span -100% to +100%.
+This is not a share of the signed/net total. An all-zero category shows 0% labels
+without segments. Labels show normalized percentages using each series' Number
+format plus <code>%</code> (F1 recommended); they do not show the original amounts. Rounding
+may make displayed shares total 99.9% or 100.1%, but geometry uses unrounded values.
+No source values are modified. Calculations use finite double geometry, including
+sums larger than decimal.MaxValue; individual inputs must still be decimal numbers.</p>
+<p>Both orientations, up to three series, legend/order/colors, Flow pagination,
+empty data and existing width/height checks apply. Percentages can require wider
+label space. No mixed bar/line stacking or totals printed inside segments.
+Example: samples/stacked-charts.nrtemplate + samples/stacked-charts.data.json:
+four pages for stacked/percent × horizontal/vertical. North 120/60/60 becomes
+50%/25%/25%; South 60/-30/-10 becomes 100%/-75%/-25%; East stays all zero.</p>
+<h2 id="code-39-barcode-block">Code 39 barcode block</h2>
+<p><code>{&quot;type&quot;:&quot;barcode&quot;,&quot;value&quot;:&quot;{{data.orderCode}}&quot;,&quot;moduleWidth&quot;:1,&quot;height&quot;:70,&quot;showText&quot;:true,&quot;fontSize&quot;:10}</code>.
+Defaults: symbology code39, value CODE39, moduleWidth 1pt, height 60pt, showText true, fontSize 9pt.
+Value supports data/parameters bindings, maximum binding text length 10,000; the
+resolved payload must contain 1–80 standard Code 39 characters: A–Z, 0–9, space,
+<code>- . $ / + %</code>. No trimming, uppercasing, checksum or Extended ASCII. Start/stop *
+are automatic; * in the payload is invalid. Preserve leading zeros using strings.</p>
+<p>Module width is 1–4pt; wide:narrow ratio is 3:1 and the inter-character gap is one
+module. Each side's white quiet zone is max(18pt, 10 modules). Natural total width
+is <code>(16 * (payloadLength + 2) - 1) * moduleWidth + 2 * quietZone</code>. It must fit the
+page content width; there is no automatic compression. Height includes caption
+and a 4pt gap when showText is true. Bar height must be at least 20pt, font size
+must be positive and at most 36pt, and the unwrapped caption must fit the symbol.
+Bars are black on an explicit white background, using shared vector commands.</p>
+<p>Only Flow; no frame or table-cell placement. QR/Data Matrix are described below. Code 39 has no checksum. The block
+moves whole to the next page and honors spaceAfter. Invalid values, bindings,
+height/width and text overflow produce ReportException. Sample: samples/code39.nrtemplate
+and samples/code39.data.json, decoded payload SO-2026-001. Optional independent
+verification uses independent barcode decoding.
+See THIRD-PARTY-NOTICES.md for the pattern-table attribution and license.</p>
+<h3 id="code-128-b">Code 128 B</h3>
+<p>Set <code>symbology: &quot;code128b&quot;</code> on a barcode block. The default is <code>code39</code>;
+unknown/null symbologies are rejected. The resolved payload is 1–80 printable
+ASCII characters U+0020–U+007E, including lowercase, spaces, underscore and *.
+No trimming or case conversion occurs. Unicode, DEL, controls and FNC escape
+characters are rejected. This is Code Set B only: no A/C switching, numeric
+compression, GS1/FNC1 or application identifiers.</p>
+<p>Start B, the mandatory modulo-103 weighted checksum and stop are automatic;
+the caption contains only the original payload. Symbol width is
+<code>(11 * (payloadLength + 2) + 13) * moduleWidth</code>, plus the same quiet zones as Code 39.
+Bars/spaces are 1–4 modules wide. All common height, caption, Flow pagination,
+binding, module-width and page-fit checks apply. No automatic shrinking occurs.
+Example: samples/code128b.nrtemplate + samples/code128b.data.json, decoded payload
+so_2026-001. PDF output has independent decoding checks.py); checks all printable ASCII, checksum, spaces and 80 characters.</p>
+<h3 id="ean-13-ean-8-and-upc-a">EAN-13, EAN-8 and UPC-A</h3>
+<p>Use <code>symbology: &quot;ean13&quot;</code>, <code>&quot;ean8&quot;</code> or <code>&quot;upca&quot;</code>. Only ASCII digits are accepted:</p>
+<table>
+<thead>
+<tr>
+<th>Symbology</th>
+<th>Input without check digit</th>
+<th>Complete input/caption</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ean13</td>
+<td>12 digits</td>
+<td>13 digits</td>
+</tr>
+<tr>
+<td>ean8</td>
+<td>7 digits</td>
+<td>8 digits</td>
+</tr>
+<tr>
+<td>upca</td>
+<td>11 digits</td>
+<td>12 digits</td>
+</tr>
+</tbody>
+</table>
+<p>Short input receives a modulo-10 check digit (weights 3/1 from the right).
+Complete input must have the correct check digit; it is never silently repaired.
+No trimming, padding or numeric coercion. Data/parameter bindings are expanded first;
+store codes as strings to preserve leading zeros. Caption and encoded bars include
+the calculated digit, while the template/data remain unchanged.</p>
+<p>EAN-13 and UPC-A occupy 95 modules, EAN-8 occupies 67. Each white quiet zone is
+max(18pt, 11 modules). Common 1–4pt module, caption/font, height, Flow/page-fit rules
+apply. Black vector bars have equal heights, with a centered caption below the
+whole symbol; this is not a retail packaging layout with extended guard bars and
+positioned digit groups. No UPC-E, EAN supplements, GS1-128 or GTIN allocation checks.
+The application encodes digits, not product-registration status. Actual printer/
+scanner and packaging compliance have not been verified.</p>
+<p>Example: samples/retail-barcodes.nrtemplate + samples/retail-barcodes.data.json.
+Expected values: 5901234123457, 96385074 and 036000291452. Some readers report
+UPC-A as equivalent EAN-13 with a leading zero (0036000291452); the report caption
+remains the 12-digit UPC-A value. Independent PDF decoding:
+independent retail-barcode decoding checks (Pillow, zxing-cpp and pdftoppm), including all ten
+EAN-13 first-digit parities, leading zeros, full/short inputs and hidden captions.</p>
+<h2 id="cross-tab-block">Cross-tab block</h2>
+<p><code>{&quot;type&quot;:&quot;crossTab&quot;,&quot;source&quot;:&quot;items&quot;,&quot;rowField&quot;:&quot;region&quot;,&quot;columnField&quot;:&quot;quarter&quot;,&quot;valueField&quot;:&quot;amount&quot;,&quot;aggregate&quot;:&quot;sum&quot;,&quot;format&quot;:&quot;F2&quot;,&quot;showRowTotals&quot;:true,&quot;showColumnTotals&quot;:true}</code>.
+These values are defaults. Style defaults to 9pt, with standard text style properties.
+Source is an array in the current data context (report root outside repeat
+sections); fields are dotted paths relative to each record.
+Both categories must be nonempty strings (maximum 200 characters), exact comparison,
+first-seen axis order. Maximum 100,000 records, 1,000 row and 20 column categories.
+Values must be decimal JSON numbers; Count ignores valueField values but still
+requires a valid field path in the template. Aggregates: sum/average/min/max/count.
+Missing intersections are zero for sum/count, blank otherwise. Totals aggregate
+raw records, including Average. Display format is null or F0–F6/N0–N6.</p>
+<p>Only Flow, with repeated headers and existing table text wrapping/pagination.
+Each numeric column needs at least 40pt; row labels take two shares of width.
+No horizontal pagination or built-in filters.
+Empty input retains headers and enabled totals. Row totals add a right Total column;
+column totals add a bottom Grand total row with ordinary row styling. Both default
+true and can be disabled independently. spaceAfter applies once to the whole block.
+Example: samples/cross-tab.nrtemplate + samples/cross-tab.data.json.</p>
+<h3 id="multiple-cross-tab-measures">Multiple cross-tab measures</h3>
+<p>Optional <code>measures</code> defaults to <code>[]</code>. Empty uses legacy block valueField/aggregate/format
+unchanged. A nonempty array (1–3 entries) takes precedence; those three legacy
+properties are then ignored by the engine, including runtime validation. The schema
+still validates any supplied legacy properties; omit unused ones in new templates.
+Null arrays/items fail.
+Each measure has title (default Value, nonempty, maximum 100 characters, distinct
+ordinal case-sensitive titles), valueField (default amount), aggregate (default sum)
+and format (default F2). Field/aggregate/format follow the same single-measure rules.</p>
+<p>Example: <code>&quot;measures&quot;:[{&quot;title&quot;:&quot;Sales&quot;,&quot;valueField&quot;:&quot;amount&quot;,&quot;aggregate&quot;:&quot;sum&quot;,&quot;format&quot;:&quot;F2&quot;},{&quot;title&quot;:&quot;Orders&quot;,&quot;valueField&quot;:&quot;amount&quot;,&quot;aggregate&quot;:&quot;count&quot;,&quot;format&quot;:&quot;F0&quot;}]</code>.
+Within each category, columns follow measure order; headings contain the category
+and measure title on separate lines. Row totals have one column per measure;
+column and grand totals aggregate original records independently (never cell averages).
+Maximum 50 rendered columns: <code>labelColumnCount + (categoryCount + subtotalColumnGroups + (showRowTotals ? 1 : 0)) * measureCount</code>.
+The existing width rule still applies. Explicit one-measure arrays retain titles;
+empty arrays preserve legacy headings. Sample: samples/cross-tab-measures.nrtemplate
+with samples/cross-tab.data.json, landscape page, Sales/Orders/Average.</p>
+<h3 id="nested-cross-tab-axes">Nested cross-tab axes</h3>
+<p>Optional <code>rowFields</code> and <code>columnFields</code> contain up to three distinct dotted field
+paths, outermost first. Each defaults to <code>[]</code>, which uses rowField/columnField.
+A nonempty list replaces its legacy field (ignored by engine validation; omit unused
+legacy properties in new templates). Null lists/items, blank paths, duplicates and
+more than three levels are rejected. Category rules apply to every level.</p>
+<p>Example: <code>&quot;rowFields&quot;:[&quot;region&quot;,&quot;city&quot;],&quot;columnFields&quot;:[&quot;year&quot;,&quot;quarter&quot;]</code>.
+Children retain first-seen order within each parent. Interleaved records are grouped
+by parent; equal child names under different parents remain independent. Limits of
+1,000 row categories and 20 column categories count complete leaf paths. Existing
+measure, width, record and rendered-column limits remain unchanged.</p>
+<p>Each leaf prints its complete path on separate lines, outermost first. Parent labels
+repeat by default. Column headings can be merged with mergeColumnHeaders (see below).
+Optional intermediate subtotals are described below;
+there are no collapse/drill-down controls. Totals still aggregate source records across leaf
+paths; Average is never an average of displayed values. Repeated page headers include
+all column levels and measure titles. Empty data keeps headers and enabled totals.
+Sample: samples/cross-tab-hierarchy.nrtemplate + samples/cross-tab-hierarchy.data.json.</p>
+<h3 id="cross-tab-group-subtotals">Cross-tab group subtotals</h3>
+<p><code>showRowSubtotals</code> and <code>showColumnSubtotals</code> are independent booleans, default false.
+The row switch adds a subtotal row after every non-leaf row group; the column switch
+adds one subtotal column per measure after every non-leaf column group. Three-level
+axes subtotal the inner group first, then its parent. Labels show the parent path
+followed by <code>Subtotal</code>. Single-level axes and empty input add no subtotals.</p>
+<p>Subtotals aggregate original records once at each ancestor intersection, including
+intersections of row and column subtotals. Sum/Average/Min/Max/Count and per-measure
+formats retain their normal semantics; grand totals never include subtotal values.
+The switches do not depend on showRowTotals/showColumnTotals. Old templates retain
+their layout. Subtotal rows use ordinary matrix-row styling and pagination;
+subtotal column headings repeat with the other headers on every page.</p>
+<p>The 1,000-row/20-column limits still count leaf paths. Subtotal rows are additional
+(up to 2,000 for three levels). Subtotal columns count toward the 50 rendered-column
+limit and the minimum 40pt numeric-column width. Disable column subtotals, reduce
+categories/measures or widen the page when the matrix does not fit. All non-leaf
+groups are subtotaled together; per-level selection is not supported.
+Example: samples/cross-tab-subtotals.nrtemplate + samples/cross-tab-hierarchy.data.json.
+North subtotal Sales 90.00 / Average 30.00; grand total 110.00 / 27.50.</p>
+<h3 id="merged-cross-tab-column-headers">Merged cross-tab column headers</h3>
+<p><code>mergeColumnHeaders</code> is a boolean, default false. When true, each column-axis level
+has its own header band. A parent's cell spans all contiguous child columns and
+measures under that exact parent path, including its enabled subtotal columns.
+Equal names under different parents are never merged together. Explicit measures
+get a separate bottom band. Legacy single-measure mode has no measure-title band.</p>
+<p>The row-field corner spans all header bands; Total spans the category bands, with
+measure headings below it. Subtotal spans the remaining category bands below its
+parent. Text is centered in numeric header cells, wrapped within the combined width,
+and header heights grow to fit it. The complete header repeats on each page.
+Generation rejects a header that cannot fit with one data line on a page.</p>
+<p>This changes only column-header presentation: row-axis labels repeat full
+paths unless mergeRowLabels is enabled; data/aggregates/order/limits are unchanged, and no horizontal pagination is
+added. Empty input keeps the corner and enabled Total/measure headings. Merged
+headers may be taller than ordinary headings, so page counts can change.
+Example: samples/cross-tab-merged-headers.nrtemplate + samples/cross-tab-hierarchy.data.json.</p>
+<h3 id="merged-cross-tab-row-labels">Merged cross-tab row labels</h3>
+<p><code>mergeRowLabels</code> is a boolean, default false, independent of mergeColumnHeaders.
+When true, each row-axis level becomes a separate label column (weight 2 each).
+The rendered-column limit includes all these label columns: labelColumnCount is
+row-axis depth when enabled, otherwise 1. Numeric columns still need at least 40pt;
+extra label columns can require a wider page even with unchanged data.</p>
+<p>Adjacent labels merge vertically only for the same complete category prefix and
+within one page. The parent label repeats at the top of its continued group on
+each new page. Parent cells include their own subtotal row; Subtotal spans the
+remaining label columns, and Grand total spans all label columns. Label cells use
+a white background, left/top-aligned text and borders; numeric stripes remain.</p>
+<p>Each source matrix row must fit below the repeated header when row merging is on.
+Rows are kept whole; overly tall labels produce a clear error. Increase page height,
+reduce font size or disable Merge row labels to return to ordinary split-row behavior.
+No rows or label text are silently truncated. Counts, order and aggregates are unchanged.
+Empty input keeps separate field headings and enabled totals. Undo/Redo and project
+serialization preserve the switch. Example: samples/cross-tab-merged-rows.nrtemplate
+with samples/cross-tab-hierarchy.data.json.</p>
+<h3 id="nested-table-filter-groups">Nested table filter groups</h3>
+<p>A table may specify <code>filterGroup</code> instead of <code>filter</code>/<code>filters</code>:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="nt">&quot;filterGroup&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;all&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;filters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;amount&quot;</span><span class="p">,</span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="s2">&quot;gte&quot;</span><span class="p">,</span><span class="nt">&quot;parameter&quot;</span><span class="p">:</span><span class="s2">&quot;minAmount&quot;</span><span class="p">}],</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;match&quot;</span><span class="p">:</span><span class="s2">&quot;any&quot;</span><span class="p">,</span><span class="nt">&quot;filters&quot;</span><span class="p">:[</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="p">{</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;customer&quot;</span><span class="p">,</span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="s2">&quot;eq&quot;</span><span class="p">,</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;North&quot;</span><span class="p">},</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="p">{</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;customer&quot;</span><span class="p">,</span><span class="nt">&quot;operator&quot;</span><span class="p">:</span><span class="s2">&quot;eq&quot;</span><span class="p">,</span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="s2">&quot;South&quot;</span><span class="p">}</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="p">]}]</span></span>
+<span class="code-line" data-line="8"><span class="p">}</span></span></code></pre></figure>
+<p>Each group's <code>match</code> is all (AND, default) or any (OR), combining its direct
+conditions and child groups. This example means amount &gt;= minAmount AND
+(customer = North OR customer = South). All ordinary filter operators, typed
+constants, dotted paths and string/number/boolean parameters are available.
+<code>filterMatch</code> only governs legacy filters and is ignored for a group tree.</p>
+<p>Limits per table: 3 levels including the root, 10 groups including the root,
+20 conditions across the tree. Every group must contain at least one condition
+or subgroup. Null lists/elements, unknown modes and mixing a tree with nonempty
+legacy filters are errors. JSON schema describes structure; the engine also
+checks total counts and depth. Every condition is validated/evaluated even when
+another branch determines the result, so invalid data types are never hidden by
+short-circuiting. Missing paths retain ordinary filter error behavior.</p>
+<p>Filtering precedes sorting, grouping, numeric expressions and totals. Flow,
+Fixed and master-detail tables use the same logic; for master-detail, fields
+refer to the current child row and filtering runs separately per parent.
+Source JSON is unchanged. <code>filterGroup: null</code> retains legacy behavior.</p>
+<h3 id="conditional-calculations-and-cell-styles">Conditional calculations and cell styles</h3>
+<p>Numeric expressions additionally accept <code>== != &gt; &gt;= &lt; &lt;=</code>, <code>&amp;&amp; || !</code>, <code>null</code>,
+<code>if(test,yes,no)</code>, <code>coalesce(value,fallback)</code> and <code>isNull(value)</code>.
+Precedence, highest first: unary + - !, * / %, + -, one comparison, &amp;&amp;, ||.
+Comparisons and logical operators return decimal 0/1. Tests treat zero as false
+and any nonzero decimal as true; JSON boolean/string values are not coerced.
+Chained comparisons are invalid; use <code>a &lt; b &amp;&amp; b &lt; c</code> or parentheses.</p>
+<p><code>if</code> evaluates only its chosen branch; &amp;&amp;/|| short-circuit; coalesce evaluates
+its fallback only when the first result is null. All branches are parsed and
+parameter declarations validated even for empty input. Missing row paths still
+fail when accessed: coalesce only handles JSON null, not missing fields, invalid
+types, divide-by-zero or overflow. Equality/inequality permit null; ordering,
+arithmetic and logical tests require numbers. <code>isNull</code> returns 1 for null, else 0.
+The final expression result must be a non-null decimal. Existing limits apply.</p>
+<p>Optional column <code>styleRules</code> is an ordered array, at most 10 rules per column and
+100 per table. Each rule has a numeric <code>when</code> expression (default &quot;1&quot;) and at least
+one of <code>color</code>/<code>background</code> in #RRGGBB. Null/omitted colors inherit the table style.
+The first rule whose expression returns nonzero wins as a whole; rules do not
+cascade. All syntax/colors are validated, but later conditions are not evaluated
+once a rule matches. Errors identify the column and rule number.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Net&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;expression&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;if(row.quantity == 0, 0, row.amount / row.quantity)&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;styleRules&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="6"><span class="w">      </span><span class="nt">&quot;when&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;row.amount &lt; 0&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="nt">&quot;color&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#842029&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">      </span><span class="nt">&quot;background&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#F8D7DA&quot;</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="11"><span class="p">}</span></span></code></pre></figure>
+<p>Rules apply to data cells, including every page fragment of a split row, but not
+headers, group headings, totals, cross-tabs or charts. Unmatched cells use normal
+text/stripe colors. Colors do not affect layout metrics or totals. Flow, Fixed
+and master-detail tables share the rules; master-detail references each child
+row. Conditions reference source numeric fields/number parameters, not computed
+columns. Formula/filter/style evaluation does not mutate the source data.</p>
+<h2 id="repeated-report-sections">Repeated report sections</h2>
+<p><code>{&quot;type&quot;:&quot;repeat&quot;,&quot;source&quot;:&quot;orders&quot;,&quot;pageBreakBetween&quot;:true,&quot;spaceAfter&quot;:12,&quot;blocks&quot;:[...]}</code>
+repeats its child blocks for each object in an array. Sources are dotted paths
+relative to the current data context (the report root outside a section).
+Only object records are accepted; missing/non-array sources and scalar/null
+records fail. Empty arrays emit no section content or spacing.</p>
+<p>Inside a record, text/chart-title/barcode bindings use <code>{{data.path}}</code> for that
+record, <code>{{root.path}}</code> for report data after beforeRender, and <code>{{parent.path}}</code>
+for the enclosing record (the root for a top-level section). Parameters/resources
+remain global. A child table/chart/cross-tab source resolves inside the current
+record. Table row formulas/filters retain their ordinary child-row semantics;
+master-detail headers additionally support <code>{{master.path}}</code>. Parent bindings
+outside a repeat are errors. Global page headers/footers always bind root data,
+with global page numbering. Context is restored after a section; later sibling
+blocks cannot accidentally use the last repeated record.</p>
+<p>Children may contain text, embedded images, tables (including master-detail,
+formulas and conditional styles), charts, cross-tabs, barcodes, page breaks and
+nested repeat sections. All children must use Flow; Fixed frames inside any
+section are rejected even for empty data. Three repeat levels are supported.
+The engine limits the template to 1,000 blocks including descendants, the report
+to 10,000 repeated records across all sections and 100,000 rendered block
+instances, plus its existing 10,000-page limit. Cancellation applies during
+iteration. Child definitions are validated even when no records exist.</p>
+<p><code>pageBreakBetween</code> starts subsequent records on a new page, but does not force a
+break before the first record or after the last. An explicit child Page break
+can start every record on a new page. Normal Flow pagination and table header
+repetition remain active. Section text headings are not repeated automatically
+when their following tables continue. There is no keep-together or per-section
+page numbering/header/footer. <code>spaceAfter</code> applies after each record, not once
+per section; an empty section adds none.</p>
+<p>This is inline repetition, not a link to another template/file/server. Sections
+share page settings, fonts, parameters and embedded resources. Scripts run once
+for the entire report, not once per section. Source data is not modified.
+Example: samples/repeated-sections.nrtemplate and repeated-sections.data.json.</p>
+<h2 id="text-and-calendar-expressions">Text and calendar expressions</h2>
+<p>Inline bindings accept <code>{{= expression }}</code> in Text (Flow/Fixed), page headers and
+footers, chart titles, barcode values and master-detail headings. Example:
+<code>Due {{= formatDate(addDays(data.ordered, 7), 'dd MMM yyyy') }}</code>. Existing dotted
+bindings keep working. Substituted values are literal: braces in data/results
+are not evaluated as another binding.</p>
+<p>A table column can use <code>&quot;textExpression&quot;:&quot;upper(row.name)&quot;</code> instead of <code>field</code>.
+It produces display text, supports Flow/Fixed/master-detail/repeated sections and
+may use Count. It cannot combine <code>expression</code>, <code>format</code>, Sum/Average/Min/Max or
+legacy <code>sum:true</code>; use formatNumber inside the text expression. Numeric columns
+retain the existing decimal <code>expression</code> language and aggregate behavior.
+Text results do not become new source fields: sort/group/filter/style rules still
+reference original row fields. The engine never changes source JSON.</p>
+<p>References: <code>data.path</code>, <code>root.path</code>, <code>parent.path</code> inside a repeat, <code>master.path</code>
+in a master-detail heading, <code>row.path</code> only in a table textExpression, and declared
+scalar <code>parameters.name</code>. In tables data is the enclosing report/repeat context,
+row is the current child row; master is not available in cell expressions.
+Missing paths are errors. JSON null is a value; arrays/objects are rejected.
+Parameters may be string, number or boolean, not string[]. Global page expressions
+use root data and have no row/parent/master context.</p>
+<p>Literals are single-quoted strings (escapes: <code>\'</code>, <code>\\</code>, <code>\n</code>, <code>\r</code>, <code>\t</code>), decimal
+numbers without exponent, true, false and null. Expressions are nested function
+calls/references/literals; no operators, script evaluation or current-time function.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>concat(a, ...)</td>
+<td>1–16 scalar arguments, invariant number/boolean conversion; null becomes empty</td>
+</tr>
+<tr>
+<td>upper(s), lower(s), trim(s)</td>
+<td>Invariant case conversion / whitespace trimming</td>
+</tr>
+<tr>
+<td>replace(s, old, replacement)</td>
+<td>Case-sensitive ordinal replacement; old must not be empty</td>
+</tr>
+<tr>
+<td>substring(s, start, length), length(s)</td>
+<td>Zero-based UTF-16 indices/length; invalid ranges fail</td>
+</tr>
+<tr>
+<td>coalesce(a, fallback)</td>
+<td>Fallback only for null, not empty text or a missing path; lazy</td>
+</tr>
+<tr>
+<td>eq(a, b), if(condition, yes, no)</td>
+<td>Exact scalar equality (no coercion); boolean condition; only selected branch runs</td>
+</tr>
+<tr>
+<td>formatNumber(number, format)</td>
+<td>Invariant N0–N6 / F0–F6</td>
+</tr>
+<tr>
+<td>formatDate(date, format)</td>
+<td>ISO calendar date to an allowed display format</td>
+</tr>
+<tr>
+<td>addDays(date, days)</td>
+<td>Whole calendar-day offset, returns ISO yyyy-MM-dd</td>
+</tr>
+<tr>
+<td>daysBetween(start, end)</td>
+<td>Signed end minus start calendar days; no time-of-day rounding</td>
+</tr>
+</tbody>
+</table>
+<p>Dates must be real <code>yyyy-MM-dd</code> strings, years 0001–9999. Times, timestamps, timezone
+offsets and locale-specific input are rejected. Allowed output formats:
+<code>yyyy-MM-dd</code>, <code>dd/MM/yyyy</code>, <code>MM/dd/yyyy</code>, <code>dd.MM.yyyy</code>, <code>dd MMM yyyy</code>, <code>MMMM d, yyyy</code>,
+<code>yyyy-MM</code>. Month names are invariant English. Date arithmetic handles leap years
+and rejects values outside the date range. Integer arguments are bounded to
+±1,000,000; there is no month/year arithmetic or localization setting.</p>
+<p>Limits: 512 characters, 128 nodes, 16 levels and 16 function arguments per
+expression; each string input/intermediate/result is at most 16,000 UTF-16 units.
+Definitions are syntax/context-checked even for empty tables/repeats; argument
+values are checked when evaluated. Errors identify table columns. Empty result
+text is allowed. Examples: samples/text-dates.nrtemplate and matching data JSON.</p>
+<h2 id="qr-code-and-data-matrix">QR Code and Data Matrix</h2>
+<p>Barcode <code>symbology</code> also accepts <code>qr</code> and <code>dataMatrix</code>. Both encode the resolved
+<code>value</code> as UTF-8, including text-expression and repeat/parameter bindings. Values
+must contain non-whitespace text, at most 512 UTF-8 bytes; leading/trailing spaces
+are preserved. Invalid Unicode and control characters other than CR/LF/tab fail.
+The byte limit applies after binding, not to the source expression's length.</p>
+<p><code>moduleWidth</code> remains 1–4pt and scales every square module uniformly. Symbol
+version/dimensions are selected automatically for the payload. QR includes four
+white modules per side; square Data Matrix ECC200 includes one. Black modules
+are vector rectangles, coalesced into horizontal runs; Preview/PDF/HTML use the
+same layout without an external image service or native imaging dependency.</p>
+<p>Optional <code>qrErrorCorrection</code> is L/M/Q/H, default M; it is ignored by other
+symbologies but must always contain a valid enum value. A higher QR correction
+level can increase symbol size for the same payload. Data Matrix uses ECC200;
+there is no configurable correction level, rectangular shape or DMRE mode.</p>
+<p>For matrix symbols <code>height</code> is retained for switching back to 1D but does not
+control layout (it must still be positive). Actual square size = encoded matrix
+width including quiet zones × moduleWidth. With <code>showText:true</code> the payload wraps
+under the whole square, after a 4pt gap; fontSize retains its usual limit of 36pt.
+Caption drawing never intrudes into quiet zones. Hide text for long payloads or
+characters unsupported by the report font. The caption is not the encoded value:
+wrapping does not add whitespace or alter encoded bytes.</p>
+<p>The entire symbol plus optional caption must fit the page content area and moves
+as one block when remaining page space is insufficient. A too-wide/tall symbol
+fails instead of shrinking modules or clipping. Flow only, including repeats;
+Fixed frames and table-cell barcodes remain unsupported. No logos, color/inversion,
+structured append, GS1/FNC1, application-identifier parsing, or automatic URL/Wi-Fi
+payload construction. Payload text is encoded exactly; URLs are not opened.</p>
+<p>Example: samples/matrix-barcodes.nrtemplate with matrix-barcodes.data.json produces
+two shipping labels with independent tracking QR and internal Data Matrix codes.</p>
+<h2 id="pie-and-donut-composition-charts">Pie and donut composition charts</h2>
+<p>Use <code>chartKind: &quot;pie&quot;</code> or <code>&quot;donut&quot;</code> on a Chart block. Source/category/value bindings
+are unchanged. These types accept one legacy measure (<code>valueField</code>/<code>format</code>) or
+one explicit series; more than one series is rejected. Orientation and barMode
+are retained but ignored. For multiple measures use separate circular charts.</p>
+<p>The source must be an array of at most 12 rows, with scalar categories and
+nonnegative decimal numeric values. Source order is preserved; duplicate categories
+are separate slices, not grouped. Null categories display <code>(null)</code>. Zero values
+remain in the legend but emit no slice; all-zero data displays <code>No positive values</code>,
+empty data <code>No data</code>. Negative/null/nonnumeric values fail. The decimal total must
+not overflow. No sorting, filtering or aggregation is implicit: prepare summaries
+before rendering (data or beforeRender).</p>
+<p><code>sliceColors</code> is a list of 1–12 #RRGGBB colors; the default is
+[&quot;#4F6BED&quot;,&quot;#008844&quot;,&quot;#B45309&quot;,&quot;#863BB0&quot;,&quot;#C45555&quot;,&quot;#008C99&quot;]. Colors are assigned
+by original row index and reused cyclically, including zero rows. barColor,
+negativeColor and a series color do not override this palette.
+<code>showPercentages</code> defaults true. The legend always includes category, formatted
+value and total; optional percentages use one invariant decimal place. Rounding
+can make displayed percentages sum slightly above/below 100%; sector geometry
+uses unrounded proportions. <code>donutHole</code> defaults .55 and must be .2–.8, a ratio
+of inner radius to outer radius; ignored for other chart types. New option values
+are validated even when another type is selected or data is empty.</p>
+<p>Sectors start at 12 o'clock and proceed clockwise. The chart sits left, a wrapping
+legend right. Height includes the title, plot and legend; increase height/reduce
+font or shorten categories if the legend does not fit. At least 80pt is required
+for both circle diameter and legend width. No outside/inside-slice labels are
+placed, so small slices do not cause overlapping captions. Flow only, including
+repeat contexts; the whole chart moves together to the next page. Fixed charts
+and automatic multi-page legends are not supported.</p>
+<p>The shared document protocol adds <code>type: &quot;polygon&quot;</code>, <code>points: [{x,y},...]</code> in page
+points and <code>fill: &quot;#RRGGBB&quot;</code>. Clients must close and fill these polygons using the
+even-odd rule; reverse inner boundaries preserve donut holes. Circular boundaries
+use chords of at most two degrees, giving identical vector geometry in SVG
+Preview, PDF and standalone HTML. No external chart library or raster image is
+required. Example: samples/circular-charts.nrtemplate and matching data JSON.</p>
+<h2 id="table-row-drill-down">Table row drill-down</h2>
+<p>Optional <code>drillDown: {&quot;label&quot;:&quot;Open details&quot;,&quot;template&quot;:{...v1 template...}}</code>
+embeds a detail template in an ordinary Table. Omitted/null disables it. Label is
+plain text, 1–120 characters; default Open details. Up to three nested detail
+levels are statically validated, including empty source tables. Detail templates
+have their own page/images/parameters/logic/dialog/blocks definitions.</p>
+<p>The Viewer opens the selected original row with <code>{row: record, source: parentData}</code>
+as data. ParentData is the snapshot after beforeRender, not a repeat/master
+record. Matching normalized parent parameters are inherited; other detail
+parameters use defaults/required validation. Row values are not automatically
+converted into parameters. Child scripts obey the same host opt-in; parameter
+dialogs do not run automatically. Back restores cached pages and view settings.</p>
+<p>Flow/Fixed, groups, sorting/filtering, master-detail and repeat tables are
+supported. Headers/totals are not links; split-row fragments select one record.
+Display expressions do not become row data. Cross-tabs/charts have no actions.
+The optional ReportDocument.drillDown metadata carries source/parameters,
+deduplicated targets, rows and page-point regions. Draw commands are unchanged;
+static exporters ignore interaction metadata. Limits: 10,000 interactive rows,
+8 MB serialized row data per report, existing JSON/request/page limits.</p>
+<p>See <a href="/docs/reports/drill-down">drill-down.md</a> for protocol, authoring steps, CLI and limitations.
+Example: samples/drill-down.nrtemplate with samples/drill-down.data.json.</p>
+<h2 id="derived-tables">Derived tables</h2>
+<p>Optional top-level <code>dataTables</code> contains up to 20 ordered definitions with
+<code>name</code>, <code>source</code>, <code>filters</code>, <code>filterMatch</code>, <code>sorts</code>, <code>groupBy</code> and <code>columns</code>.
+Each output column has <code>name</code>, exactly one <code>field</code>/numeric <code>expression</code>, and
+optional <code>aggregate</code> (sum/average/min/max/count); count has neither source.
+Filters and sorts use existing Table contracts. Grouped nonaggregate columns
+must copy a group field. Output names cannot replace existing root fields.</p>
+<p>Rules execute after parameter normalization, before scripts/layout, independently
+on each render. Raw data is preserved; derived outputs can feed later rules and
+report blocks. Empty global summaries emit count/sum 0 and average/min/max null;
+empty grouped summaries emit no rows. Limits and full semantics, including typed
+keys and source ordering, are in <a href="/docs/reports/data-preparation">data-preparation.md</a>.
+Sample: <code>samples/data-preparation.nrtemplate</code> and matching <code>.data.json</code>.</p>
+<h2 id="portable-data-connections">Portable data connections</h2>
+<p>Optional <code>connections</code> contains up to eight <code>{source,target,path,parameters,query,refreshOnRender}</code>
+definitions. Source is a host catalog ID; target is a distinct root array name;
+path selects a response array for HTTP/JSON/objects (empty means root and is required for SQL); parameters maps allowed
+source keys to declared scalar report parameter names. Optional query (up to 16,000
+characters) overrides SQL only for host sources with allowQueryEditing enabled.
+File paths, URLs and credentials never belong in templates. refreshOnRender defaults
+to false and opts an HTTP connection into refresh before server generation.</p>
+<p>The direct engine remains offline. Studio server generation refreshes opted-in HTTP
+connections before preparation/scripts; useSnapshot:true bypasses fetching. Studio
+exports reuse the displayed snapshot. Explicit refresh returns a candidate snapshot.
+See <a href="/docs/reports/http-connections">http-connections.md</a> for defaults, typed values, limits,
+atomic Apply/Undo, host setup and API/CLI. Sample: <code>http-connections.nrtemplate</code>
+with <code>http-connections.data.json</code>.</p>
+<h2 id="sql-json-and-object-sources">SQL, JSON and object sources</h2>
+<p>See <a href="/docs/reports/data-sources">data-sources.md</a> for all five SQL providers, JSON files,
+.NET object callbacks and direct POCO/JSON inputs. Connections keep only host IDs,
+target arrays, paths and report-parameter bindings, plus optional SQL overrides for
+explicitly editable host sources. Credentials and file paths remain on the host. SQL uses an empty path; JSON/objects may
+select a nested array. Refresh previews a candidate; Apply saves the snapshot.
+HTTP refresh before generation is an explicit per-connection option. Validate the template against its
+actual saved data, including when the source is unavailable. The manual includes
+an offline example with total 10.00 and configured refresh to 290.00.</p>
+<h2 id="page-sections-and-imported-subreports">Page sections and imported subreports</h2>
+<p>A <code>section</code> block starts on a fresh page, renders its <code>blocks</code> with its own <code>page</code>
+settings, then resumes the enclosing page settings on a fresh page. Settings use
+the same defaults and validation as the report page. Data, parameters, images and
+imported subreport names are shared with the enclosing report. Fixed blocks fit
+the section's content area. A section cannot be inside a repeat; put a repeat
+inside a section instead. Empty sections are rejected.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;section&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="nt">&quot;width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">841.89</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nt">&quot;height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">595.28</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nt">&quot;margin&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;header&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Overview&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nt">&quot;footer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Page {page} / {pages}&quot;</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="p">},</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="12"><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">      </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Landscape overview&quot;</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="16"><span class="p">}</span></span></code></pre></figure>
+<p><code>subreports</code> is a dictionary of imported v1 templates, keyed by identifiers
+(<code>[A-Za-z_][A-Za-z0-9_]{0,79}</code>, at most 20 per template). A <code>subreport</code> block names
+one with <code>reference</code>. <code>source</code> is a dotted path resolving to a data object; empty
+or omitted means the current object (including a repeat record).</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;subreports&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="nt">&quot;summary&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">      </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="7"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="8"><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">          </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{{data.customer}}&quot;</span></span>
+<span class="code-line" data-line="10"><span class="w">        </span><span class="p">}</span></span>
+<span class="code-line" data-line="11"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="13"><span class="w">  </span><span class="p">},</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="16"><span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;subreport&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">      </span><span class="nt">&quot;reference&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;summary&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">      </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;order&quot;</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="20"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="21"><span class="p">}</span></span></code></pre></figure>
+<p>Each imported report owns its page settings, images, data preparation and parameter
+schema. Same-named parent parameter values are inherited; child defaults apply to
+other parameters. The child validates inherited values against its own schema.
+Its <code>data</code> and <code>root</code> refer to its prepared object; parent scope is restored after
+it finishes. Child drill-down keeps the child's data and parameter snapshot.
+Scripts, dialogs and connections in imported templates are rejected: prepare or
+refresh data in the parent. No file paths, URL fetching or automatic file watching
+occur during generation. To update an external template, import it again and select
+the new snapshot. Existing references retain their saved version.</p>
+<p>Sections, subreports and drill-down allow at most three combined template nesting
+levels; repeat depth has its existing independent three-level limit. Each template
+retains its 1,000-block limit; the whole render retains the 100,000-instance and
+10,000-page limits. <code>frame</code> is not supported on section/subreport blocks and
+<code>spaceAfter</code> is ignored for those page-isolated containers. Initial, repeated and
+trailing boundaries do not add empty pages. <code>{page}</code> / <code>{pages}</code> always number the
+complete output, including all sections and imported reports. PDF, HTML, image
+exports and Word use each page's geometry; Excel retains its existing custom-paper
+size approximation. Validate the actual combined template/data, not only the child.</p>
+<p>See <code>samples/composed-report.nrtemplate</code>, its matching data and the independently
+importable <code>samples/order-subreport.nrtemplate</code>.</p>

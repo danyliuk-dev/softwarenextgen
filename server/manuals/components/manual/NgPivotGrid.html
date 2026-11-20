@@ -1,0 +1,262 @@
+<h1 id="ngpivotgrid-pivot-grid">NgPivotGrid — Pivot grid</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Aggregate records by row and column dimensions.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgPivotGrid#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgPivotGrid#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>NgPivotRecord contains a unique nonblank ID, string dimensions and one nullable finite numeric value. RowField/ColumnField must be nonblank. Raw dimension keys sort lexically; a missing key is the blank string. Sum/Average/Min/Max use numeric values; Count includes records with null values. Totals always aggregate original records, so an average is not an average of averages.</p>
+<p>ShowRowTotals/showRowTotals controls the last column of per-row totals. ShowColumnTotals/showColumnTotals controls the bottom row of per-column totals. Both default true; the grand total is visible only when both are true. Visibility changes presentation, not aggregation. ValueFormatter/valueFormatter receives the nullable aggregate and returns plain text for visible and accessible values; null means no numeric result or overflow. RowLabel/rowLabel and ColumnLabel/columnLabel format raw keys, including the blank string, without changing sorting or callback keys. TotalText/totalText labels totals independently of ordinary keys; EmptyText/emptyText replaces the no-data message. These are plain-text formatters, not arbitrary widget/HTML templates.</p>
+<p>SelectionReadOnly/selectionReadOnly blocks cell and total actions while keeping values readable. Missing callbacks also disable these actions. Input updates still work while locked. Stale callbacks after parent updates or disposal cannot emit old data. Cell callbacks contain original records in a read-only collection; null Row/Column denotes a total, while an empty string denotes a blank dimension. Replace input lists and dimension dictionaries instead of mutating them. This component emits drilldown requests and does not own current selection; the example retains Last drilldown as application history after data changes. Filter Items/items before passing them in. Multiple grouping levels, measures, OLAP, export, virtualization and a drag/drop configurator remain unimplemented.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;toolbar&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;rowTotals=!rowTotals&quot;</span><span class="p">&gt;</span>Toggle row totals<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;columnTotals=!columnTotals&quot;</span><span class="p">&gt;</span>Toggle column totals<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;locked=!locked&quot;</span><span class="p">&gt;</span>Toggle selection lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;average=!average&quot;</span><span class="p">&gt;</span>Toggle average<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;empty=!empty&quot;</span><span class="p">&gt;</span>Toggle empty data<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;records=Data(2)&quot;</span><span class="p">&gt;</span>Update values<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Row totals @(rowTotals?&quot;shown&quot;:&quot;hidden&quot;) · Column totals @(columnTotals?&quot;shown&quot;:&quot;hidden&quot;) · Selection @(locked?&quot;locked&quot;:&quot;enabled&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">NgPivotGrid</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;@(empty?[]:records)&quot;</span> <span class="na">Aggregate</span><span class="o">=</span><span class="s">&quot;@(average?NgAggregate.Average:NgAggregate.Sum)&quot;</span> <span class="na">ShowRowTotals</span><span class="o">=</span><span class="s">&quot;rowTotals&quot;</span> <span class="na">ShowColumnTotals</span><span class="o">=</span><span class="s">&quot;columnTotals&quot;</span> <span class="na">SelectionReadOnly</span><span class="o">=</span><span class="s">&quot;locked&quot;</span> <span class="na">ValueFormatter</span><span class="o">=</span><span class="s">&quot;Format&quot;</span> <span class="na">RowLabel</span><span class="o">=</span><span class="s">&quot;RowText&quot;</span> <span class="na">ColumnLabel</span><span class="o">=</span><span class="s">&quot;ColumnText&quot;</span> <span class="na">TotalText</span><span class="o">=</span><span class="s">&quot;All&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;No matching deliveries&quot;</span> <span class="na">OnCellSelected</span><span class="o">=</span><span class="s">&quot;Selected&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;status&quot;</span><span class="p">&gt;</span>Last drilldown: @message<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">rowTotals</span><span class="o">=</span><span class="k">true</span><span class="p">,</span><span class="n">columnTotals</span><span class="o">=</span><span class="k">true</span><span class="p">,</span><span class="n">locked</span><span class="p">,</span><span class="n">average</span><span class="p">,</span><span class="n">empty</span><span class="p">;</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="s">&quot;none&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgPivotRecord</span><span class="p">[]</span><span class="w"> </span><span class="n">records</span><span class="o">=</span><span class="n">Data</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">Format</span><span class="p">(</span><span class="kt">double?</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="p">.</span><span class="n">HasValue</span><span class="o">?</span><span class="n">v</span><span class="p">.</span><span class="n">Value</span><span class="p">.</span><span class="n">ToString</span><span class="p">(</span><span class="s">&quot;F1&quot;</span><span class="p">,</span><span class="n">System</span><span class="p">.</span><span class="n">Globalization</span><span class="p">.</span><span class="n">CultureInfo</span><span class="p">.</span><span class="n">InvariantCulture</span><span class="p">)</span><span class="o">+</span><span class="s">&quot; credits&quot;</span><span class="p">:</span><span class="s">&quot;No value&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">RowText</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="o">==</span><span class="s">&quot;&quot;</span><span class="o">?</span><span class="s">&quot;Unassigned&quot;</span><span class="p">:</span><span class="s">&quot;Team &quot;</span><span class="o">+</span><span class="n">v</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">ColumnText</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="s">&quot;Period &quot;</span><span class="o">+</span><span class="n">v</span><span class="p">;</span></span>
+<span class="code-line" data-line="19"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Selected</span><span class="p">(</span><span class="n">NgPivotSelection</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">message</span><span class="o">=</span><span class="s">$&quot;{p.Row??&quot;</span><span class="p">(</span><span class="n">total</span><span class="p">)</span><span class="s">&quot;} / {p.Column??&quot;</span><span class="p">(</span><span class="n">total</span><span class="p">)</span><span class="s">&quot;} · {p.Records.Count} records · IDs: {string.Join(&quot;</span><span class="p">,</span><span class="s">&quot;,p.Records.Select(r=&gt;r.Id))}&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="20"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NgPivotRecord</span><span class="p">[]</span><span class="w"> </span><span class="nf">Data</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">factor</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">{{</span><span class="s">&quot;Team&quot;</span><span class="p">,</span><span class="s">&quot;A&quot;</span><span class="p">},{</span><span class="s">&quot;Quarter&quot;</span><span class="p">,</span><span class="s">&quot;Q1&quot;</span><span class="p">}},</span><span class="mi">10</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">{{</span><span class="s">&quot;Team&quot;</span><span class="p">,</span><span class="s">&quot;A&quot;</span><span class="p">},{</span><span class="s">&quot;Quarter&quot;</span><span class="p">,</span><span class="s">&quot;Q1&quot;</span><span class="p">}},</span><span class="mi">30</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;c&quot;</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">{{</span><span class="s">&quot;Team&quot;</span><span class="p">,</span><span class="s">&quot;B&quot;</span><span class="p">},{</span><span class="s">&quot;Quarter&quot;</span><span class="p">,</span><span class="s">&quot;Q2&quot;</span><span class="p">}},</span><span class="mi">90</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;d&quot;</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">{{</span><span class="s">&quot;Team&quot;</span><span class="p">,</span><span class="s">&quot;&quot;</span><span class="p">},{</span><span class="s">&quot;Quarter&quot;</span><span class="p">,</span><span class="s">&quot;Q1&quot;</span><span class="p">}},</span><span class="k">null</span><span class="p">)];</span></span>
+<span class="code-line" data-line="21"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">rowTotals</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span><span class="n">columnTotals</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span><span class="n">locked</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">average</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">empty</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kt">String</span><span class="w"> </span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="n">List</span><span class="o">&lt;</span><span class="n">NgPivotRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="o">=</span><span class="n">data</span><span class="p">(</span><span class="m">1</span><span class="p">);</span></span>
+<span class="code-line" data-line="4"><span class="kd">static</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">NgPivotRecord</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">factor</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">[</span><span class="n">NgPivotRecord</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,{</span><span class="s1">&#39;Team&#39;</span><span class="o">:</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;Quarter&#39;</span><span class="o">:</span><span class="s1">&#39;Q1&#39;</span><span class="p">},</span><span class="m">10.0</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="n">NgPivotRecord</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,{</span><span class="s1">&#39;Team&#39;</span><span class="o">:</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;Quarter&#39;</span><span class="o">:</span><span class="s1">&#39;Q1&#39;</span><span class="p">},</span><span class="m">30.0</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="n">NgPivotRecord</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,{</span><span class="s1">&#39;Team&#39;</span><span class="o">:</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;Quarter&#39;</span><span class="o">:</span><span class="s1">&#39;Q2&#39;</span><span class="p">},</span><span class="m">90.0</span><span class="o">*</span><span class="n">factor</span><span class="p">),</span><span class="n">NgPivotRecord</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,{</span><span class="s1">&#39;Team&#39;</span><span class="o">:</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="s1">&#39;Quarter&#39;</span><span class="o">:</span><span class="s1">&#39;Q1&#39;</span><span class="p">},</span><span class="kc">null</span><span class="p">)];</span></span>
+<span class="code-line" data-line="5"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="6"><span class="w"> </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">runSpacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">rowTotals</span><span class="o">=!</span><span class="n">rowTotals</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle row totals&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">columnTotals</span><span class="o">=!</span><span class="n">columnTotals</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle column totals&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">locked</span><span class="o">=!</span><span class="n">locked</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle selection lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">average</span><span class="o">=!</span><span class="n">average</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle average&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">empty</span><span class="o">=!</span><span class="n">empty</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle empty data&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">records</span><span class="o">=</span><span class="n">data</span><span class="p">(</span><span class="m">2</span><span class="p">)),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Update values&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="p">]),</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Row totals </span><span class="si">${</span><span class="n">rowTotals</span><span class="o">?</span><span class="s2">&quot;shown&quot;</span><span class="o">:</span><span class="s2">&quot;hidden&quot;</span><span class="si">}</span><span class="s1"> · Column totals </span><span class="si">${</span><span class="n">columnTotals</span><span class="o">?</span><span class="s2">&quot;shown&quot;</span><span class="o">:</span><span class="s2">&quot;hidden&quot;</span><span class="si">}</span><span class="s1"> · Selection </span><span class="si">${</span><span class="n">locked</span><span class="o">?</span><span class="s2">&quot;locked&quot;</span><span class="o">:</span><span class="s2">&quot;enabled&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="n">NgPivotGrid</span><span class="p">(</span><span class="nl">items:</span><span class="n">empty</span><span class="o">?</span><span class="k">const</span><span class="w"> </span><span class="p">[]</span><span class="o">:</span><span class="n">records</span><span class="p">,</span><span class="nl">aggregate:</span><span class="n">average</span><span class="o">?</span><span class="n">NgAggregate</span><span class="p">.</span><span class="nl">average:</span><span class="n">NgAggregate</span><span class="p">.</span><span class="n">sum</span><span class="p">,</span><span class="nl">showRowTotals:</span><span class="n">rowTotals</span><span class="p">,</span><span class="nl">showColumnTotals:</span><span class="n">columnTotals</span><span class="p">,</span><span class="nl">selectionReadOnly:</span><span class="n">locked</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">  </span><span class="nl">valueFormatter:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="o">==</span><span class="kc">null</span><span class="o">?</span><span class="s1">&#39;No value&#39;</span><span class="o">:</span><span class="s1">&#39;</span><span class="si">${</span><span class="n">v</span><span class="p">.</span><span class="n">toStringAsFixed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="si">}</span><span class="s1"> credits&#39;</span><span class="p">,</span><span class="nl">rowLabel:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">v</span><span class="p">.</span><span class="n">isEmpty</span><span class="o">?</span><span class="s1">&#39;Unassigned&#39;</span><span class="o">:</span><span class="s1">&#39;Team </span><span class="si">$</span><span class="n">v</span><span class="s1">&#39;</span><span class="p">,</span><span class="nl">columnLabel:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="s1">&#39;Period </span><span class="si">$</span><span class="n">v</span><span class="s1">&#39;</span><span class="p">,</span><span class="nl">totalText:</span><span class="s1">&#39;All&#39;</span><span class="p">,</span><span class="nl">emptyText:</span><span class="s1">&#39;No matching deliveries&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">  </span><span class="nl">onCellSelected:</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">message</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">row</span><span class="o">??</span><span class="s2">&quot;(total)&quot;</span><span class="si">}</span><span class="s1"> / </span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">column</span><span class="o">??</span><span class="s2">&quot;(total)&quot;</span><span class="si">}</span><span class="s1"> · </span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">length</span><span class="si">}</span><span class="s1"> records · IDs: </span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">records</span><span class="p">.</span><span class="n">map</span><span class="p">((</span><span class="n">r</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">r</span><span class="p">.</span><span class="n">id</span><span class="p">).</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Last drilldown: </span><span class="si">$</span><span class="n">message</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="19"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Pivot table&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgPivotRecord&gt;</code></td>
+<td>[]</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>RowField</code></td>
+<td><code>string</code></td>
+<td>&quot;Team&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ColumnField</code></td>
+<td><code>string</code></td>
+<td>&quot;Quarter&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Aggregate</code></td>
+<td><code>NgAggregate</code></td>
+<td>NgAggregate.Sum</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ShowRowTotals</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ShowColumnTotals</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ValueFormatter</code></td>
+<td><code>Func&lt;double?,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>RowLabel</code></td>
+<td><code>Func&lt;string,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ColumnLabel</code></td>
+<td><code>Func&lt;string,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>TotalText</code></td>
+<td><code>string</code></td>
+<td>&quot;Total&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No pivot data.&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnCellSelected</code></td>
+<td><code>EventCallback&lt;NgPivotSelection&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>rowField</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>columnField</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgPivotRecord&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>aggregate</code></td>
+<td><code>NgAggregate</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>showRowTotals</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>showColumnTotals</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>totalText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>valueFormatter</code></td>
+<td><code>String Function(double?)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>rowLabel</code></td>
+<td><code>String Function(String)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>columnLabel</code></td>
+<td><code>String Function(String)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onCellSelected</code></td>
+<td><code>ValueChanged&lt;NgPivotSelection&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgPivotGrid</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Pivot table&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rowField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Team&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">columnField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Quarter&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">aggregate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NgAggregate</span><span class="p">.</span><span class="n">sum</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onCellSelected</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showRowTotals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showColumnTotals</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">totalText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Total&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No pivot data.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">valueFormatter</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rowLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">columnLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

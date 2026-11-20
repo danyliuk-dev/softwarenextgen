@@ -1,0 +1,76 @@
+<h1 id="page-image-export">Page image export</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>PNG and SVG export the engine's final positioned pages, including tables, charts,
+barcodes, images, headers and footers. They are page pictures, not editable report
+projects or data exports. Generate first; Studio exports the last generated
+request even if the editors contain unfinished changes. As with PDF/HTML, export
+renders that saved request again, so nondeterministic trusted scripts can produce
+new values. Save the project separately to preserve template and source data.</p>
+<h2 id="studio">Studio</h2>
+<ol>
+<li>Generate preview, then open <strong>Preview → Export images</strong>.</li>
+<li>Choose PNG or SVG. PNG offers 72, 150 (default) or 300 DPI. Higher DPI creates
+more pixels; it does not change page breaks or wrap text again. SVG is vector
+and disables the DPI selector.</li>
+<li>Choose All pages, Current page or Page range. Current uses the viewer's selected
+page at dialog opening; range endpoints are inclusive and start at 1.</li>
+<li>Leave <strong>Always package as ZIP</strong> checked for an archive. Uncheck it for a single
+selected page to download one PNG/SVG. Multiple pages always produce ZIP.</li>
+<li>Download and inspect the result. ZIP entries retain original page numbers:
+page-0002.png, page-0003.png, etc. Cancel leaves the report unchanged.</li>
+</ol>
+<p>The page background is opaque white. SVG embeds raster images and converts text
+into vector outlines using the same regular/bold DejaVu fonts as the report.
+It needs no installed fonts or network resources. Text is <strong>not selectable or
+searchable</strong> in PNG/SVG; use PDF or HTML when text search/accessibility is needed.
+SVG retains physical dimensions in points plus a matching viewBox. Raster PNG
+stores its DPI in pHYs metadata; consumers may choose their own print scaling.</p>
+<p>PNG dimensions are ceil(page points × DPI / 72). A4 portrait (595.28 × 841.89pt)
+is 1241 × 1754px at 150 DPI. For barcode scanning, prefer 150–300 DPI and adequate
+module width: a one-pixel module at 72 DPI may require magnification by a detector.
+Neither resolution settings nor successful software decoding prove physical
+printer/scanner behavior. Raster edges can differ slightly from browser/PDF
+antialiasing; layout coordinates and embedded font outlines are retained.</p>
+<p>Limits: 72–300 DPI, at most 100 selected pages, 25 million pixels per PNG page,
+100 million pixels per PNG export, 25 MB per SVG and 100 MB ZIP. Lower DPI or
+select a smaller page range when a limit is reached. Export finishes in memory
+before writing the destination; rejected options do not create partial files.
+Large exports use native raster memory in addition to the output buffer.</p>
+<h2 id="installed-command-line-tools">Installed command-line tools</h2>
+<p>With local Studio running:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1"><span class="c1"># All pages, ZIP containing PNG files at 150 DPI</span></span>
+<span class="code-line" data-line="2">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/sales.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span>--data<span class="w"> </span>samples/sales.data.json<span class="w"> </span>--parameters<span class="w"> </span>samples/sales.parameters.json<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span>--format<span class="w"> </span>png<span class="w"> </span>--output<span class="w"> </span>artifacts/sales-pages.zip</span>
+<span class="code-line" data-line="5"></span>
+<span class="code-line" data-line="6"><span class="c1"># One vector page, standalone SVG</span></span>
+<span class="code-line" data-line="7">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/circular-charts.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span>--data<span class="w"> </span>samples/circular-charts.data.json<span class="w"> </span>--format<span class="w"> </span>svg<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span>--first-page<span class="w"> </span><span class="m">1</span><span class="w"> </span>--last-page<span class="w"> </span><span class="m">1</span><span class="w"> </span>--single-image<span class="w"> </span>--output<span class="w"> </span>artifacts/composition.svg</span></code></pre></figure>
+<p>Use --dpi 300 for high-resolution PNG and --first-page/--last-page for a range.
+--single-image disables forced ZIP only when exactly one page is selected.
+The output suffix must match the actual response (.zip, .png or .svg).
+Omit --output to validate export without saving it. report-tool.py requires Studio.</p>
+<h2 id="api-and-net">API and .NET</h2>
+<p>POST /api/export/images accepts the same template/data/parameters as /api/preview,
+plus optional options:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;data&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;options&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;png&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nt">&quot;dpi&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">150</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;firstPage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nt">&quot;lastPage&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="nt">&quot;archive&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="11"><span class="p">}</span></span></code></pre></figure>
+<p>Defaults: png, 150 DPI, first page 1, last page equal to the report's page count,
+archive true. The result is application/zip, image/png or image/svg+xml with
+Content-Disposition and X-Report-Pages (number of exported pages). Validation
+errors return HTTP 400 Problem Details, including parameterErrors where relevant.
+The existing same-origin rules apply. Scripts follow the host's opt-in setting.</p>
+<p>For .NET image export, submit the documented JSON body to this endpoint using HttpClient, then save the returned bytes. Use the installed client for preview and PDF/Office export as described in the <a href="/docs/reports/dotnet-integration">.NET guide</a>.
+SVG uses outlined text; no third-party SVG parser is used. SkiaSharp and Linux
+native assets are pinned to 3.119.2, with their upstream notices shipped under
+licenses/. Local Linux on iMac is verified; macOS/Windows remain unverified.</p>

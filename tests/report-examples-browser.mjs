@@ -1,0 +1,35 @@
+import fs from 'node:fs';
+const port=process.argv[2]||'9355',base=process.argv[3]||'http://127.0.0.1:5356';
+const tabs=await(await fetch(`http://127.0.0.1:${port}/json/list`)).json();const ws=new WebSocket(tabs.find(t=>t.type==='page').webSocketDebuggerUrl);await new Promise((r,j)=>{ws.onopen=r;ws.onerror=j});let id=0;const pending=new Map();ws.onmessage=e=>{const x=JSON.parse(e.data);if(pending.has(x.id)){const[r,j]=pending.get(x.id);pending.delete(x.id);x.error?j(Error(x.error.message)):r(x.result)}};
+const send=(method,params={})=>new Promise((r,j)=>{const n=++id;pending.set(n,[r,j]);ws.send(JSON.stringify({id:n,method,params}))});
+const evalJS=async expression=>{const r=await send('Runtime.evaluate',{expression,awaitPromise:true,returnByValue:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value};
+async function wait(expression){for(let i=0;i<100;i++){try{if(await evalJS(expression))return}catch{}await new Promise(r=>setTimeout(r,100));}throw Error('Timed out: '+expression)}
+const cases={
+'overview':["document.querySelector('#sample').value='charts';document.querySelector('#sample').dispatchEvent(new Event('change'));document.querySelector('#view-inputs').click()","document.querySelector('#detail pre')&&document.querySelector('#page-image').src.includes('/charts/')"],
+'index':["void 0","document.querySelectorAll('.topic-links a').length===8"],
+'agent-authoring':["document.querySelector('#validate-template').click()","document.querySelector('#status').textContent==='Template validation passed.'"],
+'data-import':["document.querySelector('#import-format').value='xlsx';document.querySelector('#import-format').dispatchEvent(new Event('change'));document.querySelector('#import-data').click()","document.querySelector('#status').textContent.includes('Imported 3 rows')&&document.querySelector('#detail').textContent.includes('Monitor')"],
+'data-preparation':["document.querySelector('#minimum').value='100';document.querySelector('#prepare').click()","document.querySelector('#status').textContent.includes('regional totals')&&document.querySelector('#page-image').src.includes('prepared-100')"],
+'data-sources':["document.querySelector('#source-kind').value='sql';document.querySelector('#source-kind').dispatchEvent(new Event('change'))","document.querySelector('#detail').textContent.includes('SQLite query')&&document.querySelector('#source-file').href.endsWith('.sqlite.bin')"],
+'desktop':["document.querySelector('#platform').value='mac';document.querySelector('#platform').dispatchEvent(new Event('change'))","document.querySelector('#detail').textContent.includes('macOS first launch')"],
+'developer-guide':["document.querySelector('#inspect-response').click()","document.querySelector('#status').textContent.includes('pages in the response')"],
+'dotnet-integration':["document.querySelector('#inspect-request').click()","document.querySelector('#detail').textContent.includes('POST /api/preview')"],
+'drill-down':["document.querySelector('#order').selectedIndex=1;document.querySelector('#open-order').click()","document.querySelector('#page-image').src.includes('order-ord-002')"],
+'flutter-integration':["document.querySelector('#inspect-response').click()","document.querySelector('#detail pre')&&document.querySelector('#page-image').src.includes('charts')"],
+'http-connections':["document.querySelector('#refresh').click()","document.querySelector('#status').textContent.includes('Snapshot 2')&&document.querySelector('#page-image').src.includes('http-2')"],
+'image-export':["document.querySelector('#image-format').value='svg';document.querySelector('#image-format').dispatchEvent(new Event('change'));document.querySelector('#first').value='2';document.querySelector('#first').dispatchEvent(new Event('change'))","document.querySelector('#export-images').href.endsWith('svg-96-2-3.zip')&&document.querySelector('#dpi').disabled"],
+'office-export':["document.querySelector('#content-mode').value='pages';document.querySelector('#content-mode').dispatchEvent(new Event('change'));document.querySelector('#first').value='2';document.querySelector('#first').dispatchEvent(new Event('change'))","document.querySelector('#export-xlsx').href.endsWith('xlsx-pages-2-3.xlsx')&&document.querySelector('#export-docx').href.endsWith('docx-pages-2-3.docx')"],
+'report-authoring-manual':["document.querySelector('#region').value='West';document.querySelector('#minimum').value='5';document.querySelector('#generate').click()","document.querySelector('#page-image').src.includes('parameters-west-5')"],
+'report-library':["document.querySelector('#clear-versions').click();document.querySelector('#save-version').click();document.querySelector('#library-sample').value='charts';document.querySelector('#library-sample').dispatchEvent(new Event('change'));document.querySelector('.library-row button').click()","document.querySelector('#status').textContent.includes('Restored version 1')&&document.querySelector('#page-image').src.includes('/sales/')"],
+'report-logic-manual':["document.querySelector('#invalid').click()","document.querySelector('#status').classList.contains('error')&&document.querySelector('#detail pre').textContent.includes('parameterErrors')"],
+'template-format':["document.querySelector('#template-kind').value='invalid';document.querySelector('#validate-template').click()","document.querySelector('#status').classList.contains('error')&&document.querySelector('#detail').textContent.includes('unknown-control')"],
+'toolbox':["document.querySelector('#region').value='East';document.querySelector('#minimum').value='10';document.querySelector('#generate').click()","document.querySelector('#page-image').src.includes('parameters-east-10')"],
+'installation':["document.querySelector('#platform').value='windows';document.querySelector('#show-steps').click()","document.querySelector('#starter').href.endsWith('.nrproject.json')&&document.querySelector('#detail').textContent.includes('Start menu')"]};
+const results=[];
+for(const[topic,[action,expected]]of Object.entries(cases)){
+ await send('Page.navigate',{url:base+'/report-examples/index.html?topic='+topic});await wait(`document.body.dataset.ready==='true'&&document.body.dataset.topic===${JSON.stringify(topic)}`);await evalJS(action);await wait(expected);await wait("document.querySelector('#viewer').hidden||document.querySelector('#page-image').naturalWidth>0");
+ const downloads=await evalJS(`(async()=>{let count=0;for(const a of document.querySelectorAll('a[download][href]')){if(a.getAttribute('aria-disabled')==='true')continue;const r=await fetch(a.href);if(!r.ok)throw Error(a.href+' '+r.status);const bytes=await r.arrayBuffer();if(bytes.byteLength<10)throw Error('Empty download');count++;}return count})()`);
+ if(topic==='report-library')await evalJS("document.querySelector('#clear-versions').click()");
+ results.push({topic,downloads,status:'passed'});console.log('PASS '+topic+' ('+downloads+' downloads)');
+}
+console.log(JSON.stringify({topics:results.length,results}));ws.close();

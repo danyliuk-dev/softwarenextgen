@@ -1,0 +1,174 @@
+<h1 id="ngcalendar-calendar">NgCalendar — Calendar</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Select a calendar date or local wall-clock time without automatic timezone conversion.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgCalendar#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgCalendar#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>Input format: calendar selection. Min/Max include boundary values. Invalid dates such as April 31 and times such as 24:00 are rejected. DisabledDate returns true for unavailable days. Blazor uses DateOnly, TimeOnly or DateTime; Flutter uses DateTime or TimeOfDay. Normalize timezones at application boundaries. Empty optional input is null. Validate required values through the form or application rule; Calendar has no required parameter. See <span>forms and dates</span> for supported calendar interactions and parsing limitations.</p>
+<p>ReadOnly/readOnly prevents user changes. Disabled/enabled also disables interaction. Date editors keep readable, focusable text in read-only mode and disable their picker action; Calendar blocks selection and navigation (Flutter also excludes keyboard focus). Bounds must be ordered; invalid configuration throws. Values are Gregorian calendar dates; date text is ISO yyyy-MM-dd, independent of Blazor's current culture. Empty optional input clears to null.</p>
+<p>DisabledDate/disabledDate applies to typing and calendar selection. In a range it checks both endpoints, not every date between them. Partial and reversed ranges fail form validation. Flutter range validation reads the current parent value after replacement. Applications own validation of external single-date values. Replace the form key to discard an invalid draft when the model value is unchanged.</p>
+<p>Flutter calendars use Material locale/week-start and default bounds 1900–2100; Blazor uses Culture/FirstDayOfWeek and DateOnly bounds. Supply explicit bounds for matching domains. Calendar selection is single-date only. Shared range highlighting, multiple calendar views, cell templates, week numbers, segmented/custom-format input and complete keyboard/screen-reader parity remain open. Flutter popup results are ignored after a parent rebuild, edit or disposal.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCalendar</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;value&quot;</span> <span class="na">Min</span><span class="o">=</span><span class="s">&quot;min&quot;</span> <span class="na">Max</span><span class="o">=</span><span class="s">&quot;max&quot;</span> <span class="na">DisabledDate</span><span class="o">=</span><span class="s">&quot;Unavailable&quot;</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;Toggle&quot;</span><span class="p">&gt;</span>Read only<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Accepted date: @value<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">DateOnly</span><span class="o">?</span><span class="w"> </span><span class="k">value</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="p">;</span></span>
+<span class="code-line" data-line="6"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">DateOnly</span><span class="w"> </span><span class="n">min</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">max</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">31</span><span class="p">);</span></span>
+<span class="code-line" data-line="7"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Unavailable</span><span class="p">(</span><span class="n">DateOnly</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">d</span><span class="p">.</span><span class="n">DayOfWeek</span><span class="o">==</span><span class="n">DayOfWeek</span><span class="p">.</span><span class="n">Sunday</span><span class="p">;</span></span>
+<span class="code-line" data-line="8"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Toggle</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=!</span><span class="n">readOnly</span><span class="p">;</span></span>
+<span class="code-line" data-line="9"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">DateTime</span><span class="o">?</span><span class="w"> </span><span class="n">value</span><span class="o">=</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">20</span><span class="p">);</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">start</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="3"><span class="w"> </span><span class="n">NgCalendar</span><span class="p">(</span><span class="nl">value:</span><span class="n">value</span><span class="p">,</span><span class="nl">min:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="nl">max:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">31</span><span class="p">),</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nl">readOnly:</span><span class="n">readOnly</span><span class="p">,</span><span class="nl">disabledDate:</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">d</span><span class="p">.</span><span class="n">weekday</span><span class="o">==</span><span class="n">DateTime</span><span class="p">.</span><span class="n">sunday</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">value</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="6"><span class="w"> </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=!</span><span class="n">readOnly</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Read only&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="7"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Accepted date: </span><span class="si">$</span><span class="n">value</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="8"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Value</code></td>
+<td><code>DateOnly?</code></td>
+<td>not set</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;DateOnly?&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>Min</code></td>
+<td><code>DateOnly?</code></td>
+<td>not set</td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>Max</code></td>
+<td><code>DateOnly?</code></td>
+<td>not set</td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>DisabledDate</code></td>
+<td><code>Func&lt;DateOnly,bool&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Calendar&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Culture</code></td>
+<td><code>CultureInfo</code></td>
+<td>CultureInfo.CurrentCulture</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>FirstDayOfWeek</code></td>
+<td><code>DayOfWeek</code></td>
+<td>DayOfWeek.Monday</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>value</code></td>
+<td><code>DateTime?</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td><code>DateTime?</code></td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td><code>DateTime?</code></td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;DateTime&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>disabledDate</code></td>
+<td><code>bool Function(DateTime)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgCalendar</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">min</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">max</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabledDate</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

@@ -1,0 +1,46 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.70.0-linux-x86_64.AppImage",
+    "storage_name": "components/0.70.0/linux-x64/NextgenComponents-0.70.0-linux-x86_64.AppImage",
+    "size": 217994602,
+    "sha256": "336C31D783A0EB6711AA880A97D440168C9FD9DAD797DD4CF38C581157379A59",
+    "notes": "Self-contained desktop workspace with offline manuals. Manual updates through this portal."
+  },
+  {
+    "id": "1c0ebae0-8a57-445e-9e09-c0314d49510f",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "Linux x64",
+    "filename": "Nextgen-Reports-0.2.1-linux-x86_64.AppImage",
+    "storage_name": "reports/0.2.1/linux-x64/Nextgen-Reports-0.2.1-linux-x86_64.AppImage",
+    "size": 237073003,
+    "sha256": "52F613210D3F61C9CBEA55734687171CA273D0BDBB81A23F06B948FE8A33EE84",
+    "notes": "Self-contained desktop workspace with offline manuals. Manual updates through this portal."
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.70.0-mac-arm64.dmg",
+    "storage_name": "components/0.70.0/osx-arm64/NextgenComponents-0.70.0-mac-arm64.dmg",
+    "size": 228891448,
+    "sha256": "25C16FC0F3B48A67C2B3E22AAA0749AD22EF36CD6100E0DF57F96C6061427433",
+    "notes": "Apple Silicon (M-series). Includes local runtime and manuals. Unsigned and not notarized; see the installation guide."
+  },
+  {
+    "id": "fe629692-f256-411b-8d4b-90d0fd57c530",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "macOS Apple Silicon",
+    "filename": "Nextgen-Reports-0.2.1-mac-arm64.dmg",
+    "storage_name": "reports/0.2.1/osx-arm64/Nextgen-Reports-0.2.1-mac-arm64.dmg",
+    "size": 240268312,
+    "sha256": "EFC27AC96FA955657D66A0B0F39086ECB4CCE2714B62F932DE253156462BEE83",
+    "notes": "Apple Silicon (M-series). Includes local runtime and manuals. Unsigned and not notarized; see the installation guide."
+  }
+]

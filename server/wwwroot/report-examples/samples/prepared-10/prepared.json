@@ -1,0 +1,109 @@
+{
+  "data": {
+    "company": "Synthetic company",
+    "items": [
+      {
+        "id": "A",
+        "region": "East",
+        "quantity": 2,
+        "price": 25,
+        "status": "Paid"
+      },
+      {
+        "id": "B",
+        "region": "West",
+        "quantity": 3,
+        "price": 40,
+        "status": "Paid"
+      },
+      {
+        "id": "C",
+        "region": "East",
+        "quantity": 1,
+        "price": 20,
+        "status": "Paid"
+      },
+      {
+        "id": "D",
+        "region": "West",
+        "quantity": 2,
+        "price": 100,
+        "status": "Pending"
+      },
+      {
+        "id": "E",
+        "region": "North",
+        "quantity": 1,
+        "price": 5,
+        "status": "Paid"
+      }
+    ],
+    "sales": [
+      {
+        "region": "East",
+        "order": "A",
+        "amount": 50
+      },
+      {
+        "region": "East",
+        "order": "C",
+        "amount": 20
+      },
+      {
+        "region": "North",
+        "order": "E",
+        "amount": 5
+      },
+      {
+        "region": "West",
+        "order": "B",
+        "amount": 120
+      }
+    ],
+    "qualified": [
+      {
+        "region": "East",
+        "order": "A",
+        "amount": 50
+      },
+      {
+        "region": "East",
+        "order": "C",
+        "amount": 20
+      },
+      {
+        "region": "West",
+        "order": "B",
+        "amount": 120
+      }
+    ],
+    "regional": [
+      {
+        "region": "East",
+        "revenue": 70,
+        "average": 35,
+        "orders": 2
+      },
+      {
+        "region": "West",
+        "revenue": 120,
+        "average": 120,
+        "orders": 1
+      }
+    ],
+    "ranked": [
+      {
+        "region": "West",
+        "revenue": 120,
+        "average": 120,
+        "orders": 1
+      },
+      {
+        "region": "East",
+        "revenue": 70,
+        "average": 35,
+        "orders": 2
+      }
+    ]
+  }
+}

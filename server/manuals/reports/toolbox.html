@@ -1,0 +1,227 @@
+<h1 id="dialog-toolbox">Dialog Toolbox</h1>
+<p>Toolbox is a browser-native, cross-platform palette inspired by the
+<a href="https://learn.microsoft.com/en-us/dotnet/desktop/winforms/controls/windows-forms-controls-by-function">WinForms control groups</a>.
+The 30 entries below work in Studio and runtime dialogs. Each has a distinct
+local SVG icon, searchable label, click insertion and drag-and-drop.</p>
+<table>
+<thead>
+<tr>
+<th>Group</th>
+<th>Controls</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Text input</td>
+<td>TextBox, MaskedTextBox, Multiline TextBox, PasswordBox</td>
+<td>String parameters; PasswordBox masks display only</td>
+</tr>
+<tr>
+<td>Numbers</td>
+<td>NumericUpDown, TrackBar</td>
+<td>Numeric parameters, optional minimum/maximum; TrackBar requires both</td>
+</tr>
+<tr>
+<td>Selection</td>
+<td>CheckBox, ComboBox, ListBox, RadioButton group, CheckedListBox, ColorPicker</td>
+<td>Boolean, string selection, string array selection, or #RRGGBB</td>
+</tr>
+<tr>
+<td>Date and time</td>
+<td>DateTimePicker · Date, TimePicker, DateTimePicker</td>
+<td>ISO date, time, local datetime strings</td>
+</tr>
+<tr>
+<td>Containers</td>
+<td>Panel, GroupBox, TabControl, TabPage</td>
+<td>Nested children, parent assignment, movement, resizing and anchors</td>
+</tr>
+<tr>
+<td>Actions</td>
+<td>Button · Generate, Button · Reset, Button · Cancel, Button · Custom</td>
+<td>Generate/close preview, restore defaults, discard draft, run dialogButtonClick</td>
+</tr>
+<tr>
+<td>Display</td>
+<td>Label, LinkLabel, PictureBox, ProgressBar, Separator</td>
+<td>Caption, safe external link, image resource, 0–100 value, divider</td>
+</tr>
+<tr>
+<td>Data views</td>
+<td>DataGridView, TreeView</td>
+<td>Read-only views of report JSON</td>
+</tr>
+</tbody>
+</table>
+<h2 id="inserting-and-configuring">Inserting and configuring</h2>
+<p>Use search or expand a group. Click a tool to insert it, or drag onto the form.
+Dropping inside a container assigns Parent automatically. Clicking while a
+container is selected inserts a child. Fields reuse an unbound parameter only
+when its type and control match; otherwise an optional parameterN is created.
+Combo/list/radio controls start with two editable choices.</p>
+<p>Properties configures Caption, Parent, geometry, Anchors, and component-specific
+settings. <strong>Edit parameter / options</strong> opens parameter definitions, including
+labels, help, choices, defaults, Minimum and Maximum.</p>
+<ul>
+<li>Parent accepts Panel, GroupBox or TabPage. TabControl accepts only TabPages. Coordinates are stored in form coordinates.
+Runtime subtracts the parent position; children must fit inside it.</li>
+<li>Moving a container moves descendants. Resizing applies child anchors.
+Cycles and invalid bounds are rejected. Deleting a container removes its
+descendants from the layout without deleting parameter definitions.</li>
+<li>Earlier/Later reorder siblings. Runtime visits each parent then its children.</li>
+<li>LinkLabel URL accepts http, https or mailto; it opens only on user activation.</li>
+<li>PictureBox Resource selects an existing template image (add images through
+the report's Insert Image workflow). Images are embedded, not remote fetched.</li>
+<li>ProgressBar uses Value 0–100 or a numeric Source path in input data.</li>
+<li>TrackBar (Range) displays the current numeric value beside the slider. Its
+readout follows both manual input and parameter updates from dialog events.</li>
+<li>DataGridView Source is a dotted array path; at most 100 rows and 20 columns.</li>
+<li>TreeView Source is a dotted data path, or empty for the full data object;
+display is limited to 200 entries and six levels. Nodes expand/collapse.</li>
+<li>Button Action may be submit, reset, cancel, custom, next or back. Next/Back require a TabPage ancestor. Preview never executes report
+logic; Generate in a runtime dialog runs the normal report pipeline.</li>
+</ul>
+<h2 id="value-contracts">Value contracts</h2>
+<p>Date: YYYY-MM-DD. Time: HH:mm or HH:mm:ss. Datetime:
+YYYY-MM-DDTHH:mm or YYYY-MM-DDTHH:mm:ss (local time, no timezone conversion).
+Color: #RRGGBB. CheckedListBox uses a real JSON string array and TypeScript
+string[], including [] for missing optional values. Required lists need at
+least one selection. Choices are exact, unique strings.</p>
+<p>Server binding validates dates, times, colors, ranges and choices before
+TypeScript report handlers execute. Text binding of string arrays joins items
+with a comma and space; scripts can use array methods to implement custom logic.
+PasswordBox is not a secret store: values are handled like other parameters and
+may be included in saved projects.</p>
+<h2 id="compatibility-boundaries">Compatibility boundaries</h2>
+<p>This is not the entire Windows Forms class library. Native Windows services
+(NotifyIcon, SerialPort, BackgroundWorker, native file/print dialogs) are not
+available in the browser palette. SplitContainer,
+FlowLayoutPanel/TableLayoutPanel, RichTextBox/RTF and editable
+DataGridView are not implemented yet. Load/Change/Custom Click support dynamic
+choices and visible/enabled state. Tab selection supports Page changed events. Back/Next actions navigate existing TabPages; Sequential steps in TabControl Properties requires Next for forward
+navigation.
+There are no disabled placeholder tools pretending to implement these controls.</p>
+<h2 id="tabbed-forms">Tabbed forms</h2>
+<p>Insert <strong>TabControl</strong> to create a container with two pages. Click a tab header
+(or select a page/child in the object selector) to edit that page. Insert
+<strong>TabPage</strong> while a TabControl or its page is selected to add another page.
+Set its Caption and use Earlier/Later to change page order. Arrow keys and
+Home/End navigate tab headers in the designer and runtime.</p>
+<p>Place fields, panels and even nested TabControls on pages. Only the active
+page is shown, but values on all pages are collected. Switching pages does not
+reset values. Generate reveals the page containing an invalid field, including
+nested pages. Reset restores defaults across all pages. Active page selection
+is view state: reopening the runtime starts with the first page.</p>
+<p>Pages created in Studio fill their parent below a 36 px tab strip and stretch
+with it. Resize/move the TabControl; page geometry is not edited separately.
+TabControl has a minimum size of 160 × 100 px. Deleting a page or TabControl
+removes its descendants from the layout, while keeping parameter definitions
+and values. At least one page must remain; Undo restores removed layouts.</p>
+<p>Template kinds are <code>tabs</code> and <code>tabpage</code>; pages reference a TabControl with
+<code>parentId</code>. Field coordinates remain form-relative, as for other containers.
+The server rejects orphan pages, ordinary children directly under TabControl,
+empty TabControls, and pages overlapping the tab strip.</p>
+<h2 id="maskedtextbox">MaskedTextBox</h2>
+<p>Choose MaskedTextBox in Text input. It creates an optional string parameter with
+mask <code>000-000</code>. Use <strong>Edit parameter / options</strong>, then <strong>Mask</strong>, to change it.
+The placeholder shows expected separators; hovering displays the mask legend.</p>
+<table>
+<thead>
+<tr>
+<th>Mask symbol</th>
+<th>Required input</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>One ASCII digit 0–9</td>
+</tr>
+<tr>
+<td><code>L</code></td>
+<td>One ASCII letter A–Z or a–z</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>One ASCII letter or digit</td>
+</tr>
+<tr>
+<td><code>\</code> followed by a character</td>
+<td>That literal character (for example <code>\0</code>)</td>
+</tr>
+<tr>
+<td>Any other printable ASCII character</td>
+<td>That literal character</td>
+</tr>
+</tbody>
+</table>
+<p>Masks contain 1–128 printable ASCII characters and at least one input slot.
+Every slot is required for nonempty values. Optional parameters allow an empty
+string; partially completed values are rejected. Case is preserved.</p>
+<p>For <code>LL-000</code>, either type <code>AB-123</code> or type/paste the complete unformatted <code>AB123</code>.
+Studio inserts literals when the field loses focus or is validated for Generate.
+It does not change the caret while typing, strip invalid text or truncate extra
+characters. Partially formatted text must be corrected by the user.
+Defaults entered in Parameters are formatted and validated on Save.</p>
+<p>Templates store <code>control: &quot;masked&quot;</code> and <code>mask: &quot;LL-000&quot;</code>. API/CLI callers and
+JSON-authored defaults must supply the <strong>formatted value</strong> <code>AB-123</code>; the server
+validates exact characters and length before any TypeScript report handler runs.
+Scripts receive a normal string, including literals. JavaScript/JSON escapes
+apply: a mask containing a literal backslash needs <code>\\\\</code> in JSON source.</p>
+<p>This is a portable fixed-mask subset, not all WinForms MaskedTextBox options.
+Optional positions, Unicode/culture-aware slots, case-conversion directives,
+InputMask regexes and custom prompt characters are not implemented. Symbols
+such as <code>9</code> or <code>?</code> are literal characters, not optional positions.</p>
+<h2 id="context-menu-and-deletion">Context menu and deletion</h2>
+<p>Right-click the form, a component or its outline entry. <strong>Add control…</strong> opens
+an icon palette with search and inserts at the clicked position. <strong>Duplicate</strong>
+copies the selected component and descendants; fields get independent copied
+parameter definitions and values. <strong>Delete</strong> removes the component and all its
+children. <strong>Move earlier/later</strong>, <strong>Properties</strong>, and <strong>Preview form</strong> provide
+access to the existing designer actions. Changes participate in Undo/Redo.</p>
+<p>Shift+F10 opens the menu from a focused component; Arrow keys navigate, Enter
+activates, Escape closes. Delete/Backspace removes a focused component and
+Ctrl/Command+D duplicates it. These shortcuts do not intercept text editing.</p>
+<p>A custom dialog displays <strong>only its placed components</strong>. Deleting a field does
+not delete its parameter definition, which may still be used by report content
+or scripts, but the field no longer appears in Preview or Run. Unplaced
+parameters keep current/default values; the server still validates them. Set
+those values in Parameters or place a field if users need to enter them. With
+no custom dialog, the automatic parameter form still shows every parameter.</p>
+<h2 id="copy-cut-paste-and-code">Copy, cut, paste and Code</h2>
+<p>The context menu includes <strong>Copy</strong>, <strong>Cut</strong> and <strong>Paste</strong>, with their own icons.
+Use Ctrl/Command+C, X and V while the form or a component has keyboard focus.
+Ctrl/Command+Z undoes and Ctrl+Y or Ctrl/Command+Shift+Z redoes layout edits.
+Text inputs retain their normal editing shortcuts.</p>
+<p>The private clipboard holds one component and its descendants, parameter
+settings, current values and referenced images. It belongs to this editing
+session: opening a project/template/sample or reloading Studio clears it.
+It does not read or overwrite the operating-system clipboard.</p>
+<ul>
+<li>Copy creates independent parameter bindings on each paste. Images are reused
+when unchanged; a conflicting resource gets a separate name.</li>
+<li>Cut removes the component from the layout. Paste reuses free, unchanged
+parameter bindings, preserving report expressions; otherwise it safely makes
+independent copies. Further pastes act as Copy. Undo after Cut does not allow
+a second field to bind to an already placed parameter.</li>
+<li>Paste into the selected container, or beside the selected ordinary component.
+Keyboard paste beside the original or last pasted component uses its parent.
+Paste on the blank canvas uses the form; a context-menu paste uses the clicked
+position. TabPages require a TabControl destination and resize to its page area.</li>
+<li>Insufficient space or the 100-component limit rejects the entire paste without
+adding parameters or losing the clipboard. Cut and Paste are separate Undo steps.</li>
+<li>Source data paths and report event code are not duplicated or rewritten.</li>
+</ul>
+<p><strong>Code</strong> on the Dialogs toolbar or in its context menu opens the same TypeScript
+editor as <strong>Design → Page → Code</strong>. These are report-level handlers:
+<code>validateParameters</code>, <code>beforeRender</code>, <code>afterRender</code>. Use <code>validateParameters</code>
+for validation after Generate. <strong>Button · Custom</strong> invokes <code>dialogButtonClick</code>
+with <code>ctx.componentId</code>; add its handler through <strong>Code → Button click</strong>.</p>
+<p>Dialog load and parameter change handlers are available through <strong>Code</strong>. See
+<a href="/docs/reports/report-logic-manual#dialog-load-and-change">the scripting manual</a> for draft values, atomic updates and cancellation.</p>
+<h2 id="contextual-event-editing">Contextual event editing</h2>
+<p>Properties → Events opens Load for Form, Changed for parameter fields, Click for
+Custom buttons, and Page changing / Page changed for TabPage. Missing handlers get typed drafts
+with a selected-parameter/component guard; existing shared handlers are selected
+without modification. Apply code saves; Cancel discards. Opening never runs code.</p>

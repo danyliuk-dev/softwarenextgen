@@ -1,0 +1,181 @@
+<h1 id="desktop-studio-for-linux-macos-and-windows">Desktop Studio for Linux, macOS and Windows</h1>
+<p>Nextgen Reports Desktop opens Studio in a dedicated application window with its
+own local engine. It includes the same designer, Preview, Library, JSON/object
+workflow, PDF/HTML/image/Office exports and local English documentation.
+The published installers support Linux x64, macOS Apple Silicon and Windows x64. See <a href="/docs/reports/installation">Installation</a> for download, checksum and platform steps.</p>
+<h2 id="install-a-release">Install a release</h2>
+<p>Download from your signed-in product page on https://softwarenextgen.com. On Linux, open the executable AppImage; on macOS, copy the app from the DMG to Applications and open it there; on Windows, run Setup and use the installed Start-menu shortcut. All engine/runtime files are bundled.</p>
+<h2 id="software-updates">Software updates</h2>
+<p>Use <strong>Help → Check for updates…</strong> to go to the authenticated product portal. Download the new installer manually. Save projects and close the application before updating. Back up local data; keep the SDK version used by your own application pinned until you choose to upgrade it.</p>
+<h2 id="open-the-application">Open the application</h2>
+<p>Open <strong>Nextgen Reports</strong> from its installed location.</p>
+<p>Expected startup: a short <strong>Starting the local report engine…</strong> screen, followed
+by Studio and a calculated sample report. Select Preview if Design is active. A second launch focuses the existing window
+for the same user-data directory. The app chooses a free loopback port; it does
+not take port 5274 or reuse the browser demo's engine or Library.</p>
+<h2 id="first-desktop-report">First desktop report</h2>
+<ol>
+<li>Open <strong>File → Open project…</strong> (Ctrl+O on Linux) and choose a <code>.nrproject.json</code>
+file. The project is validated before replacing the workspace. Templates and
+raw JSON can also be opened through Studio's existing file controls.</li>
+<li>Change a parameter or edit the design/data, then <strong>Generate preview</strong>.</li>
+<li>Use <strong>File → Save project as…</strong> (Ctrl+Shift+S) for a native save dialog. This
+saves the portable template/data/parameter bundle, not just the PDF. The file
+must be at most 8 MB. Invalid draft JSON cannot be saved as a valid project.</li>
+<li>Use <strong>Export PDF</strong>, <strong>Export Office</strong>, <strong>Export images</strong> or <strong>Export HTML</strong>.
+A native save dialog selects the destination. Cancel leaves the destination
+unchanged. Studio's <strong>Save project</strong> button also downloads a portable project.</li>
+<li>To retain versions inside this app, use <strong>Library → Save new copy / Save new
+version</strong>. Close and reopen the desktop app; the Library project remains.
+A separate recovery draft also retains the current workspace between launches;
+see the recovery workflow below.</li>
+<li><strong>Help → Developer guide &amp; code examples</strong> opens the English code guide in a
+separate application window. <strong>User manual</strong> and <strong>Desktop guide</strong> are available
+from the same menu. Local documentation works without an Internet connection.</li>
+</ol>
+<h2 id="recover-your-workspace">Recover your workspace</h2>
+<p>The desktop app checks for changes every three seconds while the workspace is
+idle. A private recovery file stores the exact template/data editor text, filename
+and applied parameter controls, including unfinished JSON and blank values.
+Open Studio dialogs, active generation and exports pause capture; complete those
+operations first. Unapplied modal edits, undo history, selection, zoom, navigation,
+Library identity and generated preview pages are not included.</p>
+<ol>
+<li>Edit the report, data or parameters. The disabled status line in <strong>File</strong> shows
+the last successful draft save time. <strong>Save recovery draft now</strong> saves immediately.</li>
+<li>Close Studio normally, or reopen it after an unexpected interruption.</li>
+<li>Choose <strong>Restore draft</strong> to resume, <strong>Discard draft</strong> to start with the sample,
+or <strong>Quit</strong> to leave the draft untouched. A restored workspace says <strong>Recovered
+draft</strong> and has no active preview or export snapshot.</li>
+<li>Fix unfinished JSON if necessary, then <strong>Generate preview</strong>. Recovery never
+executes the restored report's scripts or refreshes external sources itself.</li>
+<li><strong>File → Delete recovery draft…</strong> removes only the recovery file after
+confirmation. The open workspace stays unchanged; a subsequent edit creates
+a new draft. Closing without new edits does not recreate a deleted draft.</li>
+</ol>
+<p><strong>Closing:</strong> File → Close Studio or the main window's close button asks for
+confirmation, then attempts a final capture. If capture fails, <strong>Keep working</strong>
+lets you save or fix the problem; <strong>Close without latest draft</strong> retains only the
+last successful snapshot. Normal close stops the owned engine and auxiliary
+windows. An unexpected termination can lose edits since the last successful
+capture (normally up to three seconds when idle).</p>
+<p>Opening a project or creating a new report asks before replacing the workspace
+in desktop mode. The recovery file follows the current workspace; it is not a
+multi-project history. Save a project file or Library version before switching.
+The draft can contain the report's entire data and is not encrypted: it is a
+current-user-only local file, not a substitute for backups. Maximum workspace
+snapshot size is 16 MB. Oversized or failed writes retain the previous snapshot.
+An unreadable recovery file is left untouched and automatic saving is paused;
+back up/remove that file while Studio is closed, then restart.</p>
+<h2 id="where-files-live">Where files live</h2>
+<p>Default application profile: <code>~/.config/NextgenReportsDesktop</code> on Linux,
+<code>~/Library/Application Support/NextgenReportsDesktop</code> on macOS and
+<code>%APPDATA%\NextgenReportsDesktop</code> on Windows. <strong>Help → About</strong>
+shows the actual path. It contains:</p>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>reports/library.db</td>
+<td>Desktop Library and project versions</td>
+</tr>
+<tr>
+<td>reports/schedules.db</td>
+<td>Schedule metadata; local desktop mode does not run an authenticated server UI</td>
+</tr>
+<tr>
+<td>reports/keys</td>
+<td>Data-protection keys, restricted to the current user</td>
+</tr>
+<tr>
+<td>workspace-recovery.json</td>
+<td>Last workspace draft, including template/data text and parameters; current-user read/write only</td>
+</tr>
+<tr>
+<td>studio.log</td>
+<td>Current startup/engine log, bounded to 2 MB and reset each launch</td>
+</tr>
+<tr>
+<td>Other profile files</td>
+<td>Electron's local browser state/cache</td>
+</tr>
+</tbody>
+</table>
+<p>Exports and portable projects go to the location you choose. Back up <code>reports</code> and <code>workspace-recovery.json</code>
+while the application is closed. Deleting the application folder does not remove
+its profile. Deleting the profile removes saved Library data; preserve a backup
+or portable projects first.</p>
+<p>Advanced hosts may choose an isolated profile with <code>NEXTGEN_DESKTOP_USER_DATA</code>.
+The engine uses <code>NEXTGEN_STATE_DIRECTORY</code> internally for state/key storage.
+Desktop startup overrides inherited server-account and Library/schedule file
+settings so it cannot accidentally reuse a separate Studio server's identity
+or database paths. It can use explicitly configured <code>NEXTGEN_DATA_SOURCES</code> and
+<code>NEXTGEN_HTTP_SOURCES</code> catalogs; see <a href="/docs/reports/data-sources">data sources</a>.</p>
+<h2 id="trusted-report-scripts">Trusted report scripts</h2>
+<p>Scripts are disabled by default. To enable the existing TypeScript pipeline for
+your trusted local templates, close the app and start it explicitly with:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Shell</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Shell code example"><code class="language-sh"><span class="code-line" data-line="1"><span class="c1"># Linux: use your actual downloaded AppImage filename.</span></span>
+<span class="code-line" data-line="2"><span class="nv">NEXTGEN_DESKTOP_SCRIPTS</span><span class="o">=</span><span class="m">1</span><span class="w"> </span>~/Applications/Nextgen-Reports.AppImage</span>
+<span class="code-line" data-line="3"></span>
+<span class="code-line" data-line="4"><span class="c1"># macOS: launch the installed executable directly after closing the app.</span></span>
+<span class="code-line" data-line="5"><span class="nv">NEXTGEN_DESKTOP_SCRIPTS</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;/Applications/Nextgen Reports.app/Contents/MacOS/Nextgen Reports&quot;</span></span></code></pre></figure>
+<p>On Windows, open PowerShell after closing the application, then run (adjust the path if you selected a custom installation folder):</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">powershell</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="powershell code example"><code class="language-powershell"><span class="code-line" data-line="1"><span class="nv">$env:NEXTGEN_DESKTOP_SCRIPTS</span> <span class="p">=</span> <span class="s2">&quot;1&quot;</span></span>
+<span class="code-line" data-line="2"><span class="p">&amp;</span> <span class="s2">&quot;$env:LOCALAPPDATA\Programs\Nextgen Reports\Nextgen Reports.exe&quot;</span></span></code></pre></figure>
+<p>The compiler uses Electron's bundled Node runtime in a child process; no separate
+Node installation is needed by the built app. <strong>Help → About</strong> shows whether
+scripts were enabled. Script validation, limits and trust boundaries remain those
+in the <a href="/docs/reports/report-logic-manual">event guide</a>. This is not an offline mobile runtime
+or an untrusted-report sandbox.</p>
+<h2 id="engine-ownership-and-troubleshooting">Engine ownership and troubleshooting</h2>
+<p>Each desktop instance owns a fresh loopback server and a random, memory-only
+capability. Only its Electron session adds that capability to requests. Opening
+the displayed engine URL in an unrelated browser or sending an ordinary curl
+request returns 403; use the desktop window. This is separate from the regular
+Studio URL at 5274. Cross-origin navigation is not embedded; supported external
+links ask before opening the default application.</p>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engine files are missing</td>
+<td>Reinstall the verified platform package; do not move individual engine files</td>
+</tr>
+<tr>
+<td>Sandbox startup failure</td>
+<td>Check the Linux sandbox setup above; keep sandboxing enabled</td>
+</tr>
+<tr>
+<td>Engine startup error</td>
+<td>Read the path shown in the error dialog and studio.log</td>
+</tr>
+<tr>
+<td>Unexpected engine exit</td>
+<td>Close/reopen the app and restore the draft or a saved project/Library version</td>
+</tr>
+<tr>
+<td>Cannot open/save a project</td>
+<td>Check file permissions, valid project JSON and the 8 MB limit</td>
+</tr>
+<tr>
+<td>Missing recent edits after restart</td>
+<td>Check the File draft status; capture pauses during modal dialogs, generation and export</td>
+</tr>
+</tbody>
+</table>
+<p>Normal close stops the engine through its stdin lifetime pipe, with termination
+fallbacks if it cannot stop. If the parent process dies, pipe EOF also requests
+engine shutdown. The app never terminates unrelated Studio/demo processes.
+Windows/macOS GUI verification, Developer ID/Authenticode signing, notarization, file associations and autonomous background scheduling remain separate release work.</p>
+<p>Security setup follows the <a href="https://www.electronjs.org/docs/latest/tutorial/security/">Electron security guide</a>
+and <a href="https://www.electronjs.org/docs/latest/api/app">single-instance lifecycle API</a>.</p>

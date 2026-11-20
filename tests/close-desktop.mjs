@@ -1,0 +1,2 @@
+const port=process.argv[2];
+try{const version=await(await fetch('http://127.0.0.1:'+port+'/json/version')).json();const ws=new WebSocket(version.webSocketDebuggerUrl);await new Promise(r=>ws.onopen=r);ws.send(JSON.stringify({id:1,method:'Browser.close'}));await new Promise(r=>setTimeout(r,500));ws.close();console.log('Closed test browser on '+port);}catch{console.log('Test browser already closed on '+port);}

@@ -1,0 +1,238 @@
+[
+  {
+    "Title": "NextgenComponents",
+    "Path": "overview"
+  },
+  {
+    "Title": "NgAIPrompt \u2014 AI prompt interface",
+    "Path": "manual/NgAIPrompt"
+  },
+  {
+    "Title": "NgArcGauge \u2014 Arc gauge",
+    "Path": "manual/NgArcGauge"
+  },
+  {
+    "Title": "NgAutoComplete \u2014 Text suggestions",
+    "Path": "manual/NgAutoComplete"
+  },
+  {
+    "Title": "NgBreadcrumb \u2014 Breadcrumb",
+    "Path": "manual/NgBreadcrumb"
+  },
+  {
+    "Title": "NgButton \u2014 Button",
+    "Path": "manual/NgButton"
+  },
+  {
+    "Title": "NgButtonGroup \u2014 Single and multiple choice buttons",
+    "Path": "manual/NgButtonGroup"
+  },
+  {
+    "Title": "NgCalendar \u2014 Calendar",
+    "Path": "manual/NgCalendar"
+  },
+  {
+    "Title": "NgChart \u2014 Chart",
+    "Path": "manual/NgChart"
+  },
+  {
+    "Title": "NgCheckBox \u2014 Checkbox",
+    "Path": "manual/NgCheckBox"
+  },
+  {
+    "Title": "NgChip \u2014 Compact selectable or removable tag",
+    "Path": "manual/NgChip"
+  },
+  {
+    "Title": "NgChipList \u2014 Controlled tag collection",
+    "Path": "manual/NgChipList"
+  },
+  {
+    "Title": "NgComboBox \u2014 Searchable selection",
+    "Path": "manual/NgComboBox"
+  },
+  {
+    "Title": "NgDataGrid \u2014 Data grid",
+    "Path": "manual/NgDataGrid"
+  },
+  {
+    "Title": "NgDateInput \u2014 Date input",
+    "Path": "manual/NgDateInput"
+  },
+  {
+    "Title": "NgDatePicker \u2014 Date picker",
+    "Path": "manual/NgDatePicker"
+  },
+  {
+    "Title": "NgDateRangePicker \u2014 Date range",
+    "Path": "manual/NgDateRangePicker"
+  },
+  {
+    "Title": "NgDateTimePicker \u2014 Date and time",
+    "Path": "manual/NgDateTimePicker"
+  },
+  {
+    "Title": "NgDiagram \u2014 Interactive diagram",
+    "Path": "manual/NgDiagram"
+  },
+  {
+    "Title": "NgDialog \u2014 Modal dialog",
+    "Path": "manual/NgDialog"
+  },
+  {
+    "Title": "NgDrawer \u2014 Navigation drawer",
+    "Path": "manual/NgDrawer"
+  },
+  {
+    "Title": "NgDropDownList \u2014 Dropdown list",
+    "Path": "manual/NgDropDownList"
+  },
+  {
+    "Title": "NgEditor \u2014 Structured document editor",
+    "Path": "manual/NgEditor"
+  },
+  {
+    "Title": "NgForm \u2014 Form validation",
+    "Path": "manual/NgForm"
+  },
+  {
+    "Title": "NgLinearGauge \u2014 Linear gauge",
+    "Path": "manual/NgLinearGauge"
+  },
+  {
+    "Title": "NgMap \u2014 Interactive map",
+    "Path": "manual/NgMap"
+  },
+  {
+    "Title": "NgMenu \u2014 Command menu",
+    "Path": "manual/NgMenu"
+  },
+  {
+    "Title": "NgMultiSelect \u2014 Multiple selection",
+    "Path": "manual/NgMultiSelect"
+  },
+  {
+    "Title": "NgNotification \u2014 Notification",
+    "Path": "manual/NgNotification"
+  },
+  {
+    "Title": "NgNumericTextBox \u2014 Numeric input",
+    "Path": "manual/NgNumericTextBox"
+  },
+  {
+    "Title": "NgPager \u2014 Pagination",
+    "Path": "manual/NgPager"
+  },
+  {
+    "Title": "NgPdfViewer \u2014 PDF viewer",
+    "Path": "manual/NgPdfViewer"
+  },
+  {
+    "Title": "NgPivotGrid \u2014 Pivot grid",
+    "Path": "manual/NgPivotGrid"
+  },
+  {
+    "Title": "NgPromptBox \u2014 Prompt input",
+    "Path": "manual/NgPromptBox"
+  },
+  {
+    "Title": "NgRadioGroup \u2014 Radio group",
+    "Path": "manual/NgRadioGroup"
+  },
+  {
+    "Title": "NgScheduler \u2014 Day and week scheduler",
+    "Path": "manual/NgScheduler"
+  },
+  {
+    "Title": "NgSpreadsheet \u2014 Spreadsheet",
+    "Path": "manual/NgSpreadsheet"
+  },
+  {
+    "Title": "NgStepper \u2014 Step progress",
+    "Path": "manual/NgStepper"
+  },
+  {
+    "Title": "NgSwitch \u2014 Switch",
+    "Path": "manual/NgSwitch"
+  },
+  {
+    "Title": "NgTabs \u2014 Tabs",
+    "Path": "manual/NgTabs"
+  },
+  {
+    "Title": "NgTextArea \u2014 Multiline text",
+    "Path": "manual/NgTextArea"
+  },
+  {
+    "Title": "NgTextBox \u2014 Single-line text",
+    "Path": "manual/NgTextBox"
+  },
+  {
+    "Title": "NgTimePicker \u2014 Time picker",
+    "Path": "manual/NgTimePicker"
+  },
+  {
+    "Title": "NgToggleButton \u2014 Toggle button",
+    "Path": "manual/NgToggleButton"
+  },
+  {
+    "Title": "NgTooltip \u2014 Tooltip",
+    "Path": "manual/NgTooltip"
+  },
+  {
+    "Title": "NgTreeList \u2014 Tree list",
+    "Path": "manual/NgTreeList"
+  },
+  {
+    "Title": "NgTreeView \u2014 Tree view",
+    "Path": "manual/NgTreeView"
+  },
+  {
+    "Title": "NgWizard \u2014 Multi-step wizard",
+    "Path": "manual/NgWizard"
+  },
+  {
+    "Title": "Nextgen Components manual",
+    "Path": "manual/index"
+  },
+  {
+    "Title": "Code examples",
+    "Path": "manual/code-examples"
+  },
+  {
+    "Title": "Getting started",
+    "Path": "manual/getting-started"
+  },
+  {
+    "Title": "Grid editing",
+    "Path": "manual/grid-editing"
+  },
+  {
+    "Title": "Grid export",
+    "Path": "manual/grid-export"
+  },
+  {
+    "Title": "Grouped remote ranges",
+    "Path": "manual/grouped-remote-ranges"
+  },
+  {
+    "Title": "Data models and formulas",
+    "Path": "manual/models"
+  },
+  {
+    "Title": "Remote grouped Grid data",
+    "Path": "manual/remote-grouped-data"
+  },
+  {
+    "Title": "Continuous remote Grid ranges",
+    "Path": "manual/remote-ranges"
+  },
+  {
+    "Title": "Virtual scrolling for large data views",
+    "Path": "manual/virtual-data"
+  },
+  {
+    "Title": "Installation and first launch",
+    "Path": "installation"
+  }
+]

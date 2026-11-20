@@ -1,0 +1,185 @@
+{
+  "kind": "nextgen-report-project",
+  "version": 1,
+  "template": {
+    "version": 1,
+    "title": "Prepared regional sales",
+    "parameters": {
+      "minimum": {
+        "type": "number",
+        "default": 10
+      }
+    },
+    "dataTables": [
+      {
+        "name": "sales",
+        "source": "items",
+        "filters": [
+          {
+            "field": "status",
+            "operator": "eq",
+            "value": "Paid"
+          }
+        ],
+        "sorts": [
+          {
+            "field": "region",
+            "direction": "asc"
+          }
+        ],
+        "columns": [
+          {
+            "name": "region",
+            "field": "region"
+          },
+          {
+            "name": "order",
+            "field": "id"
+          },
+          {
+            "name": "amount",
+            "expression": "row.quantity * row.price"
+          }
+        ]
+      },
+      {
+        "name": "qualified",
+        "source": "sales",
+        "filters": [
+          {
+            "field": "amount",
+            "operator": "gte",
+            "parameter": "minimum"
+          }
+        ]
+      },
+      {
+        "name": "regional",
+        "source": "qualified",
+        "groupBy": [
+          "region"
+        ],
+        "columns": [
+          {
+            "name": "region",
+            "field": "region"
+          },
+          {
+            "name": "revenue",
+            "field": "amount",
+            "aggregate": "sum"
+          },
+          {
+            "name": "average",
+            "field": "amount",
+            "aggregate": "average"
+          },
+          {
+            "name": "orders",
+            "aggregate": "count"
+          }
+        ]
+      },
+      {
+        "name": "ranked",
+        "source": "regional",
+        "sorts": [
+          {
+            "field": "revenue",
+            "direction": "desc"
+          }
+        ]
+      }
+    ],
+    "blocks": [
+      {
+        "type": "text",
+        "text": "Regional sales",
+        "style": {
+          "size": 22,
+          "bold": true
+        }
+      },
+      {
+        "type": "text",
+        "text": "Paid orders · minimum amount {{parameters.minimum}}"
+      },
+      {
+        "type": "table",
+        "source": "ranked",
+        "columns": [
+          {
+            "title": "Region",
+            "field": "region"
+          },
+          {
+            "title": "Revenue",
+            "field": "revenue",
+            "format": "F2",
+            "aggregate": "sum"
+          },
+          {
+            "title": "Average",
+            "field": "average",
+            "format": "F2"
+          },
+          {
+            "title": "Orders",
+            "field": "orders",
+            "aggregate": "sum"
+          }
+        ]
+      },
+      {
+        "type": "chart",
+        "source": "ranked",
+        "categoryField": "region",
+        "valueField": "revenue",
+        "height": 180
+      }
+    ]
+  },
+  "data": {
+    "company": "Synthetic company",
+    "items": [
+      {
+        "id": "A",
+        "region": "East",
+        "quantity": 2,
+        "price": 25,
+        "status": "Paid"
+      },
+      {
+        "id": "B",
+        "region": "West",
+        "quantity": 3,
+        "price": 40,
+        "status": "Paid"
+      },
+      {
+        "id": "C",
+        "region": "East",
+        "quantity": 1,
+        "price": 20,
+        "status": "Paid"
+      },
+      {
+        "id": "D",
+        "region": "West",
+        "quantity": 2,
+        "price": 100,
+        "status": "Pending"
+      },
+      {
+        "id": "E",
+        "region": "North",
+        "quantity": 1,
+        "price": 5,
+        "status": "Paid"
+      }
+    ]
+  },
+  "parameters": {
+    "minimum": 60
+  }
+}

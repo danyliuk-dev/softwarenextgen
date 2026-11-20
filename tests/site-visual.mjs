@@ -1,0 +1,7 @@
+import fs from 'node:fs';
+const tabs=await(await fetch('http://127.0.0.1:9348/json/list')).json();const tab=tabs.find(t=>t.type==='page');const ws=new WebSocket(tab.webSocketDebuggerUrl);await new Promise(r=>ws.onopen=r);let id=0;const waiting=new Map();ws.onmessage=e=>{const m=JSON.parse(e.data);if(waiting.has(m.id)){const [r,j]=waiting.get(m.id);waiting.delete(m.id);m.error?j(Error(m.error.message)):r(m.result);}};const send=(method,params={})=>new Promise((r,j)=>{const n=++id;waiting.set(n,[r,j]);ws.send(JSON.stringify({id:n,method,params}));});
+const qa=JSON.parse(fs.readFileSync('/tmp/nextgen-live-qa.json'));for(const [name,value] of Object.entries(qa.cookies))await send('Network.setCookie',{name,value,url:'https://softwarenextgen.com',path:'/',secure:true,httpOnly:true});
+const width=Number(process.argv[4]||1280);await send('Emulation.setDeviceMetricsOverride',{width,height:950,deviceScaleFactor:1,mobile:width<600});await send('Page.navigate',{url:'https://softwarenextgen.com'+process.argv[2]});
+await new Promise(r=>setTimeout(r,2000));
+const check=await send('Runtime.evaluate',{expression:'JSON.stringify({title:document.title,overflow:document.documentElement.scrollWidth>innerWidth,iframes:[...document.querySelectorAll("iframe")].map(f=>f.contentDocument?.title)})',returnByValue:true});console.log(check.result.value);
+const screenshot=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(process.argv[3],Buffer.from(screenshot.data,'base64'));ws.close();

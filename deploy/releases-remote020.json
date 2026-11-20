@@ -1,0 +1,38 @@
+[
+  {
+    "id": "f7adece6-d383-55b6-a7e1-4c7f77e00019",
+    "product": "remote",
+    "version": "0.2.0",
+    "platform": "Linux x64",
+    "filename": "nextgen-remote-0.2.0-linux-x86_64.tar.gz",
+    "storage_name": "remote/0.2.0/portal-20261117/nextgen-remote-0.2.0-linux-x86_64.tar.gz",
+    "size": 5215199,
+    "sha256": "759B2FE30F98D52F6A2FCFDEF9B16B2C38EBAA9BAAFF961A5EA2815CD1CD8644",
+    "notes": "Remote desktop with host-approved control and file transfer. Portable package; read the installation guide for OS permissions, dependencies and signing information. Includes offline guides revision 2026.11.17.1.",
+    "local_path": "artifacts/remote-020/installers/nextgen-remote-0.2.0-linux-x86_64.tar.gz"
+  },
+  {
+    "id": "a976b30b-a20a-5cf2-a1d9-d2528046f6d6",
+    "product": "remote",
+    "version": "0.2.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "nextgen-remote-0.2.0-macos-aarch64.zip",
+    "storage_name": "remote/0.2.0/portal-20261117/nextgen-remote-0.2.0-macos-aarch64.zip",
+    "size": 50253486,
+    "sha256": "3739BD47563B8A4C0F5DABCDF9F152D9F1017277AD99EF5EE58A78C94D7552D2",
+    "notes": "Remote desktop with host-approved control and file transfer. Portable package; read the installation guide for OS permissions, dependencies and signing information. Includes offline guides revision 2026.11.17.1.",
+    "local_path": "artifacts/remote-020/installers/nextgen-remote-0.2.0-macos-aarch64.zip"
+  },
+  {
+    "id": "236eff06-94d5-51e4-9ba6-6836dbaaf314",
+    "product": "remote",
+    "version": "0.2.0",
+    "platform": "Windows x64",
+    "filename": "nextgen-remote-0.2.0-windows-x86_64.zip",
+    "storage_name": "remote/0.2.0/portal-20261117/nextgen-remote-0.2.0-windows-x86_64.zip",
+    "size": 75198392,
+    "sha256": "453E76261FC2938F8747D9E7D884BDAB47502BE05F1301EF9A708B874EBF85C5",
+    "notes": "Remote desktop with host-approved control and file transfer. Portable package; read the installation guide for OS permissions, dependencies and signing information. Includes offline guides revision 2026.11.17.1.",
+    "local_path": "artifacts/remote-020/installers/nextgen-remote-0.2.0-windows-x86_64.zip"
+  }
+]

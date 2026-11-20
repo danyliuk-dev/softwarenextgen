@@ -1,0 +1,28 @@
+[
+  {
+    "id": "1c0ebae0-8a57-445e-9e09-c0314d49510f",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "Linux x64",
+    "filename": "Nextgen-Reports-0.2.1-docs3-linux-x86_64.AppImage",
+    "storage_name": "reports/0.2.1/docs-20261028.3/linux-x64/Nextgen-Reports-0.2.1-docs3-linux-x86_64.AppImage",
+    "size": 272578869,
+    "sha256": "D0E22E46CC4038D506451EB9A2CF42CF4636E7ACCC576935E5489C73D20552A6",
+    "notes": "Self-contained desktop workspace with offline manuals. Manual updates through this portal. Documentation revision 2026.10.28.3: topic-specific working examples for all 20 report guides, real Office and image exports, import, parameters, data preparation and drill-down samples.",
+    "previous_storage_name": "reports/0.2.1/docs-20261028.2/linux-x64/Nextgen-Reports-0.2.1-docs2-linux-x86_64.AppImage",
+    "previous_sha256": "4641212A6CAEF0347419FC53ED3FD6A17E3C205DCF6A282B9B56CCC8E85AD5E1"
+  },
+  {
+    "id": "fe629692-f256-411b-8d4b-90d0fd57c530",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "macOS Apple Silicon",
+    "filename": "Nextgen-Reports-0.2.1-docs3-mac-arm64.dmg",
+    "storage_name": "reports/0.2.1/docs-20261028.3/osx-arm64/Nextgen-Reports-0.2.1-docs3-mac-arm64.dmg",
+    "size": 275920122,
+    "sha256": "BDBA712BDE1779A22BAF23CD6B3690FD5613BA14D79FEE8585E1728F14719462",
+    "notes": "Apple Silicon (M-series). Includes local runtime and manuals. Unsigned and not notarized; see the installation guide. Documentation revision 2026.10.28.3: topic-specific working examples for all 20 report guides, real Office and image exports, import, parameters, data preparation and drill-down samples.",
+    "previous_storage_name": "reports/0.2.1/docs-20261028.2/osx-arm64/Nextgen-Reports-0.2.1-docs2-mac-arm64.dmg",
+    "previous_sha256": "A82F617B6A51C9DBB0688BFC58C549EFA0429161CCE99E5761E37AA3A2E34F6F"
+  }
+]

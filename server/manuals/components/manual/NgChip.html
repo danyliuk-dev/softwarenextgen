@@ -1,0 +1,352 @@
+<h1 id="ngchip-compact-selectable-or-removable-tag">NgChip — Compact selectable or removable tag</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Show a short status, toggle a tag, or offer an explicit remove action.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgChip#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgChip#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="state-and-events">State and events</h3>
+<p>The parent owns Value/value and stores selection callbacks. Selectable/selectable defaults to true. Disable it for a display-only label. OnRemove/onRemove is optional: providing it shows a separate, named remove action. Removal never changes selection or data automatically. Reject a request by leaving state unchanged; accept it by removing the ID from both items and selected values in one update. Removal does not fire the selection callback. Keep durable state in the parent.</p>
+<h3 id="keyboard-and-accessibility">Keyboard and accessibility</h3>
+<p>Selection and removal have separate accessible actions. Tab moves through enabled actions; Enter or Space activates the focused action. Selected state is exposed to assistive technology. Disabled chips cannot be selected or removed. Delete or Backspace requests removal from a focused interactive chip. Holding the key does not repeatedly remove chips. ChipList adds Left/Right and Home/End navigation with focus recovery after removal; see the keyboard rules below. Test screen-reader behavior in your target browser.</p>
+<h3 id="scope">Scope</h3>
+<p>Labels must be nonblank and at most 120 UTF-16 code units. Labels render as text, never HTML. Light/dark styling and wrapping are supported. Icons and avatars can be supplied as leading content, and custom labels and remove icons are supported. Drag sorting, editable tags and virtualization are not established third-party Chip/ChipList requirements and remain possible extensions, not parity claims. Web is the verified target; mobile verification is a separate phase.</p>
+<p>A missing selection callback prevents selection. Removal remains independently available when supplied. For a static status, set Selectable/selectable to false. Removing a standalone chip means the parent stops rendering it.</p>
+<h3 id="appearance-and-custom-content-015">Appearance and custom content (0.15)</h3>
+<p>Size/size accepts sm, md or lg. Rounded/rounded accepts sm, md, lg or full. FillMode/fillMode accepts solid or outline. ThemeColor/themeColor accepts base, info, success, warning or error. Invalid values throw; defaults remain md/full/outline/base for compatibility with 0.14. These defaults differ from third-party. Colors adapt to light/dark themes; this is not a pixel-match claim.</p>
+<p>Leading/leading accepts decorative content such as a small icon or avatar. ChildContent/child replaces the visible label. RemoveContent/removeIcon replaces the removal symbol. Always retain a meaningful Label/label: it supplies the default accessible name regardless of the visual template; AriaLabel/semanticLabel can override the main name since 0.25. Do not put buttons, links, text fields or other interactive controls inside these templates. The parent owns image loading and image errors; there is no built-in avatar downloader or third-party SVG icon registry.</p>
+<p>OnClick/onClick is independent of selection: it runs after the selection callback on activation, also when selection is disabled. Removal only invokes the remove callback. Disabled chips invoke neither. A missing selection callback keeps selection unchanged, while an available click callback can still run a command. Blazor awaits the selection handler before invoking click; the next boolean is calculated before either callback. Flutter callbacks are synchronous. Do not use click to toggle selection a second time.</p>
+<h3 id="action-labels-018">Action labels (0.18)</h3>
+<p>NgChip.RemoveLabel / removeLabel overrides the complete accessible removal name and Flutter delete tooltip. Null keeps &quot;Remove {label}&quot;. Supply a nonblank phrase including the item name, such as &quot;Dismiss Design&quot;; a visual remove icon alone is not an accessible name. Text is escaped, not treated as markup. Obtain translations from your application's localization resources; the library does not select a locale or ship translation dictionaries.</p>
+<h3 id="right-to-left-layout-021">Right-to-left layout (0.21)</h3>
+<p>Blazor inherits the nearest HTML dir attribute. Wrap a component or a group in a div with dir=&quot;rtl&quot; (or dir=&quot;ltr&quot;). Flutter inherits Directionality: wrap a component or group with Directionality(textDirection: TextDirection.rtl, child: ...). Keep the direction wrapper outside NgChipList so layout and keyboard handling read the same direction. No data reversal is required. Mixed LTR/RTL regions may coexist; omit the wrapper to inherit the application setting.</p>
+<p>Chips start at the reading edge and wrap in source order. Leading content appears at the reading start, removal at the reading end, and the Blazor separator follows that edge. Changing direction at runtime preserves stable IDs, selection and the remembered keyboard entry. In RTL, Left moves to the next enabled record and Right to the previous; Home/End still target the first/last enabled record in data order. Removal keeps the existing next/previous focus policy, including wrapped rows. Up/Down spatial navigation is not provided.</p>
+<p>Direction changes layout; it does not translate labels or reverse application strings. Supply translated labels and RemoveLabel/removeLabel (or the list callback) and EmptyText/emptyText yourself. Use bdi/dir on a Blazor template or a nested Directionality/Text.textDirection in Flutter to isolate mixed-direction identifiers when appropriate. Directional custom icons are application-owned; they are not automatically mirrored. Keep templates noninteractive.</p>
+<p>The English Reading direction demo includes a constrained wrapping region, decorative leading stars, a disabled record, a static status chip and a runtime direction switch. The rest of the demo remains LTR. Verification covers Chip/ChipList layout and keyboard behavior on Web, not every component or screen-reader pronunciation.</p>
+<h3 id="identity-accessible-names-and-contextual-help-022">Identity, accessible names and contextual help (0.22)</h3>
+<p>Blazor Id identifies the outer component element, and Class appends application CSS classes while preserving built-in classes. Neither creates a focus target or changes keyboard behavior. Supply unique IDs per rendered instance; Id must be nonblank and contain no whitespace. Classes can affect layout and contrast, so review custom styles in both themes.</p>
+<p>AriaLabelledBy accepts one or more space-separated IDs of existing elements. Browser accessible-name computation gives these references priority over Label. Keep Label meaningful as the visible text/fallback, and ensure every referenced element exists. AriaDescribedBy accepts a similar list for contextual instructions. On ChipList, naming and description apply to the group; they are not duplicated on every item. On a standalone Chip, references apply to its label element/action, and the description also applies to removal. The remove action retains its own RemoveLabel; it never borrows the selection action's name. Static text chips remain noninteractive; when a Blazor static chip has naming/description references, its label becomes a named group without a Tab stop so the references have a semantic target. Null omits a hook; blank reference lists are rejected. The library cannot validate DOM existence or global ID uniqueness during server rendering.</p>
+<p>Flutter semanticIdentifier identifies a semantics node for automation; it is not a widget Key, HTML id, user-facing label or selection ID. semanticHint provides contextual guidance in that node's semantics. Both are optional nonblank strings. On Web, the installed Flutter engine exports identifiers as flt-semantics-identifier attributes when semantics are enabled; this is an engine detail, not a CSS styling API. Metadata is additive: it must not replace the child selection/removal actions.</p>
+<p>Flutter has no DOM Class or aria-labelledby relationship in this API. Use the existing theme/appearance parameters for styling. For a shared heading, keep one application string and pass it to Text and the list's label; update both together. Use semanticHint for concise guidance and show the same text visibly when it helps users. A hint is not an exact aria-describedby equivalent; assistive-technology announcement varies by platform. Application code owns translations. Do not include secrets or personal data in automation identifiers.</p>
+<p>The examples wire contextual help to the list and a standalone command. The Business records demo can update its heading and guidance at runtime while retaining selection and identity. Browser accessibility-tree inspection and widget tests verify the exported information and actions; screen-reader testing/certification remains separate. TabIndex supports -1 and 0 since 0.23; listbox/option roles remain open.</p>
+<h3 id="participation-in-tab-navigation-023">Participation in Tab navigation (0.23)</h3>
+<p>TabIndex/tabIndex defaults to 0. Set -1 to skip the component during forward and reverse Tab traversal. Only -1 and 0 are accepted; positive indices and other negative values throw. This deliberately limited cross-platform contract does not reproduce every integer value of third-party Chip.TabIndex. Use the application's layout/traversal policy to establish logical order instead of positive indices.</p>
+<p>For a standalone Chip, the setting applies to both its main action and removal action. Static labels and disabled actions never acquire a Tab stop. For ChipList, 0 retains one remembered enabled entry; -1 excludes the entire collection from Tab traversal. The list container remains a programmatic fallback, not an additional Tab stop. Individual items inside a list do not expose independent traversal indices.</p>
+<p>Exclusion does not disable the control: mouse/touch, accessibility activation, application focus, arrow navigation and removal continue to work. A focused item is not blurred when the setting changes. FocusAsync()/NgChipListController.focus() can still enter a skipped list, and Tab then leaves it. Returning the setting to 0 restores its remembered enabled entry. Selection and collection state remain parent-owned. Provide another accessible way to enter a list when excluding it; the demo includes a Focus directional topics button.</p>
+<h3 id="accessible-name-versus-visible-text-025">Accessible name versus visible text (0.25)</h3>
+<p>AriaLabel (Blazor) and semanticLabel (Flutter) optionally replace the main chip's accessible name. Null uses Label/label, preserving existing applications. A supplied name must be nonblank; visible Label/label remains required and retains its 120-character limit. The override does not change visible text, templates, selection, click handling, disabled state or Tab traversal.</p>
+<p>Use a meaningful name that includes the visible wording: for a visible CI chip, use CI — Continuous integration. This helps people using speech input identify the same control. Avoid using an unrelated name to hide what a control actually does. For longer instructions use AriaDescribedBy/semanticHint instead of overloading the name. Resolve translations in the application and rebuild normally when they change.</p>
+<p>Blazor AriaLabelledBy takes precedence over AriaLabel when it references an existing naming element; AriaLabel then takes precedence over Label. Flutter semanticLabel is its native semantics override, not a DOM aria-labelledby API. Both static statuses and interactive chips support the override. A static Blazor chip with an explicit accessible name exposes a non-focusable group for that name.</p>
+<p>The remove action is independent: its default stays Remove {visible label}, and RemoveLabel/removeLabel can override it separately. The main accessible name never changes removal permissions or callbacks. ItemTemplate and ChildContent remain display-only; their text does not replace the explicit accessible name.</p>
+<p>The demo's Visible text and accessible name section changes CI's full name at runtime while keeping selected state. No screen-reader certification is implied. ChipList still uses each NgOption label for its main item name; this release adds the override to standalone NgChip only.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;build-help&quot;</span><span class="p">&gt;</span>Opens the build activity summary.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgChip</span> <span class="na">TabIndex</span><span class="o">=</span><span class="s">&quot;0&quot;</span> <span class="na">Id</span><span class="o">=</span><span class="s">&quot;build-status&quot;</span> <span class="na">AriaLabel</span><span class="o">=</span><span class="s">&quot;Build succeeded — Open build activity&quot;</span> <span class="na">Class</span><span class="o">=</span><span class="s">&quot;build-status&quot;</span> <span class="na">AriaDescribedBy</span><span class="o">=</span><span class="s">&quot;build-help&quot;</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Build succeeded&quot;</span> <span class="na">Selectable</span><span class="o">=</span><span class="s">&quot;false&quot;</span> <span class="na">ThemeColor</span><span class="o">=</span><span class="s">&quot;success&quot;</span> <span class="na">FillMode</span><span class="o">=</span><span class="s">&quot;solid&quot;</span> <span class="na">Size</span><span class="o">=</span><span class="s">&quot;lg&quot;</span> <span class="na">Rounded</span><span class="o">=</span><span class="s">&quot;md&quot;</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;clicks++&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3">    <span class="p">&lt;</span><span class="nt">Leading</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>✓<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">Leading</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4">    <span class="p">&lt;</span><span class="nt">ChildContent</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>Build succeeded<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">ChildContent</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;/</span><span class="nt">NgChip</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6">@if (visible) {</span>
+<span class="code-line" data-line="7">    <span class="p">&lt;</span><span class="nt">NgChip</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Favourite&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">OnRemove</span><span class="o">=</span><span class="s">&quot;()=&gt;visible=false&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8">        <span class="p">&lt;</span><span class="nt">RemoveContent</span><span class="p">&gt;</span>−<span class="p">&lt;/</span><span class="nt">RemoveContent</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9">    <span class="p">&lt;/</span><span class="nt">NgChip</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10">}</span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Activity opened @clicks times<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span><span class="w"> </span><span class="n">visible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">clicks</span><span class="p">;</span></span>
+<span class="code-line" data-line="15"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">visible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kt">int</span><span class="w"> </span><span class="n">clicks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="n">NgChip</span><span class="p">(</span><span class="nl">tabIndex:</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticIdentifier:</span><span class="w"> </span><span class="s1">&#39;build-status&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticLabel:</span><span class="w"> </span><span class="s1">&#39;Build succeeded — Open build activity&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticHint:</span><span class="w"> </span><span class="s1">&#39;Opens the build activity summary.&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Build succeeded&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">selectable:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">themeColor:</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nl">fillMode:</span><span class="w"> </span><span class="s1">&#39;solid&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="w"> </span><span class="s1">&#39;lg&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">rounded:</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">leading:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">check</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="w"> </span><span class="m">18</span><span class="p">),</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Build succeeded&#39;</span><span class="p">),</span><span class="w"> </span><span class="nl">onClick:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">clicks</span><span class="o">++</span><span class="p">)),</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">visible</span><span class="p">)</span><span class="w"> </span><span class="n">NgChip</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Favourite&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">),</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="nl">removeIcon:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">remove</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="w"> </span><span class="m">18</span><span class="p">),</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="nl">onRemove:</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">visible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)),</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Activity opened </span><span class="si">$</span><span class="n">clicks</span><span class="s1"> times&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="12"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TabIndex</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+<tr>
+<td><code>Id</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Class</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>AriaLabel</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Optional nonblank main-chip accessible name; labelled-by takes precedence. Visible text and removal names are unchanged.</td>
+</tr>
+<tr>
+<td><code>AriaLabelledBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for the accessible name; takes precedence over Label.</td>
+</tr>
+<tr>
+<td><code>AriaDescribedBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for contextual guidance; see target-element rules.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>required</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>RemoveLabel</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Complete nonblank accessible removal name; for ChipList, a callback receiving NgOption.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;bool&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>Selectable</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>OnRemove</code></td>
+<td><code>EventCallback</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnClick</code></td>
+<td><code>EventCallback</code></td>
+<td>not set</td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Rounded</code></td>
+<td><code>string</code></td>
+<td>&quot;full&quot;</td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>FillMode</code></td>
+<td><code>string</code></td>
+<td>&quot;outline&quot;</td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>ThemeColor</code></td>
+<td><code>string</code></td>
+<td>&quot;base&quot;</td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>Leading</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ChildContent</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>Razor content; for a wizard, a RenderFragment&lt;int&gt; receiving the active index.</td>
+</tr>
+<tr>
+<td><code>RemoveContent</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>Decorative replacement for the remove symbol; accessible action label is retained.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>semanticIdentifier</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank automation identifier in the Flutter semantics tree; not a widget Key or DOM id.</td>
+</tr>
+<tr>
+<td><code>semanticHint</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank contextual guidance in the semantics tree; not a visible tooltip.</td>
+</tr>
+<tr>
+<td><code>semanticLabel</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank native accessible name for the main chip; null uses label.</td>
+</tr>
+<tr>
+<td><code>tabIndex</code></td>
+<td><code>int</code></td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+<tr>
+<td><code>removeLabel</code></td>
+<td><code>String?</code></td>
+<td>Complete nonblank accessible removal name; for ChipList, a callback receiving NgOption.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>bool</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>selectable</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;bool&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>onRemove</code></td>
+<td><code>VoidCallback?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onClick</code></td>
+<td><code>VoidCallback?</code></td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>rounded</code></td>
+<td><code>String</code></td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>fillMode</code></td>
+<td><code>String</code></td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>themeColor</code></td>
+<td><code>String</code></td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>leading</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>child</code></td>
+<td><code>Widget?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>removeIcon</code></td>
+<td><code>Widget?</code></td>
+<td>Replacement widget for the remove symbol; accessible action label is retained.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgChip</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tabIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticIdentifier</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticHint</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">removeLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onRemove</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onClick</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;full&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">fillMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">themeColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;base&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">leading</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">child</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">removeIcon</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

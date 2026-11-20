@@ -1,0 +1,18 @@
+<h1 id="start-a-remote-session">Start a remote session</h1>
+<p>Before starting, activate your assigned license using <strong>Help → License → Activate license</strong>. See <a href="/docs/remote/installation">installation and activation</a>.</p>
+<h2 id="on-the-computer-you-want-to-share">On the computer you want to share</h2>
+<p>Open Nextgen Remote and select <strong>Share desktop</strong>. Allow the operating system to share the screen when asked. Share the displayed access key only with the person you trust.</p>
+<p>For an independent host, open <strong>File → Connection settings</strong> and set <strong>Relay server</strong> to <code>https://connect.softwarenextgen.com</code> before starting sharing. The host displays its connection link after registration. Send that link and the access key privately to the viewer.</p>
+<h2 id="on-the-viewing-device">On the viewing device</h2>
+<p>In version 0.4.3, choose <strong>Connect → My computers</strong> to select another computer registered through the central relay under your account. The list remembers the last registered route. Sharing must be running on the selected host. Enter its current access key to connect.</p>
+<p>For a manually supplied address, open <strong>Connect</strong>, enter your name and the host’s access key, then select <strong>Connect</strong>. If the host supplied a computer-specific connection link, enter it under <strong>File → Connection settings → Connection server</strong> first. The default server address is configured for the existing shared host.</p>
+<p>You can also open the host’s connection link in a browser. The <a href="https://connect.softwarenextgen.com">browser viewer</a> is available without installing the desktop client.</p>
+<h2 id="view-or-control">View or control</h2>
+<p>New participants begin as viewers. Select <strong>Request control</strong> if you need keyboard or mouse access. The host selects the participant and grants permission. Only one participant controls the host at a time. The host can revoke control or stop sharing.</p>
+<h2 id="files-and-clipboard">Files and clipboard</h2>
+<p>After the host grants control, open <strong>Files</strong>. Select the destination folder on the host and choose <strong>Upload file</strong> or <strong>Upload folder</strong>. To copy an item from the host, select it and choose <strong>Download file</strong> or <strong>Download folder</strong>, then choose a local destination. The desktop app shows the folder buttons when both computers support resumable transfers (0.4.4 or later).</p>
+<p>A folder transfer includes empty folders. Choose a destination where the folder name is available. The recipient sees the complete folder after the transfer finishes. If the connection drops, reconnect and request control again within ten minutes to resume. Choose <strong>Cancel</strong> to discard a partial transfer. Each transfer supports up to 50,000 entries and 64 GiB total, with an 8 GiB limit per file.</p>
+<p>Use the clipboard controls to exchange text during an authorized control session.</p>
+<h2 id="end-the-session">End the session</h2>
+<p>Disconnect when finished. On the host, use <strong>Stop sharing</strong> or quit the application to end access. Closing the window can leave the application running in the tray; it is not the same as quitting.</p>
+<p>See <a href="/docs/remote/permissions">Permissions and troubleshooting</a>.</p>

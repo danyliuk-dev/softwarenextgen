@@ -1,0 +1,44 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.74.1",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.74.1-variable0741-linux-x86_64.AppImage",
+    "storage_name": "components/0.74.1/variable0741/linux-x64/NextgenComponents-0.74.1-variable0741-linux-x86_64.AppImage",
+    "size": 220548311,
+    "sha256": "2E9EC77CD43189606EAAFAE7FE8BA30E8B92EE3D80670308CAC2BDCE4E723114",
+    "notes": "Components 0.74.1: measured variable-height local and server-page Grid rows, multiline cells, group headers and inline editors. Continuous range readers retain fixed heights. Documentation revision 2026.10.31.2.",
+    "local_path": "artifacts/variable0741/installers/NextgenComponents-0.74.1-variable0741-linux-x86_64.AppImage",
+    "previous_storage_name": "components/0.73.0/batch073/linux-x64/NextgenComponents-0.73.0-batch073-linux-x86_64.AppImage",
+    "previous_sha256": "D4E28D432F928C061E9B585BD43F888C216542023C8F8BF87CBB3D5D7C3D4274"
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.74.1",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.74.1-variable0741-mac-arm64.dmg",
+    "storage_name": "components/0.74.1/variable0741/osx-arm64/NextgenComponents-0.74.1-variable0741-mac-arm64.dmg",
+    "size": 262012887,
+    "sha256": "7FFF89F23BF3D5BEFBCF52493441A96541EDD420822D1A5835482C12976ACF68",
+    "notes": "Components 0.74.1: measured variable-height local and server-page Grid rows, multiline cells, group headers and inline editors. Continuous range readers retain fixed heights. Documentation revision 2026.10.31.2.",
+    "local_path": "artifacts/variable0741/installers/NextgenComponents-0.74.1-variable0741-mac-arm64.dmg",
+    "previous_storage_name": "components/0.73.0/batch073/osx-arm64/NextgenComponents-0.73.0-batch073-mac-arm64.dmg",
+    "previous_sha256": "45370075249F54F390214C63C5998D369D83CF2E03D3942A3DA97C2D3C6F93D1"
+  },
+  {
+    "id": "5cf41f31-81e0-5c26-83c2-43417fae8ccb",
+    "product": "components",
+    "version": "0.74.1",
+    "platform": "Windows x64",
+    "filename": "NextgenComponents-0.74.1-variable0741-win-x64.exe",
+    "storage_name": "components/0.74.1/variable0741/win-x64/NextgenComponents-0.74.1-variable0741-win-x64.exe",
+    "size": 208768062,
+    "sha256": "1003C2DA9ABB4B1C974BADA735CCA353B5CFA55BDA49B973049CAE3CCF5D88D8",
+    "notes": "Components 0.74.1: measured variable-height local and server-page Grid rows, multiline cells, group headers and inline editors. Continuous range readers retain fixed heights. Documentation revision 2026.10.31.2.",
+    "local_path": "artifacts/variable0741/installers/NextgenComponents-0.74.1-variable0741-win-x64.exe",
+    "previous_storage_name": "components/0.73.0/batch073/win-x64/NextgenComponents-0.73.0-batch073-win-x64.exe",
+    "previous_sha256": "F9C7D94C919F95F823F66AF2093682AE2364823573F2EAD1176C3D7D0BC28811"
+  }
+]

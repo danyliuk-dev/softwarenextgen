@@ -1,0 +1,99 @@
+<h1 id="nextgen-reports-documentation">Nextgen Reports documentation</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>All guides and demo UI are in English. Examples use fictional data. Programming
+is optional for report authors; application developers can start with runnable code.</p>
+<h2 id="choose-your-starting-point">Choose your starting point</h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Guide</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Use the desktop application</td>
+<td><a href="/docs/reports/desktop">Desktop Studio on Linux</a></td>
+</tr>
+<tr>
+<td>Run Studio</td>
+<td><a href="/docs/reports/overview#run">Installation</a></td>
+</tr>
+<tr>
+<td>Call the engine from application code</td>
+<td><a href="/docs/reports/developer-guide">Developer guide and complete examples</a></td>
+</tr>
+<tr>
+<td>Integrate a .NET/Blazor app</td>
+<td><a href="/docs/reports/dotnet-integration">.NET client and Blazor viewer</a></td>
+</tr>
+<tr>
+<td>Integrate Flutter/Dart</td>
+<td><a href="/docs/reports/flutter-integration">Flutter SDK and Web demo</a></td>
+</tr>
+<tr>
+<td>Create or edit a report</td>
+<td><a href="/docs/reports/report-authoring-manual">Report authoring manual</a></td>
+</tr>
+<tr>
+<td>Build forms and step-by-step dialogs</td>
+<td><a href="/docs/reports/toolbox">Dialog Toolbox</a></td>
+</tr>
+<tr>
+<td>Add validation, calculations and dependent choices</td>
+<td><a href="/docs/reports/report-logic-manual">TypeScript and events</a></td>
+</tr>
+<tr>
+<td>Author template JSON or automate generation</td>
+<td><a href="/docs/reports/template-format">Template format</a>, <a href="/docs/reports/agent-authoring">API/CLI authoring</a></td>
+</tr>
+<tr>
+<td>Connect PostgreSQL, MSSQL, MySQL, MariaDB, SQLite, JSON or objects</td>
+<td><a href="/docs/reports/data-sources">Data sources</a></td>
+</tr>
+<tr>
+<td>Refresh HTTP data or transform snapshots</td>
+<td><a href="/docs/reports/http-connections">HTTP sources</a>, <a href="/docs/reports/data-preparation">data preparation</a></td>
+</tr>
+<tr>
+<td>Import data</td>
+<td><a href="/docs/reports/data-import">CSV/TSV</a>, <a href="/docs/reports/report-authoring-manual#excel-import">Excel XLSX</a></td>
+</tr>
+<tr>
+<td>Export reports</td>
+<td><a href="/docs/reports/office-export">Office</a>, <a href="/docs/reports/report-authoring-manual#preview">HTML</a>, <a href="/docs/reports/image-export">page images</a></td>
+</tr>
+<tr>
+<td>Add interactive report details</td>
+<td><a href="/docs/reports/drill-down">Drill-down</a></td>
+</tr>
+<tr>
+<td>Store versions and run scheduled jobs</td>
+<td><a href="/docs/reports/report-library">Library</a>, <span>server operations</span></td>
+</tr>
+<tr>
+<td>Check scope and verification</td>
+<td><span>Roadmap</span>, <span>verification log</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="learn-by-doing">Learn by doing</h2>
+<ol>
+<li>Open a sample project, change a parameter and generate Preview/PDF.</li>
+<li>Follow <strong>Build your first report</strong> in the authoring manual. Create a three-row
+table, heading and page numbers; save and reopen the project.</li>
+<li>Add a company parameter and test Cancel/Generate in the parameter form.</li>
+<li>Build two dialog pages with Next/Back and test required fields and sequential steps.</li>
+<li>Read the event guide and try <code>samples/inventory.nrtemplate</code> for validation and filtering.</li>
+<li>Follow the developer guide to connect the installed SDK and generate outputs from your own C# application.</li>
+<li>Open the Blazor or Flutter demo, change data and inspect the corresponding code guide.</li>
+</ol>
+<h2 id="read-in-the-browser">Read in the browser</h2>
+<p>Studio <strong>Manual ↗</strong> or <strong>Code → Manual</strong> opens the local English authoring guide.
+Its <strong>Developer guide &amp; code examples</strong> link opens readable code, with links to
+local .NET, Flutter and data-source guides. The desktop launcher's documentation
+action opens the developer guide directly. No GitHub connection is needed. The developer hub uses three numbered cards to
+explain the learning path; code blocks have language labels, syntax colors and
+<strong>Copy code</strong>. A successful copy shows <strong>Copied</strong>. On restricted browser contexts,
+select and copy the text manually. Narrow screens stack the cards; long code lines
+scroll inside their code block.</p>

@@ -1,0 +1,131 @@
+{
+  "template": {
+    "version": 1,
+    "title": "Multiple chart series",
+    "page": {
+      "width": 595.28,
+      "height": 841.89,
+      "margin": 42,
+      "footer": "Page {page} / {pages}"
+    },
+    "blocks": [
+      {
+        "type": "chart",
+        "chartKind": "bar",
+        "orientation": "horizontal",
+        "source": "regions",
+        "categoryField": "name",
+        "title": "Grouped horizontal bars",
+        "height": 420,
+        "series": [
+          {
+            "title": "Actual",
+            "valueField": "actual",
+            "format": "F1",
+            "color": "#4F6BED"
+          },
+          {
+            "title": "Budget",
+            "valueField": "budget",
+            "format": "F0",
+            "color": "#008844"
+          },
+          {
+            "title": "Previous",
+            "valueField": "previous",
+            "format": "F1",
+            "color": "#B45309"
+          }
+        ]
+      },
+      {
+        "type": "pageBreak"
+      },
+      {
+        "type": "chart",
+        "chartKind": "bar",
+        "orientation": "vertical",
+        "source": "regions",
+        "categoryField": "name",
+        "title": "Grouped columns",
+        "height": 420,
+        "series": [
+          {
+            "title": "Actual",
+            "valueField": "actual",
+            "format": "F1",
+            "color": "#4F6BED"
+          },
+          {
+            "title": "Budget",
+            "valueField": "budget",
+            "format": "F0",
+            "color": "#008844"
+          },
+          {
+            "title": "Previous",
+            "valueField": "previous",
+            "format": "F1",
+            "color": "#B45309"
+          }
+        ]
+      },
+      {
+        "type": "pageBreak"
+      },
+      {
+        "type": "chart",
+        "chartKind": "line",
+        "orientation": "vertical",
+        "source": "regions",
+        "categoryField": "name",
+        "title": "Multiple lines",
+        "height": 420,
+        "series": [
+          {
+            "title": "Actual",
+            "valueField": "actual",
+            "format": "F1",
+            "color": "#4F6BED"
+          },
+          {
+            "title": "Budget",
+            "valueField": "budget",
+            "format": "F0",
+            "color": "#008844"
+          },
+          {
+            "title": "Previous",
+            "valueField": "previous",
+            "format": "F1",
+            "color": "#B45309"
+          }
+        ]
+      }
+    ]
+  },
+  "data": {
+    "regions": [
+      {
+        "name": "North",
+        "actual": 120,
+        "budget": 100,
+        "previous": 80
+      },
+      {
+        "name": "South",
+        "actual": 60,
+        "budget": 90,
+        "previous": -30
+      },
+      {
+        "name": "East",
+        "actual": 0,
+        "budget": 40,
+        "previous": 20
+      }
+    ]
+  },
+  "parameters": {},
+  "useSnapshot": true
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "f64ba0e0-3d49-57c4-8d48-12f0ab9292a6",
+    "product": "remote",
+    "version": "0.4.4",
+    "platform": "Linux x64",
+    "filename": "nextgen-remote-0.4.4-linux-x86_64.tar.gz",
+    "storage_name": "remote/0.4.4/3330eba-20261118/nextgen-remote-0.4.4-linux-x86_64.tar.gz",
+    "size": 5838877,
+    "sha256": "BC189C4865B2E8E15C69C51BC8208D8AD45C92EB3CFB3EFCDFC648068CD48034",
+    "notes": "Transfer folders and resume encrypted file transfers after reconnecting and receiving host control. Includes offline manuals.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.4/nextgen-remote-0.4.4-linux-x86_64.tar.gz"
+  },
+  {
+    "id": "3f5afa18-14ad-5292-8901-118042a101cb",
+    "product": "remote",
+    "version": "0.4.4",
+    "platform": "macOS Apple Silicon",
+    "filename": "nextgen-remote-0.4.4-macos-aarch64.zip",
+    "storage_name": "remote/0.4.4/3330eba-20261118/nextgen-remote-0.4.4-macos-aarch64.zip",
+    "size": 50478002,
+    "sha256": "017D78680F26F8329739B59FDFC089C3BFAA78360BC0CA2C9FE50D45D286D8A8",
+    "notes": "Transfer folders and resume encrypted file transfers after reconnecting and receiving host control. Includes offline manuals.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.4/nextgen-remote-0.4.4-macos-aarch64.zip"
+  },
+  {
+    "id": "8e0fd6c2-8ccd-599f-b898-cefc0d472c2a",
+    "product": "remote",
+    "version": "0.4.4",
+    "platform": "Windows x64",
+    "filename": "nextgen-remote-0.4.4-windows-x86_64.zip",
+    "storage_name": "remote/0.4.4/3330eba-20261118/nextgen-remote-0.4.4-windows-x86_64.zip",
+    "size": 75463020,
+    "sha256": "EB6191DD109336FC35DAD02C2557E03FC7DBACFB128AE72C34761B87A7F21E2C",
+    "notes": "Transfer folders and resume encrypted file transfers after reconnecting and receiving host control. Includes offline manuals.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.4/nextgen-remote-0.4.4-windows-x86_64.zip"
+  }
+]

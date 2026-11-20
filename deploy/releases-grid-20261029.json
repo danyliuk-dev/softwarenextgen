@@ -1,0 +1,41 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.70.0-grid1-linux-x86_64.AppImage",
+    "storage_name": "components/0.70.0/grid-20261029.2/linux-x64/NextgenComponents-0.70.0-grid1-linux-x86_64.AppImage",
+    "size": 220322909,
+    "sha256": "1FBF37BB7084971841CA4490B6022B0C9D1B3C4DF3220F07DB5EEB655EB00576",
+    "notes": "Documentation revision 2026.10.29.2: Grid guides grouped beside NgDataGrid in Data & documents. Installed SDK unchanged.",
+    "previous_storage_name": "components/0.70.0/sdk-20261029.1/linux-x64/NextgenComponents-0.70.0-sdk1-linux-x86_64.AppImage",
+    "previous_sha256": "B287B7465ABD42F83578EBC987256E9609B25CBE781E73321233140D8979E472"
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.70.0-grid1-mac-arm64.dmg",
+    "storage_name": "components/0.70.0/grid-20261029.2/osx-arm64/NextgenComponents-0.70.0-grid1-mac-arm64.dmg",
+    "size": 233494812,
+    "sha256": "34EC336EFA365EF7E0224A763286C26398F577722F586B31293091122041FC8E",
+    "notes": "Documentation revision 2026.10.29.2: Grid guides grouped beside NgDataGrid in Data & documents. Installed SDK unchanged.",
+    "previous_storage_name": "components/0.70.0/sdk-20261029.1/osx-arm64/NextgenComponents-0.70.0-sdk1-mac-arm64.dmg",
+    "previous_sha256": "FDE23F18E6035C0A0485FEB78E1216F52ED5AA9737EB27B8D55AF86F215CE892"
+  },
+  {
+    "id": "5cf41f31-81e0-5c26-83c2-43417fae8ccb",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "Windows x64",
+    "filename": "NextgenComponents-0.70.0-grid1-win-x64.exe",
+    "storage_name": "components/0.70.0/grid-20261029.2/win-x64/NextgenComponents-0.70.0-grid1-win-x64.exe",
+    "size": 208571835,
+    "sha256": "87B68DB02DF7D89DDDAD4FFBD7AA5FAC5ACE4E5F00F21266178B300F8B11854F",
+    "notes": "Documentation revision 2026.10.29.2: Grid guides grouped beside NgDataGrid in Data & documents. Installed SDK unchanged.",
+    "previous_storage_name": "components/0.70.0/sdk-20261029.1/win-x64/NextgenComponents-0.70.0-sdk1-win-x64.exe",
+    "previous_sha256": "AE874FE1A76CE7EF7C69A3F3499921C8EFAEEEA5EF3BB8BD6CB41B2F56CD53BD"
+  }
+]

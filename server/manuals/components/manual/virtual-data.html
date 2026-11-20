@@ -1,0 +1,77 @@
+<h1 id="virtual-scrolling-for-large-data-views">Virtual scrolling for large data views</h1>
+<p><code>NgDataGrid</code>, <code>NgTreeView</code> and <code>NgTreeList</code> support opt-in fixed-height virtual rendering; Grid also supports measured variable-height rows on Blazor and Flutter Web. Turn on <code>Virtualize</code> / <code>virtualize</code>, then set <code>RowHeight</code> / <code>rowHeight</code> (default 48) and <code>ViewportHeight</code> / <code>viewportHeight</code> (default 384). Heights must be finite; rows must be at least 40 pixels and the viewport at least one row high. The default nonvirtual behavior is unchanged.</p>
+<h2 id="data-and-loading-boundaries">Data and loading boundaries</h2>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Scrollable data</th>
+<th>Loading behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Local Grid</td>
+<td>All matching records, including expanded local group rows</td>
+<td>Search, sort, grouping and aggregates still run over the in-memory collection. The local pager is hidden.</td>
+</tr>
+<tr>
+<td>Remote Grid</td>
+<td>The current server page, including its grouped metadata</td>
+<td>Existing <code>ReadData</code> / <code>ReadGroupedData</code> adapters and pager remain. Scrolling never fetches another page or invents placeholders for unloaded records. Use an explicit page size such as 500.</td>
+</tr>
+<tr>
+<td>Trees</td>
+<td>The flattened, expanded, currently loaded nodes</td>
+<td>Existing lazy child adapters still run on expansion; scrolling itself does not fetch children.</td>
+</tr>
+</tbody>
+</table>
+<p>The modes above virtualize rendering only. Continuous remote scrolling with bounded client data uses the separate <a href="/docs/components/manual/remote-ranges">ReadRange contract</a>. Lazy group paging remains unsupported. Searching and flattening a large tree still visit its loaded nodes.</p>
+<h2 id="blazor">Blazor</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgDataGrid</span> <span class="na">TItem</span><span class="o">=</span><span class="s">&quot;int&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;records&quot;</span> <span class="na">Columns</span><span class="o">=</span><span class="s">&quot;columns&quot;</span> <span class="na">RowId</span><span class="o">=</span><span class="s">&quot;i=&gt;i.ToString()&quot;</span></span>
+<span class="code-line" data-line="2">    <span class="na">Virtualize</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">RowHeight</span><span class="o">=</span><span class="s">&quot;48&quot;</span> <span class="na">ViewportHeight</span><span class="o">=</span><span class="s">&quot;384&quot;</span></span>
+<span class="code-line" data-line="3">    <span class="err">@</span><span class="na">bind-SelectedIds</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="4"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="kt">int</span><span class="p">[]</span><span class="w"> </span><span class="n">records</span><span class="o">=</span><span class="n">Enumerable</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10000</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgDataColumn</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">[]</span><span class="w"> </span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="s">&quot;Record&quot;</span><span class="p">,</span><span class="n">i</span><span class="o">=&gt;</span><span class="n">i</span><span class="p">)];</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="p">[];</span></span>
+<span class="code-line" data-line="8"><span class="p">}</span></span></code></pre></figure>
+<p>Fixed-height mode uses Blazor's <code>Virtualize</code> with table-row spacers. Keep the scrolling element focusable. Rows and templates must fit the configured height; avoid multiline content, expanding editors inside cells and images without fixed dimensions. The Grid's editing panel is outside the viewport. Table columns use fixed layout in this mode and retain horizontal scrolling.</p>
+<h2 id="flutter">Flutter</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">NgDataGrid</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nl">items:</span><span class="w"> </span><span class="n">List</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">),</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nl">columns:</span><span class="w"> </span><span class="p">[</span><span class="n">NgDataColumn</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Record&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">)],</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nl">rowId:</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;</span><span class="si">$</span><span class="n">i</span><span class="s1">&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="nl">virtualize:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="nl">rowHeight:</span><span class="w"> </span><span class="m">48</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="nl">viewportHeight:</span><span class="w"> </span><span class="m">384</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="nl">selectedIds:</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="nl">onSelectionChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">ids</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ids</span><span class="p">),</span></span>
+<span class="code-line" data-line="10"><span class="p">)</span></span></code></pre></figure>
+<p>Flutter uses a lazy <code>ListView</code> and constructs cell templates only for the current window and its framework cache. The selection column stays 48 pixels wide. Virtual data columns share the available width, with a minimum of 200 pixels per column and horizontal scrolling. The header stays above the scrollable body; its height is additional to <code>viewportHeight</code>. The ordinary DataTable retains its existing intrinsic sizing. Use a bounded-width parent and keep custom cells within the configured row height.</p>
+<p>The same three settings apply directly to TreeView and TreeList. Existing selected/checked/expanded IDs, callbacks, read-only flags, disabled records, templates, search and lazy-child adapters keep their contracts. Changing modes does not grant permission to change caller-owned state.</p>
+<h2 id="selection-export-and-focus">Selection, export and focus</h2>
+<ul>
+<li>Local virtual Grid's <strong>Select results</strong> action applies to eligible records across the current expanded filtered result, including offscreen records. Collapsed group records remain excluded. In remote mode <strong>Select page</strong> still covers the loaded page. Protected and hidden selected IDs are preserved.</li>
+<li>Export scope <code>Page</code> means the logical displayed dataset, not the handful of recycled DOM/widget rows. For a local virtual Grid it covers all expanded filtered records; for a remote Grid it covers the current server page. <code>Filtered</code> and <code>Selected</code> keep their existing contracts and limits. Configure the export page label as “Current view” in an application that offers virtualization.</li>
+<li>Row selection and checked IDs survive recycling. A parent can reject a callback; widgets do not silently adopt it.</li>
+<li>Virtual Flutter tables support PageUp/PageDown and Ctrl+Home/Ctrl+End while focus is within a row; the visible scrollbar also supports direct scrolling.</li>
+<li>TreeView arrows, Home and End scroll an offscreen target into view before moving focus; Enter/Space retain selection behavior. Disabled nodes are skipped. TreeList retains its existing button/Tab navigation; full treegrid keyboard navigation is not claimed.</li>
+<li>Scrolling a focused row away can remove it from the render tree. Do not use DOM/widget identity as application selection state. Full screen-reader and native-platform certification remains open.</li>
+</ul>
+<h2 id="runnable-performance-exercise">Runnable performance exercise</h2>
+<p>Open <a href="/preview/components/virtual-data">Blazor virtual data</a> or <a href="/docs/components/manual/virtual-data#flutter">Flutter implementation</a>. Both galleries also link from Data workspace.</p>
+<ol>
+<li>Scroll from the first to the 10,000th record. Check that only a small window exists, while selected IDs persist.</li>
+<li>Search, sort, group by thousand, collapse groups and toggle the 12-record dataset. Verify the last records remain reachable after changing the result size.</li>
+<li>Switch to server pages. A page contains at most 500 records; scrolling must not increment the read counter. The pager loads the next page.</li>
+<li>Expand all 100 tree branches. With 100 children each, 10,100 nodes are available. Use Home/End and selection, then inspect TreeList and collapse the hierarchy.</li>
+</ol>
+<p>The demonstrations use synthetic in-memory data and a delayed page adapter. They are not a production database benchmark. Automated tests assert bounded cell construction on 10,000 records, last-row reachability, shrink recovery, selection retention, tree keyboard traversal and the server-page boundary. See <span>verification</span> for actual browser observations.</p>
+<h2 id="variable-row-height">Variable row height</h2>
+<p>Set <code>VariableRowHeight=&quot;true&quot;</code> / <code>variableRowHeight: true</code> together with virtualization on Grid. Cells, templates, group headers and inline editors are measured automatically. <code>RowHeight</code> / <code>rowHeight</code> remains the minimum row height and the estimate for rows not yet measured. Use content with a finite natural height; Flutter cells must not require an unbounded vertical <code>Expanded</code> or nested vertical scroll view. Provide explicit dimensions for embedded media where possible.</p>
+<p>This mode covers local results and the currently loaded server page, with or without grouping. Continuous <code>ReadRange</code> / <code>readRange</code> and <code>ReadGroupedRange</code> / <code>readGroupedRange</code> require fixed heights and reject the setting. Trees retain their fixed-height mode. Column virtualization remains separate.</p>
+<p>Only visible rows and a small buffer build cell templates. Height metadata grows with the number of visited rows; this is rendering virtualization, not a bound on local application data. Unmeasured records use the estimate, so the scrollbar thumb and total extent can change as new rows appear. The renderer preserves the visible anchor when measured heights change and keeps the end visible after an end jump. Width changes invalidate cached heights. Search, sort, page changes and changes in the expanded row sequence reset scrolling to the beginning; caller-owned selection is preserved. Offscreen changes are measured when those rows return to view.</p>
+<p>Selection and export continue to use logical records, not the rendered window. Group rows cannot become selected records. A cell editor keeps its application draft when scrolled out; scroll it into view again to continue editing. Whole-record and batch review panels remain outside the viewport. No full accessibility or native Flutter certification is claimed.</p>
+<p>The Grid manual's <strong>Measured virtual rows</strong> example and the <strong>Variable row height</strong> checkbox in the virtual data exercise demonstrate this mode. Verify the last of 10,000 records, filtering, sorting, grouping, server-page boundaries, shrinking to 12 records, and selection retention.</p>

@@ -1,0 +1,44 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.72.0",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.72.0-cell072-linux-x86_64.AppImage",
+    "storage_name": "components/0.72.0/cell072/linux-x64/NextgenComponents-0.72.0-cell072-linux-x86_64.AppImage",
+    "size": 220396133,
+    "sha256": "BDE547F9BEBB4FD8F896F9DBA427BC7DA989154ED8E2312D8FED4F917D210C89",
+    "notes": "Components 0.72.0: custom Grid editors and cell editing, full-record validation, retained drafts and guarded callbacks. Documentation revision 2026.10.30.1.",
+    "local_path": "artifacts/cell072/installers/NextgenComponents-0.72.0-cell072-linux-x86_64.AppImage",
+    "previous_storage_name": "components/0.71.0/grouped071/linux-x64/NextgenComponents-0.71.0-grouped071-linux-x86_64.AppImage",
+    "previous_sha256": "464AE9CD35AE1D107A3D7A017FC2085D8994BFE8BDB3D62679874AA2E77F07D2"
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.72.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.72.0-cell072-mac-arm64.dmg",
+    "storage_name": "components/0.72.0/cell072/osx-arm64/NextgenComponents-0.72.0-cell072-mac-arm64.dmg",
+    "size": 260375043,
+    "sha256": "D2A2E361D4D5B1A2F1DF90BECD3E12C3BAFADD574640EB6004EF78B569F0B66C",
+    "notes": "Components 0.72.0: custom Grid editors and cell editing, full-record validation, retained drafts and guarded callbacks. Documentation revision 2026.10.30.1.",
+    "local_path": "artifacts/cell072/installers/NextgenComponents-0.72.0-cell072-mac-arm64.dmg",
+    "previous_storage_name": "components/0.71.0/grouped071/osx-arm64/NextgenComponents-0.71.0-grouped071-mac-arm64.dmg",
+    "previous_sha256": "A9AFA18CB730C025102C4A64055963366CFCA96B47A63ECB383368E575D7E1F0"
+  },
+  {
+    "id": "5cf41f31-81e0-5c26-83c2-43417fae8ccb",
+    "product": "components",
+    "version": "0.72.0",
+    "platform": "Windows x64",
+    "filename": "NextgenComponents-0.72.0-cell072-win-x64.exe",
+    "storage_name": "components/0.72.0/cell072/win-x64/NextgenComponents-0.72.0-cell072-win-x64.exe",
+    "size": 208634818,
+    "sha256": "AA08BE5142B9BFE13239E0F5B01931FD3FC14EEDEB5D0320FC74A8EB403E1DF2",
+    "notes": "Components 0.72.0: custom Grid editors and cell editing, full-record validation, retained drafts and guarded callbacks. Documentation revision 2026.10.30.1.",
+    "local_path": "artifacts/cell072/installers/NextgenComponents-0.72.0-cell072-win-x64.exe",
+    "previous_storage_name": "components/0.71.0/grouped071/win-x64/NextgenComponents-0.71.0-grouped071-win-x64.exe",
+    "previous_sha256": "48E10DBCB36B59E2C84CD55F898ABD56236CD3DA421ACD8DA51F71FD7BFA9E7A"
+  }
+]

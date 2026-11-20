@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "title": "Regional inventory",
+  "parameters": {
+    "region": {
+      "type": "string",
+      "default": "East"
+    },
+    "minimum": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "blocks": [
+    {
+      "type": "unknown-control"
+    }
+  ]
+}

@@ -1,0 +1,874 @@
+{
+  "title": "Interactive orders",
+  "pages": [
+    {
+      "width": 595.28,
+      "height": 420,
+      "commands": [
+        {
+          "type": "text",
+          "text": "Orders — open a row for details",
+          "x": 32,
+          "y": 32,
+          "width": 531.28,
+          "height": 26.075000000000003,
+          "style": {
+            "size": 20,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 70.075,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Order",
+          "x": 39,
+          "y": 77.075,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Customer",
+          "x": 171.82,
+          "y": 77.075,
+          "width": 251.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Amount",
+          "x": 437.46,
+          "y": 77.075,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 95.30875,
+          "width": 531.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 95.80875,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-001",
+          "x": 39,
+          "y": 102.80875,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Central office",
+          "x": 171.82,
+          "y": 102.80875,
+          "width": 251.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "125.00",
+          "x": 437.46,
+          "y": 102.80875,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 121.0425,
+          "width": 531.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 121.5425,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "ORD-002",
+          "x": 39,
+          "y": 128.54250000000002,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "West branch",
+          "x": 171.82,
+          "y": 128.54250000000002,
+          "width": 251.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "225.00",
+          "x": 437.46,
+          "y": 128.54250000000002,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 146.77625,
+          "width": 531.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 147.27625,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "ORD-003",
+          "x": 39,
+          "y": 154.27625,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "North branch",
+          "x": 171.82,
+          "y": 154.27625,
+          "width": 251.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "325.00",
+          "x": 437.46,
+          "y": 154.27625,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 172.51,
+          "width": 531.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 173.01,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Grand total",
+          "x": 39,
+          "y": 180.01,
+          "width": 517.28,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 198.74374999999998,
+          "width": 531.28,
+          "height": 25.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 39,
+          "y": 205.74374999999998,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 171.82,
+          "y": 205.74374999999998,
+          "width": 251.64,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "675.00",
+          "x": 437.46,
+          "y": 205.74374999999998,
+          "width": 118.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "right"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 32,
+          "y": 223.97749999999996,
+          "width": 531.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "Northstar Demo",
+          "x": 32,
+          "y": 11,
+          "width": 531.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Page 1 / 1",
+          "x": 32,
+          "y": 399,
+          "width": 531.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ],
+  "drillDown": {
+    "source": {
+      "orders": [
+        {
+          "id": "ORD-001",
+          "customer": "Central office",
+          "amount": 125,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 1,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        },
+        {
+          "id": "ORD-002",
+          "customer": "West branch",
+          "amount": 225,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 2,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        },
+        {
+          "id": "ORD-003",
+          "customer": "North branch",
+          "amount": 325,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 3,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        }
+      ]
+    },
+    "parameters": {
+      "company": "Northstar Demo"
+    },
+    "targets": [
+      {
+        "label": "Open order details",
+        "template": {
+          "version": 1,
+          "connections": [],
+          "dataTables": [],
+          "dialog": null,
+          "logic": null,
+          "title": "Order details",
+          "page": {
+            "width": 595.28,
+            "height": 841.89,
+            "margin": 42,
+            "header": "",
+            "footer": "Page {page} / {pages}"
+          },
+          "parameters": {
+            "company": {
+              "label": null,
+              "help": null,
+              "minimum": null,
+              "maximum": null,
+              "mask": null,
+              "control": "auto",
+              "options": [],
+              "type": "string",
+              "required": true,
+              "default": "Example Company"
+            }
+          },
+          "images": {},
+          "subreports": {},
+          "blocks": [
+            {
+              "type": "text",
+              "text": "{{parameters.company}} · {{data.row.id}}",
+              "style": {
+                "size": 22,
+                "bold": true,
+                "color": "#24324B",
+                "align": "left"
+              },
+              "spaceAfter": 12,
+              "frame": null
+            },
+            {
+              "type": "text",
+              "text": "Customer: {{data.row.customer}}",
+              "style": {
+                "size": 10,
+                "bold": false,
+                "color": "#24324B",
+                "align": "left"
+              },
+              "spaceAfter": 12,
+              "frame": null
+            },
+            {
+              "type": "table",
+              "drillDown": {
+                "label": "Open line details",
+                "template": {
+                  "version": 1,
+                  "connections": [],
+                  "dataTables": [],
+                  "dialog": null,
+                  "logic": null,
+                  "title": "Line details",
+                  "page": {
+                    "width": 595.28,
+                    "height": 841.89,
+                    "margin": 42,
+                    "header": "",
+                    "footer": "Page {page} / {pages}"
+                  },
+                  "parameters": {},
+                  "images": {},
+                  "subreports": {},
+                  "blocks": [
+                    {
+                      "type": "text",
+                      "text": "{{data.row.item}}",
+                      "style": {
+                        "size": 22,
+                        "bold": true,
+                        "color": "#24324B",
+                        "align": "left"
+                      },
+                      "spaceAfter": 12,
+                      "frame": null
+                    },
+                    {
+                      "type": "text",
+                      "text": "Quantity: {{data.row.quantity}} · Unit price: {{data.row.price}}",
+                      "style": {
+                        "size": 10,
+                        "bold": false,
+                        "color": "#24324B",
+                        "align": "left"
+                      },
+                      "spaceAfter": 12,
+                      "frame": null
+                    },
+                    {
+                      "type": "text",
+                      "text": "Order: {{data.source.row.id}}",
+                      "style": {
+                        "size": 10,
+                        "bold": false,
+                        "color": "#24324B",
+                        "align": "left"
+                      },
+                      "spaceAfter": 12,
+                      "frame": null
+                    }
+                  ]
+                }
+              },
+              "masterSource": null,
+              "masterHeader": "Details",
+              "source": "row.lines",
+              "groupBy": null,
+              "groupFields": [],
+              "filterGroup": null,
+              "filter": null,
+              "filters": [],
+              "filterMatch": "all",
+              "sortBy": null,
+              "sortDirection": "asc",
+              "sorts": [],
+              "showGroupTotals": true,
+              "showGrandTotal": true,
+              "columns": [
+                {
+                  "styleRules": [],
+                  "expression": null,
+                  "textExpression": null,
+                  "sum": false,
+                  "aggregate": null,
+                  "title": "Item",
+                  "field": "item",
+                  "weight": 3,
+                  "format": null,
+                  "align": "left"
+                },
+                {
+                  "styleRules": [],
+                  "expression": null,
+                  "textExpression": null,
+                  "sum": false,
+                  "aggregate": null,
+                  "title": "Qty",
+                  "field": "quantity",
+                  "weight": 1,
+                  "format": null,
+                  "align": "right"
+                },
+                {
+                  "styleRules": [],
+                  "expression": "row.quantity * row.price",
+                  "textExpression": null,
+                  "sum": false,
+                  "aggregate": "sum",
+                  "title": "Total",
+                  "field": "",
+                  "weight": 1,
+                  "format": "N2",
+                  "align": "right"
+                }
+              ],
+              "style": {
+                "size": 9,
+                "bold": false,
+                "color": "#24324B",
+                "align": "left"
+              },
+              "headerColor": "#EDF1F8",
+              "stripeColor": "#F7F9FC",
+              "padding": 5,
+              "spaceAfter": 12,
+              "frame": null
+            }
+          ]
+        }
+      }
+    ],
+    "rows": [
+      {
+        "target": 0,
+        "row": {
+          "id": "ORD-001",
+          "customer": "Central office",
+          "amount": 125,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 1,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        },
+        "source": {
+          "orders": [
+            {
+              "id": "ORD-001",
+              "customer": "Central office",
+              "amount": 125,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 1,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-002",
+              "customer": "West branch",
+              "amount": 225,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 2,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-003",
+              "customer": "North branch",
+              "amount": 325,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 3,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": {
+          "company": "Northstar Demo"
+        }
+      },
+      {
+        "target": 0,
+        "row": {
+          "id": "ORD-002",
+          "customer": "West branch",
+          "amount": 225,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 2,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        },
+        "source": {
+          "orders": [
+            {
+              "id": "ORD-001",
+              "customer": "Central office",
+              "amount": 125,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 1,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-002",
+              "customer": "West branch",
+              "amount": 225,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 2,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-003",
+              "customer": "North branch",
+              "amount": 325,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 3,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": {
+          "company": "Northstar Demo"
+        }
+      },
+      {
+        "target": 0,
+        "row": {
+          "id": "ORD-003",
+          "customer": "North branch",
+          "amount": 325,
+          "lines": [
+            {
+              "item": "Delivery service",
+              "quantity": 3,
+              "price": 100
+            },
+            {
+              "item": "Packaging",
+              "quantity": 1,
+              "price": 25
+            }
+          ]
+        },
+        "source": {
+          "orders": [
+            {
+              "id": "ORD-001",
+              "customer": "Central office",
+              "amount": 125,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 1,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-002",
+              "customer": "West branch",
+              "amount": 225,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 2,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            },
+            {
+              "id": "ORD-003",
+              "customer": "North branch",
+              "amount": 325,
+              "lines": [
+                {
+                  "item": "Delivery service",
+                  "quantity": 3,
+                  "price": 100
+                },
+                {
+                  "item": "Packaging",
+                  "quantity": 1,
+                  "price": 25
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": {
+          "company": "Northstar Demo"
+        }
+      }
+    ],
+    "regions": [
+      {
+        "page": 0,
+        "x": 32,
+        "y": 95.80875,
+        "width": 531.28,
+        "height": 25.73375,
+        "row": 0
+      },
+      {
+        "page": 0,
+        "x": 32,
+        "y": 121.5425,
+        "width": 531.28,
+        "height": 25.73375,
+        "row": 1
+      },
+      {
+        "page": 0,
+        "x": 32,
+        "y": 147.27625,
+        "width": 531.28,
+        "height": 25.73375,
+        "row": 2
+      }
+    ]
+  }
+}

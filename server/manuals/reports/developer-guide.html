@@ -1,0 +1,164 @@
+<h1 id="developer-guide-and-code-examples">Developer guide and code examples</h1>
+<p>Start with a complete working example, then choose the integration for your app.
+Commands use the installed product and SDK. Examples contain fictional data. Build only your own application; the supplied libraries and engine are ready to use.</p>
+<h2 id="installed-sdk-and-first-connection">Installed SDK and first connection</h2>
+<p>Install <strong>Nextgen Reports</strong>, then copy its <code>SDK</code> folder into your application's <code>vendor/nextgen-sdk</code>. The package contains prebuilt .NET NuGet libraries and a Flutter/Dart package. The desktop app can author reports immediately; development tools are needed only for building your own application.</p>
+<h2 id="start-the-installed-engine-for-integration">Start the installed engine for integration</h2>
+<p>The desktop application's engine uses a private session and a dynamically selected port. Applications should start a separate instance of the installed executable with their own state folder and explicit loopback address. Do not reuse the desktop session or its private token.</p>
+<p>Set the resources path for your platform (see <a href="/docs/reports/installation">Installation</a>). For example, on macOS:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1"><span class="nb">export</span><span class="w"> </span><span class="nv">NEXTGEN_RESOURCES</span><span class="o">=</span><span class="s2">&quot;/Applications/Nextgen Reports.app/Contents/Resources&quot;</span></span></code></pre></figure>
+<p>On Linux, after extracting the AppImage into <code>~/NextgenInstalled/reports</code>:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1"><span class="nb">export</span><span class="w"> </span><span class="nv">NEXTGEN_RESOURCES</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/NextgenInstalled/reports/squashfs-root/resources&quot;</span></span></code></pre></figure>
+<p>Then start the prebuilt engine in a terminal:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/NextgenIntegration/reports&quot;</span></span>
+<span class="code-line" data-line="2"><span class="nv">NEXTGEN_STATE_DIRECTORY</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$HOME</span><span class="s2">/NextgenIntegration/reports&quot;</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="s2">&quot;</span><span class="nv">$NEXTGEN_RESOURCES</span><span class="s2">/server/NextgenReports.Studio&quot;</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span>--contentRoot<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$NEXTGEN_RESOURCES</span><span class="s2">/server&quot;</span><span class="w"> </span>--urls<span class="w"> </span>http://127.0.0.1:5274</span></code></pre></figure>
+<p>On Windows, use PowerShell instead of the Unix shell commands above. Adjust the resources path if you selected another installation folder:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">powershell</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="powershell code example"><code class="language-powershell"><span class="code-line" data-line="1"><span class="nv">$env:NEXTGEN_RESOURCES</span> <span class="p">=</span> <span class="s2">&quot;$env:LOCALAPPDATA\Programs\Nextgen Reports\resources&quot;</span></span>
+<span class="code-line" data-line="2"><span class="nv">$env:NEXTGEN_STATE_DIRECTORY</span> <span class="p">=</span> <span class="s2">&quot;$env:LOCALAPPDATA\NextgenIntegration\reports&quot;</span></span>
+<span class="code-line" data-line="3"><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">-Force</span> <span class="nv">$env:NEXTGEN_STATE_DIRECTORY</span> <span class="p">|</span> <span class="nb">Out-Null</span></span>
+<span class="code-line" data-line="4"><span class="p">&amp;</span> <span class="s2">&quot;$env:NEXTGEN_RESOURCES\server\NextgenReports.Studio.exe&quot;</span> <span class="p">`</span></span>
+<span class="code-line" data-line="5">  <span class="p">-</span><span class="n">-contentRoot</span> <span class="s2">&quot;$env:NEXTGEN_RESOURCES\server&quot;</span> <span class="p">-</span><span class="n">-urls</span> <span class="n">http</span><span class="p">://</span><span class="n">127</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">0</span><span class="p">.</span><span class="n">1</span><span class="p">:</span><span class="n">5274</span></span></code></pre></figure>
+<p>Leave this terminal open while your app uses the engine; Ctrl+C stops it. Open <code>http://127.0.0.1:5274</code> to confirm Studio loads. If the port is occupied, choose another free loopback port and use the same URL in your client. Each running instance needs a separate state directory. The engine is self-contained: do not install .NET or build Studio just to run it.</p>
+<p>Local mode is for trusted applications on your computer. Do not change the binding to a public interface. A remote integration requires a separately administered HTTPS server and per-user access controls. Mobile applications cannot reach your computer through the phone's localhost.</p>
+<h2 id="call-the-http-api">Call the HTTP API</h2>
+<p>Start the installed engine as described above.</p>
+<p>This complete local-mode request writes a PDF containing Hello from HTTP:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Shell</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Shell code example"><code class="language-sh"><span class="code-line" data-line="1">curl<span class="w"> </span>--fail-with-body<span class="w"> </span>http://127.0.0.1:5274/api/render<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span>-H<span class="w"> </span><span class="s1">&#39;Content-Type: application/json&#39;</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span>--data<span class="w"> </span><span class="s1">&#39;{&quot;template&quot;:{&quot;version&quot;:1,&quot;blocks&quot;:[{&quot;type&quot;:&quot;text&quot;,&quot;text&quot;:&quot;{{data.message}}&quot;}]},&quot;data&quot;:{&quot;message&quot;:&quot;Hello from HTTP&quot;},&quot;parameters&quot;:{}}&#39;</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span>--output<span class="w"> </span>http-example.pdf</span></code></pre></figure>
+<p>The command saves <code>http-example.pdf</code> in your current directory. Use the same request
+with <code>/api/preview</code> for layout JSON. Errors use HTTP 400 Problem Details;
+<code>parameterErrors</code> identifies invalid fields. With server accounts enabled, use
+session cookies, login and CSRF; the SDK examples handle that workflow. Remote
+hosting requires HTTPS. Use a separately administered HTTPS endpoint for remote access.</p>
+<h2 id="use-the-net-http-sdk">Use the .NET HTTP SDK</h2>
+<p>From your .NET 10 application directory, run:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">dotnet<span class="w"> </span>add<span class="w"> </span>package<span class="w"> </span>NextgenReports.Client<span class="w"> </span>--version<span class="w"> </span><span class="m">0</span>.2.1<span class="w"> </span>--source<span class="w"> </span>./vendor/nextgen-sdk/NuGet</span></code></pre></figure>
+<p>This example
+uses exact lowercase JSON keys, so it has no naming-policy ambiguity:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">C#</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="C# code example"><code class="language-csharp"><span class="code-line" data-line="1"><span class="k">using</span><span class="w"> </span><span class="nn">System.Text.Json</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="k">using</span><span class="w"> </span><span class="nn">NextgenReports.Client</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"></span>
+<span class="code-line" data-line="4"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportClient</span><span class="p">.</span><span class="n">Create</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Uri</span><span class="p">(</span><span class="s">&quot;http://127.0.0.1:5274/&quot;</span><span class="p">));</span></span>
+<span class="code-line" data-line="5"><span class="k">using</span><span class="w"> </span><span class="nn">var</span><span class="w"> </span><span class="n">template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">JsonDocument</span><span class="p">.</span><span class="n">Parse</span><span class="p">(</span><span class="s">&quot;&quot;&quot;</span></span>
+<span class="code-line" data-line="6"><span class="p">{</span><span class="s">&quot;version&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s">&quot;blocks&quot;</span><span class="p">:[{</span><span class="s">&quot;type&quot;</span><span class="p">:</span><span class="s">&quot;text&quot;</span><span class="p">,</span><span class="s">&quot;text&quot;</span><span class="p">:</span><span class="s">&quot;{{data.message}}&quot;</span><span class="p">}]}</span></span>
+<span class="code-line" data-line="7"><span class="s">&quot;&quot;&quot;);</span></span>
+<span class="code-line" data-line="8"><span class="kt">var</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportInput</span><span class="p">.</span><span class="n">FromObjects</span><span class="p">(</span><span class="n">template</span><span class="p">.</span><span class="n">RootElement</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello from the .NET SDK&quot;</span><span class="w"> </span><span class="p">});</span></span>
+<span class="code-line" data-line="10"><span class="kt">var</span><span class="w"> </span><span class="n">session</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">GetSessionAsync</span><span class="p">();</span></span>
+<span class="code-line" data-line="11"><span class="c1">// If session.Enabled, call LoginAsync with your host-supplied credentials first.</span></span>
+<span class="code-line" data-line="12"><span class="kt">var</span><span class="w"> </span><span class="n">file</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">ExportAsync</span><span class="p">(</span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">ReportFormat</span><span class="p">.</span><span class="n">Pdf</span><span class="p">);</span></span>
+<span class="code-line" data-line="13"><span class="k">await</span><span class="w"> </span><span class="n">File</span><span class="p">.</span><span class="n">WriteAllBytesAsync</span><span class="p">(</span><span class="s">&quot;sdk-report.pdf&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">file</span><span class="p">.</span><span class="n">Content</span><span class="p">);</span></span></code></pre></figure>
+<p>Use one client per user session. Catch <code>ReportApiException</code> for HTTP/validation
+errors; handle cancellation and transport errors separately. The client never
+replays failed POSTs. Full login, JSON, refresh, export and error examples:
+<a href="/docs/reports/dotnet-integration">.NET and Blazor integration</a>.</p>
+<h2 id="embed-the-blazor-viewer">Embed the Blazor viewer</h2>
+<p>Add the installed <code>NextgenReports.Blazor</code> NuGet package, register a client per interactive circuit, and configure static web assets as shown in the <a href="/docs/reports/dotnet-integration#add-the-blazor-component">Blazor setup guide</a>.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="n">@using</span><span class="w"> </span><span class="n">NextgenReports</span><span class="p">.</span><span class="n">Client</span></span>
+<span class="code-line" data-line="2"><span class="n">@using</span><span class="w"> </span><span class="n">NextgenReports</span><span class="p">.</span><span class="n">Blazor</span></span>
+<span class="code-line" data-line="3"><span class="n">@inject</span><span class="w"> </span><span class="n">ReportClient</span><span class="w"> </span><span class="n">Client</span></span>
+<span class="code-line" data-line="4"></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">ReportViewer</span> <span class="na">Client</span><span class="o">=</span><span class="s">&quot;Client&quot;</span> <span class="na">Input</span><span class="o">=</span><span class="s">&quot;input&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="6"></span>
+<span class="code-line" data-line="7"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">ReportInput</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportInput</span><span class="p">.</span><span class="n">FromObjects</span><span class="p">(</span></span>
+<span class="code-line" data-line="9"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Json</span><span class="p">.</span><span class="n">JsonSerializer</span><span class="p">.</span><span class="n">SerializeToElement</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="10"><span class="w">            </span><span class="n">version</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">            </span><span class="n">blocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;text&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;{{data.message}}&quot;</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="12"><span class="w">        </span><span class="p">}),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Hello from Blazor&quot;</span><span class="w"> </span><span class="p">});</span></span>
+<span class="code-line" data-line="13"><span class="p">}</span></span></code></pre></figure>
+<p>Assign a new input after edits. Navigation reuses generated pages; Download
+regenerates from the successful input snapshot. Viewer accounts cannot submit
+new report generation requests. WebAssembly/Auto are not implemented here.</p>
+<h2 id="use-flutter-and-dart">Use Flutter and Dart</h2>
+<p>Add the installed SDK package as in <a href="/docs/reports/flutter-integration">Flutter setup</a>.
+For Flutter Web, serve the app from Studio's origin; <code>Uri.base.resolve('/')</code>
+uses that origin. Native Dart hosts use an explicit HTTPS server URL.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">import</span><span class="w"> </span><span class="s1">&#39;package:nextgen_reports/nextgen_reports.dart&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"></span>
+<span class="code-line" data-line="3"><span class="kd">final</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportClient</span><span class="p">(</span><span class="n">Uri</span><span class="p">.</span><span class="n">base</span><span class="p">.</span><span class="n">resolve</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">));</span></span>
+<span class="code-line" data-line="4"><span class="kd">final</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportInput</span><span class="p">({</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="s1">&#39;version&#39;</span><span class="o">:</span><span class="w"> </span><span class="m">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="s1">&#39;blocks&#39;</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;text&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;text&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;{{data.message}}&#39;</span><span class="p">}],</span></span>
+<span class="code-line" data-line="7"><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;Hello from Flutter&#39;</span><span class="p">});</span></span>
+<span class="code-line" data-line="8"></span>
+<span class="code-line" data-line="9"><span class="c1">// Place this widget in your page&#39;s build method.</span></span>
+<span class="code-line" data-line="10"><span class="c1">// In server mode, complete client.login(...) before displaying it.</span></span>
+<span class="code-line" data-line="11"><span class="kd">final</span><span class="w"> </span><span class="n">viewer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReportViewer</span><span class="p">(</span><span class="nl">client:</span><span class="w"> </span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="nl">input:</span><span class="w"> </span><span class="n">input</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="nl">onDownload:</span><span class="w"> </span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="c1">// Integrate your app&#39;s save/share flow with file.content and file.fileName.</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="c1">// Complete browser implementation: examples/flutter_demo/lib/save_file_web.dart.</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="p">});</span></span>
+<span class="code-line" data-line="16"></span>
+<span class="code-line" data-line="17"><span class="c1">// HTTP-only generation (inside an async function):</span></span>
+<span class="code-line" data-line="18"><span class="c1">// final pdf = await client.export(input, ReportFormat.pdf);</span></span>
+<span class="code-line" data-line="19"><span class="o">//</span><span class="w"> </span><span class="n">client</span><span class="p">.</span><span class="n">close</span><span class="p">();</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">When</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">owner</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">the</span><span class="w"> </span><span class="n">client</span><span class="w"> </span><span class="k">is</span><span class="w"> </span><span class="n">disposed</span><span class="p">.</span></span></code></pre></figure>
+<p>The download callback above marks the host integration point; it does not save
+files by itself. The runnable Web demo includes the complete Blob download flow.
+Objects need <code>toJson()</code>; dates need explicit JSON conversion. Assign new input
+snapshots after edits and close the client when finished. Full code covers login,
+refresh, cancellation, errors, export options and platform limits in the Flutter
+setup guide. Android/iOS devices and native desktop GUI remain unverified.</p>
+<h2 id="connect-sql-json-files-and-application-objects">Connect SQL, JSON files and application objects</h2>
+<p>Direct JSON/C# objects require no catalog. For external refresh, the host supplies
+source IDs, queries, connection environment variables or callbacks; the report
+stores bindings and a saved data snapshot. Supported providers: PostgreSQL,
+SQL Server, MySQL, MariaDB and SQLite, plus JSON files and .NET object callbacks.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">[</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="p">{</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sales&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Sales&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="nt">&quot;provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;postgresql&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nt">&quot;connectionEnvironment&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;REPORTS_DATABASE&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nt">&quot;query&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SELECT id, region, amount FROM orders WHERE region=@region ORDER BY id&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nt">&quot;parameters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="9"><span class="w">      </span><span class="nt">&quot;region&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="10"><span class="w">        </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span></span>
+<span class="code-line" data-line="11"><span class="w">      </span><span class="p">}</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="13"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="14"><span class="p">]</span></span></code></pre></figure>
+<p>Save this host catalog outside the report and set <code>NEXTGEN_DATA_SOURCES</code> to its
+absolute path; set <code>REPORTS_DATABASE</code> in the host environment. Create the orders
+table/data in your own database. In Studio Connections choose sales, target items,
+empty array path, and bind source region to a string report parameter. Refresh,
+inspect and Apply snapshot before generating. No refresh occurs implicitly.
+See <a href="/docs/reports/data-sources">data sources</a> for all five provider configurations, JSON file
+and object callback code, expected sample totals, limits and SQL Server's current
+live-verification limitation. Never put connection secrets in report parameters.</p>
+<h2 id="export-modes-and-expected-results">Export modes and expected results</h2>
+<table>
+<thead>
+<tr>
+<th>Format/mode</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF</td>
+<td>Paginated report with embedded fonts</td>
+</tr>
+<tr>
+<td>HTML</td>
+<td>Standalone pages with embedded fonts/images</td>
+</tr>
+<tr>
+<td>Excel/Word editable</td>
+<td>Displayed text in editable cells/paragraphs; graphics omitted</td>
+</tr>
+<tr>
+<td>Excel/Word exact pages</td>
+<td>Complete pages as PNG images; text is not independently editable</td>
+</tr>
+</tbody>
+</table>
+<p>Editable Office does not preserve original typed numbers/formulas or native Office
+charts. Exact pages supports page range and DPI. See <a href="/docs/reports/office-export">Office export</a>
+and <a href="/docs/reports/image-export">page image export</a> for API/CLI examples and limits.</p>
+<h2 id="read-and-copy-code-examples">Read and copy code examples</h2>
+<p>Code blocks use local syntax highlighting for C#, Dart, TypeScript, JSON, Razor markup and shell commands. Different colors identify keywords, strings, numbers, comments, types and properties. Select <strong>Copy code</strong> above a block to copy its original source without formatting. Highlighting works without an external CDN; JavaScript must be enabled. Razor examples highlight markup; embedded C# expressions may use the default text color.</p>

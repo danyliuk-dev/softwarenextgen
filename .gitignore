@@ -1,0 +1,7 @@
+artifacts/
+/security_codes/
+**/bin/
+**/obj/
+*.env
+*.log
+__pycache__/

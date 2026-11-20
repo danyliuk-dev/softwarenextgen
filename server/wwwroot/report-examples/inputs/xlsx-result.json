@@ -1,0 +1,47 @@
+{
+  "columns": [
+    {
+      "header": "Item",
+      "field": "Item",
+      "type": "string"
+    },
+    {
+      "header": "Region",
+      "field": "Region",
+      "type": "string"
+    },
+    {
+      "header": "Quantity",
+      "field": "Quantity",
+      "type": "number"
+    },
+    {
+      "header": "Price",
+      "field": "Price",
+      "type": "number"
+    }
+  ],
+  "rows": [
+    {
+      "Item": "Monitor",
+      "Region": "East",
+      "Quantity": 8,
+      "Price": 240
+    },
+    {
+      "Item": "Desk",
+      "Region": "West",
+      "Quantity": 2,
+      "Price": 450
+    },
+    {
+      "Item": "Chair",
+      "Region": "East",
+      "Quantity": 12,
+      "Price": 120
+    }
+  ],
+  "warnings": [
+    "Imported stored values, not Excel display formatting. Empty rows are skipped; hidden rows/columns are included."
+  ]
+}

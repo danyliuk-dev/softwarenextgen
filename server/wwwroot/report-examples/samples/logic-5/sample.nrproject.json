@@ -1,0 +1,63 @@
+{
+  "kind": "nextgen-report-project",
+  "version": 1,
+  "template": {
+    "version": 1,
+    "title": "Inventory selection",
+    "parameters": {
+      "minimumQuantity": {
+        "type": "number",
+        "default": 0
+      }
+    },
+    "logic": {
+      "language": "typescript",
+      "apiVersion": 1,
+      "source": "export function validateParameters(ctx: ReportContext): ValidationError[] {\n  if (!Number.isInteger(ctx.parameters.minimumQuantity) || ctx.parameters.minimumQuantity < 0) {\n    return [{ parameter: \"minimumQuantity\", message: \"Enter a whole number of zero or greater.\" }];\n  }\n  return [];\n}\n\nexport function beforeRender(ctx: ReportContext): JsonObject {\n  const items = ctx.data.items.filter(item => item.quantity >= ctx.parameters.minimumQuantity);\n  return { ...ctx.data, items, selectedCount: items.length };\n}\n\nexport function afterRender(ctx: AfterRenderContext): void {\n  if (ctx.result.pageCount > 10) {\n    throw new Error(\"Narrow the selection: this report is limited to 10 pages.\");\n  }\n}\n"
+    },
+    "blocks": [
+      {
+        "type": "text",
+        "text": "Selected items: {{data.selectedCount}}",
+        "style": {
+          "size": 18,
+          "bold": true
+        }
+      },
+      {
+        "type": "table",
+        "source": "items",
+        "columns": [
+          {
+            "title": "Item",
+            "field": "name"
+          },
+          {
+            "title": "Quantity",
+            "field": "quantity",
+            "align": "right"
+          }
+        ]
+      }
+    ]
+  },
+  "data": {
+    "items": [
+      {
+        "name": "Monitor",
+        "quantity": 8
+      },
+      {
+        "name": "Desk",
+        "quantity": 2
+      },
+      {
+        "name": "Chair",
+        "quantity": 12
+      }
+    ]
+  },
+  "parameters": {
+    "minimumQuantity": 5
+  }
+}

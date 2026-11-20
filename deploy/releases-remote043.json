@@ -1,0 +1,38 @@
+[
+  {
+    "id": "33641aad-529a-5d62-a916-7f6362d6dd06",
+    "product": "remote",
+    "version": "0.4.3",
+    "platform": "Linux x64",
+    "filename": "nextgen-remote-0.4.3-linux-x86_64.tar.gz",
+    "storage_name": "remote/0.4.3/bce4dd3-20261117/nextgen-remote-0.4.3-linux-x86_64.tar.gz",
+    "size": 5758171,
+    "sha256": "39C35BCB13EF8CF9CDCBD10C7012A7628F21A53B7862195A93E9B58873D4B7D0",
+    "notes": "Signed updates for licensed computers. Includes My computers and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.3/nextgen-remote-0.4.3-linux-x86_64.tar.gz"
+  },
+  {
+    "id": "484f5236-08dc-5f1b-95a3-dbb913df41c1",
+    "product": "remote",
+    "version": "0.4.3",
+    "platform": "macOS Apple Silicon",
+    "filename": "nextgen-remote-0.4.3-macos-aarch64.zip",
+    "storage_name": "remote/0.4.3/bce4dd3-20261117/nextgen-remote-0.4.3-macos-aarch64.zip",
+    "size": 50404759,
+    "sha256": "3B9E648CFE50D72BF700889181102F020577D1E89CB6A91EC8F98CB79EFD31C2",
+    "notes": "Signed updates for licensed computers. Includes My computers and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.3/nextgen-remote-0.4.3-macos-aarch64.zip"
+  },
+  {
+    "id": "d0c2e12f-4e76-5f61-82a5-ad0a6da821ba",
+    "product": "remote",
+    "version": "0.4.3",
+    "platform": "Windows x64",
+    "filename": "nextgen-remote-0.4.3-windows-x86_64.zip",
+    "storage_name": "remote/0.4.3/bce4dd3-20261117/nextgen-remote-0.4.3-windows-x86_64.zip",
+    "size": 75361121,
+    "sha256": "C3299E058F94D734C7B6413B925B85974714A41AD34BA06541B9425DD83A1908",
+    "notes": "Signed updates for licensed computers. Includes My computers and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.3/nextgen-remote-0.4.3-windows-x86_64.zip"
+  }
+]

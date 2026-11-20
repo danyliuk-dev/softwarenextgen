@@ -1,0 +1,54 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.70.0-docs2-linux-x86_64.AppImage",
+    "storage_name": "components/0.70.0/docs-20261028.2/linux-x64/NextgenComponents-0.70.0-docs2-linux-x86_64.AppImage",
+    "size": 217719899,
+    "sha256": "3B1C1E1B2740603505E45DB5C7B0AD2A5C5AAA4D8A82FE760ECC249E1326CEFE",
+    "notes": "Self-contained desktop workspace with offline manuals. Manual updates through this portal. Documentation revision 2026.10.28.2: corrected offline links, syntax-highlighted examples, component categories and icons, larger navigation.",
+    "previous_storage_name": "components/0.70.0/linux-x64/NextgenComponents-0.70.0-linux-x86_64.AppImage",
+    "previous_sha256": "336C31D783A0EB6711AA880A97D440168C9FD9DAD797DD4CF38C581157379A59"
+  },
+  {
+    "id": "1c0ebae0-8a57-445e-9e09-c0314d49510f",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "Linux x64",
+    "filename": "Nextgen-Reports-0.2.1-docs2-linux-x86_64.AppImage",
+    "storage_name": "reports/0.2.1/docs-20261028.2/linux-x64/Nextgen-Reports-0.2.1-docs2-linux-x86_64.AppImage",
+    "size": 237442217,
+    "sha256": "4641212A6CAEF0347419FC53ED3FD6A17E3C205DCF6A282B9B56CCC8E85AD5E1",
+    "notes": "Self-contained desktop workspace with offline manuals. Manual updates through this portal. Documentation revision 2026.10.28.2: corrected offline links, syntax-highlighted examples, component categories and icons, larger navigation.",
+    "previous_storage_name": "reports/0.2.1/linux-x64/Nextgen-Reports-0.2.1-linux-x86_64.AppImage",
+    "previous_sha256": "52F613210D3F61C9CBEA55734687171CA273D0BDBB81A23F06B948FE8A33EE84"
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.70.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.70.0-docs2-mac-arm64.dmg",
+    "storage_name": "components/0.70.0/docs-20261028.2/osx-arm64/NextgenComponents-0.70.0-docs2-mac-arm64.dmg",
+    "size": 264627559,
+    "sha256": "5B815C58D3D249B3F0C21392A909E35B2A7B97E28843A050D204A90D9BD017F3",
+    "notes": "Apple Silicon (M-series). Includes local runtime and manuals. Unsigned and not notarized; see the installation guide. Documentation revision 2026.10.28.2: corrected offline links, syntax-highlighted examples, component categories and icons, larger navigation.",
+    "previous_storage_name": "components/0.70.0/osx-arm64/NextgenComponents-0.70.0-mac-arm64.dmg",
+    "previous_sha256": "25C16FC0F3B48A67C2B3E22AAA0749AD22EF36CD6100E0DF57F96C6061427433"
+  },
+  {
+    "id": "fe629692-f256-411b-8d4b-90d0fd57c530",
+    "product": "reports",
+    "version": "0.2.1",
+    "platform": "macOS Apple Silicon",
+    "filename": "Nextgen-Reports-0.2.1-docs2-mac-arm64.dmg",
+    "storage_name": "reports/0.2.1/docs-20261028.2/osx-arm64/Nextgen-Reports-0.2.1-docs2-mac-arm64.dmg",
+    "size": 233529688,
+    "sha256": "A82F617B6A51C9DBB0688BFC58C549EFA0429161CCE99E5761E37AA3A2E34F6F",
+    "notes": "Apple Silicon (M-series). Includes local runtime and manuals. Unsigned and not notarized; see the installation guide. Documentation revision 2026.10.28.2: corrected offline links, syntax-highlighted examples, component categories and icons, larger navigation.",
+    "previous_storage_name": "reports/0.2.1/osx-arm64/Nextgen-Reports-0.2.1-mac-arm64.dmg",
+    "previous_sha256": "EFC27AC96FA955657D66A0B0F39086ECB4CCE2714B62F932DE253156462BEE83"
+  }
+]

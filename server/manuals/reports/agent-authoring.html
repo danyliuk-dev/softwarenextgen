@@ -1,0 +1,227 @@
+<h1 id="authoring-reports-with-codex-or-another-agent">Authoring reports with Codex or another agent</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>Templates are editable JSON files, not UI state. No model-specific SDK or
+API key is needed. The current engine supports text, tables, embedded PNG/JPEG,
+parameters, flow pagination, fixed frames, page breaks and optional TypeScript events. Numeric table expressions and flow master-detail tables and horizontal/vertical grouped, stacked and percentage bar charts and categorical line charts with up to three series and a shared-scale legend and Code 39, Code 128 B, EAN-13, EAN-8, UPC-A, QR Code and Data Matrix barcodes and flow cross-tabs with up to three measures and three levels per axis are supported (see template-format.md). Do not invent
+inline SQL queries or credentials (use configured source IDs), unsupported chart/barcode types, general-purpose formulas or MRT compatibility.</p>
+<h2 id="workflow">Workflow</h2>
+<ol>
+<li>
+<p>Read the user's requested content, page format and actual data structure.
+Read docs/template-format.md and the schema at
+/schemas/report-template-v1.schema.json (also in Studio/wwwroot/schemas).
+The schema describes authoring structure; the engine is authoritative for
+cross-field constraints, bindings, text fitting and pagination.</p>
+</li>
+<li>
+<p>Create or edit a .nrtemplate file. Preserve unrelated fields. Keep data and
+parameter values in separate JSON files. Use fictional data for examples.
+Do not insert $schema into a template: unknown fields are rejected.</p>
+</li>
+<li>
+<p>Bind text with {{data.path}} / {{parameters.name}}. Table source is a data
+array path, and column field paths are relative to each row.
+Use flow tables for variable-length lists. Fixed frames use points relative
+to the content area of the current page and reject height overflow.</p>
+</li>
+<li>
+<p>Validate against a running local Studio with the client below.
+On nonzero exit, read the JSON error, correct the template and rerun.</p>
+</li>
+<li>
+<p>Inspect calculated pages in Preview and inspect exported PDF for printing.
+Browser SVG text placement may differ slightly from PDF rasterization.
+Deliver the template, sample data and requested outputs; report limitations.</p>
+<p>python3 tools/report-tool.py --template samples/positioned-table.nrtemplate --data samples/positioned-table.data.json
+python3 tools/report-tool.py --template samples/positioned-table.nrtemplate --data samples/positioned-table.data.json --output artifacts/preview.json
+python3 tools/report-tool.py --template samples/positioned-table.nrtemplate --data samples/positioned-table.data.json --format pdf --output artifacts/report.pdf</p>
+</li>
+</ol>
+<p>Add --parameters parameters.json for parameter values, --base for another
+local endpoint. Success returns {&quot;ok&quot;:true,&quot;pages&quot;:1,...}; failures return
+{&quot;ok&quot;:false,&quot;error&quot;:&quot;...&quot;} on stderr and exit 1. No output file is touched
+until the server succeeds. Running without --output validates without saving.</p>
+<h2 id="http-contract">HTTP contract</h2>
+<p>POST /api/preview and POST /api/render accept
+{&quot;template&quot;:{...},&quot;data&quot;:{...},&quot;parameters&quot;:{...}}.
+Preview returns {title,pages:[{width,height,commands:[...]}]}.
+Commands are tagged with type=text|rect|image|line|polygon; coordinates are points;
+image bytes are base64; text includes its resolved style. Lines use x1/y1/x2/y2, color and strokeWidth; consumers must render them for line charts. Polygon commands contain points [{x,y},...] and fill; close the shape and use even-odd fill for circular-chart holes.
+PDF export returns application/pdf with X-Report-Pages.
+Validation failures return HTTP 400 Problem Details with a detail string.
+Preview validates layout; PDF export additionally validates PDF image decoding.</p>
+<p>GET /schemas/report-template-v1.schema.json exposes the authoring schema.
+This is a local, unauthenticated workbench. Do not send private datasets
+to an external model or expose the server publicly without explicit authorization.</p>
+<p>This foundation lets Codex create reports through files and API today.
+An in-app prompt assistant, MCP server and automatic template application
+are not implemented yet.</p>
+<h2 id="portable-studio-project">Portable Studio project</h2>
+<p>Create a validated bundle for the user to open with Studio's Open project:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Text</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Text code example"><code class="language-text"><span class="code-line" data-line="1">python3 tools/report-tool.py --template samples/positioned-table.nrtemplate --data samples/positioned-table.data.json --format project --output output/example.nrproject.json</span></code></pre></figure>
+<p>A project is UTF-8 JSON containing kind=&quot;nextgen-report-project&quot;, version=1,
+template, data and optional parameters. The schema is available at
+/schemas/report-project-v1.schema.json. The template schema remains unchanged.
+The CLI validates layout through the API before writing a project.
+Projects are limited to 8 MB and include the data, so share them deliberately.</p>
+<p>Open project validates layout and decodes browser images before replacing the
+current document, then opens Preview. A rejected file leaves current edits intact.
+A successful import resets template-only Undo/Redo history, avoiding restoration
+of a previous template against unrelated data. Save project saves the current
+draft including unsaved edits and parameters; it does not validate layout.
+Use Save template when data should not be included. No server storage is used.</p>
+<h2 id="typescript-authoring">TypeScript authoring</h2>
+<p>Read docs/report-logic-manual.md before creating logic. Only named synchronous
+validateParameters, beforeRender, afterRender, dialogLoad, parameterChanged, dialogButtonClick, dialogPageChanged and dialogPageChanging handlers exist. Use /api/logic/check
+for types, then /api/preview with actual data/parameters. Script hosts must explicitly
+enable trusted scripts. For dialog drafts use DialogContext / ParameterChangedContext and return DialogUpdate;
+verify with /api/dialog/event. Do not invent imports, arbitrary DOM events, C# callbacks,
+decimal helpers or undocumented component APIs. Store source in logic.source.</p>
+<p>For custom buttons set kind=&quot;button&quot;, action=&quot;custom&quot; and a unique id. Use
+DialogButtonContext.componentId to dispatch actions and return DialogUpdate.
+POST /api/dialog/event uses event=&quot;dialogButtonClick&quot; and componentId=&quot;button-id&quot;.</p>
+<p>DialogUpdate also accepts <code>components: { &quot;component-id&quot;: { visible?: boolean, enabled?: boolean } }</code>.
+Patches merge for the open dialog only; closing/resetting clears them. Containers
+propagate state to children; individual TabPage patches are not supported.
+Use existing unique IDs. Hidden/disabled values still undergo server validation.</p>
+<p>Use <code>DialogUpdate.options</code> keyed by parameter name to replace choices of
+select/list/radio/checkedList controls. Values are 0–200 unique nonblank single-line
+strings, each at most 500 characters. Return <code>parameters</code> in the same patch to
+select new values; nonempty selections must belong to the new options. Otherwise
+Studio preserves valid selections and clears removed ones. Cancel discards options.
+Generate uses an effective template with updated options for server validation and
+PDF; Save project includes those choices, while Save template keeps the design.</p>
+<p>Use <code>dialogPageChanged(ctx: DialogPageContext): DialogUpdate</code> for user-selected
+TabPage changes. <code>ctx.componentId</code> is the selected page ID. Initial selection,
+validation reveals and design previews do not execute this handler. The event
+notifies after selection; it cannot cancel navigation.</p>
+<p>For step buttons, use <code>kind: &quot;button&quot;</code> and <code>action: &quot;next&quot;</code> or <code>&quot;back&quot;</code> inside a
+TabPage (optionally in a nested Panel/GroupBox). Navigation uses the nearest
+TabControl's page order. Next validates current-page browser constraints, Back
+preserves incomplete drafts, and boundary buttons are disabled. Direct tab
+selection remains available; server validation still runs on Generate.</p>
+<p>Set <code>sequential: true</code> on a <code>tabs</code> component to require Next for forward user
+navigation. Add Next buttons inside intermediate pages. Back/earlier headers
+remain available; forward headers are re-blocked after returning. The default is
+false. Automatic validation reveals may open any page; this setting is not a
+server-side workflow or authorization boundary.</p>
+<p>Use <code>dialogPageChanging(ctx: DialogPageChangingContext): DialogNavigationResult</code>
+to veto user tab/Back/Next navigation. Source is <code>previousComponentId</code>, destination
+is <code>componentId</code>; both must be distinct pages of one TabControl. Return only
+<code>{cancel?: boolean, message?: string}</code>. No patches are allowed here. Initial
+selection, validation reveals and design preview bypass the handler; validate
+final report requirements separately in validateParameters.</p>
+<p>For nested cross-tabs use rowFields/columnFields (up to three distinct paths, outermost first). See template-format.md and samples/cross-tab-hierarchy.nrtemplate. Row labels repeat on separate lines. Set mergeColumnHeaders: true to merge column-axis parent headings across children and measures (default false); complete headers repeat on each page. Set mergeRowLabels: true for separate level columns and page-local vertical merging; parent labels repeat on continuation pages. Each label column has weight 2 and counts toward the 50-column limit. Each matrix row must fit below the header in this mode, otherwise generation fails. Optional showRowSubtotals/showColumnSubtotals (default false) add parent subtotals after their children, using source records. Count these extra column groups when checking width and the 50-column limit.</p>
+<p>Delimited data can be imported through POST /api/data/import or tools/import-delimited.py; see <a href="/docs/reports/data-import">data-import.md</a>. Preview normalized keys/types before binding them. This is a one-time conversion, not a live connector.</p>
+<p>Standalone HTML: Studio <strong>Preview → Export HTML</strong>, <code>report-tool.py --format html</code>,
+or <code>.html</code> output from the .NET CLI. All pages, fonts and images are embedded.
+See <a href="/docs/reports/report-authoring-manual">authoring manual</a> for workflow and limitations.</p>
+<p>Nested table filters: <code>filterGroup</code> combines AND/OR subgroups with typed constants
+and run parameters (3 levels, 10 groups, 20 conditions). Use <strong>Use grouped filters</strong>
+in table properties; sample: <code>samples/nested-filters.nrtemplate</code> with
+<code>samples/grouped-orders.data.json</code>. See the authoring manual for steps and limits.</p>
+<p>Calculations and conditional cell styling: <code>samples/conditional-table.nrtemplate</code>
+with <code>samples/conditional-table.data.json</code> demonstrates if/coalesce/isNull, numeric
+comparisons/logic, guarded division, parameterized discounts and ordered color
+rules. In Design, use column Expression and Add style rule; see the authoring
+manual for precedence, null behavior, priority and limits.</p>
+<p>Repeated document sections: <code>samples/repeated-sections.nrtemplate</code> with
+<code>samples/repeated-sections.data.json</code> creates two complete order packs. Use
+Insert → Repeat section and Edit section; data/root/parent bindings, nested
+Flow blocks and navigation are described in the authoring manual/template format.
+Save/export always includes the whole report, even while editing a child section.</p>
+<p>Text/calendar expressions: <code>samples/text-dates.nrtemplate</code> and matching data
+demonstrate inline <code>{{= ... }}</code> and table <code>textExpression</code>, strings, null fallback,
+number/date formatting and calendar deadlines. See the manuals for functions,
+contexts, ISO dates, numeric-column compatibility and limits.</p>
+<p>Matrix barcode labels: <code>samples/matrix-barcodes.nrtemplate</code> and matching data
+create independent repeated QR/Data Matrix labels. Set symbology to <code>qr</code> or
+<code>dataMatrix</code>; module width determines automatic square size, QR correction uses
+L/M/Q/H, and optional captions wrap below the quiet zone. UTF-8 payload limit is
+512 bytes. See the authoring manual/template format for print sizing and limits.</p>
+<p>Composition charts: <code>samples/circular-charts.nrtemplate</code> with matching data
+shows pie/donut charts. Choose Chart type, Slice colors, Show percentages and
+Donut hole ratio in Design. Up to 12 nonnegative rows and one measure; see manuals
+for legends, zero data, rounding, sizing and the polygon preview command.</p>
+<p>Static diagnostics are available through <code>POST /api/template/check</code> with
+<code>{&quot;template&quot;: {...}}</code>. The response is <code>{&quot;diagnostics&quot;:[{&quot;path&quot;:&quot;$.blocks[0]&quot;, &quot;message&quot;:&quot;...&quot;}]}</code> (HTTP 200 even for template issues). Paths are zero-based;
+<code>$</code> denotes a parse/global error. The endpoint reports the first error per invalid
+block, stops on global errors, and never executes scripts or validates data/layout.
+An empty list does not replace validation of the actual template/data pair.</p>
+<p>For XLSX source data, use <code>tools/import-xlsx.py --list-sheets</code>, then select a
+worksheet with <code>--sheet</code> and write a data JSON using <code>--table</code>/<code>--output</code>. Review
+warnings; <code>--use-cached-formulas</code> is explicit and never recalculates formulas.
+Validate the resulting actual template/data pair with report-tool.py as usual.
+See <a href="/docs/reports/data-import#excel-worksheets-xlsx">XLSX import contract</a>.</p>
+<p>For PNG/SVG delivery, validate the actual template/data pair with report-tool.py
+using --format png|svg, --first-page/--last-page and --dpi. ZIP is the default;
+--single-image requires a one-page selection for a standalone image. Use the
+correct output extension and inspect the exported artifact. SVG outlines are not
+searchable text. See <a href="/docs/reports/image-export">page image export</a>.</p>
+<h2 id="office-delivery">Office delivery</h2>
+<p>Use <code>--format xlsx|docx --office-mode editable|pages</code> in <code>report-tool.py</code>; ranges
+and DPI follow image export. Editable mode exports displayed text strings, not
+typed source cells or formulas, and omits graphics. Page mode embeds complete PNG
+pages. Explain these limits when delivering Office files; validate the actual
+input pair and inspect output. See <a href="/docs/reports/office-export">Office export</a>.</p>
+<h2 id="interactive-detail-reports">Interactive detail reports</h2>
+<p>Table <code>drillDown</code> embeds a v1 template; it is not an external subreport. Detail
+inputs are <code>data.row</code> (original selected record) and <code>data.source</code> (parent data
+after beforeRender), plus same-named inherited parameters. See
+<a href="/docs/reports/drill-down">Row drill-down</a>. Validate both the parent and actual child
+requests: <code>report-tool.py --drill-row 13 --drill-row 1</code> selects nested interactive
+rows using 1-based render-order indexes. Static exports use only the selected
+view; preserve the root project separately.</p>
+<h2 id="prepare-derived-data-without-scripts">Prepare derived data without scripts</h2>
+<p>Use template <code>dataTables</code> for filter/sort/project/decimal-expression and grouped
+aggregate pipelines. Output names must be new root identifiers; later definitions
+may read earlier outputs. Point report blocks to these derived table names.
+Rules run before trusted script events; keep raw data in project data. Do not feed
+prepared output back into the same template. Validate the actual template/data
+pair with <code>tools/report-tool.py</code>; <code>--format prepared-data</code> additionally returns
+the computed arrays without scripts/layout. See <a href="/docs/reports/data-preparation">data-preparation.md</a>
+for semantics, bounded limits, example and API contract.</p>
+<h2 id="http-source-snapshots">HTTP source snapshots</h2>
+<p>Use <code>connections</code> only with host-configured source IDs. Keep URLs/headers/secrets
+out of templates and project files. The saved raw snapshot supports offline
+rendering. HTTP refresh may be explicit or opted in with refreshOnRender:true.
+Use report-tool.py --use-snapshot for offline validation of such projects. <code>report-tool.py --refresh</code> refreshes
+before generating/saving, while <code>--format refreshed-data</code> retrieves only the
+candidate response. Validate/render the actual updated template/data pair before
+delivery. See <a href="/docs/reports/http-connections">http-connections.md</a> for bindings and limits.</p>
+<h2 id="sql-json-and-object-sources">SQL, JSON and object sources</h2>
+<p>See <a href="/docs/reports/data-sources">data-sources.md</a> for all five SQL providers, JSON files,
+.NET object callbacks and direct POCO/JSON inputs. Connections keep only host IDs,
+target arrays, paths and report-parameter bindings. SQL query overrides require
+allowQueryEditing:true in the host catalog; credentials and file paths stay on the host. SQL uses an empty path; JSON/objects may
+select a nested array. Refresh previews a candidate; Apply saves the snapshot.
+Server generation refreshes opted-in HTTP connections; useSnapshot:true bypasses it. Validate the template against its
+actual saved data, including when the source is unavailable. The manual includes
+an offline example with total 10.00 and configured refresh to 290.00.</p>
+<h2 id="host-library">Host library</h2>
+<p>Validated portable projects may be saved to the host library through
+<code>POST /api/library</code>; see <a href="/docs/reports/report-library">report-library.md</a>. Library saves
+perform structural validation only, so continue to validate the actual template/data
+pair with report-tool before delivery. Respect expectedVersion conflicts; never
+automatically resubmit against a newer base. Downloaded projects remain portable
+and contain no library identity.</p>
+<h2 id="authenticated-server">Authenticated server</h2>
+<p>Use report-tool <code>--user NAME --password-env ENVIRONMENT_NAME</code> for Author/Admin
+sessions; passwords are never command arguments. Viewer can read stored reports
+and generated artifacts, but cannot submit arbitrary templates. Admin schedules
+pin an explicit library version; updates never silently follow latest. See
+<span>server-operations.md</span> for roles, CSRF and schedule APIs.</p>
+<h2 id="net-blazor-integration">.NET / Blazor integration</h2>
+<p>Use <code>NextgenReports.Client</code> for session-aware HTTP generation with JSON or .NET
+objects; <code>NextgenReports.Blazor</code> supplies an Interactive Server viewer. See
+<a href="/docs/reports/dotnet-integration">the integration guide</a> and <code>examples/BlazorDemo</code>.
+One client/cookie jar per user; Author/Admin required for POST generation.
+Construct a new <code>ReportInput</code> for edits; exports use the successful input snapshot
+but rerun generation. Flutter has a separate <a href="/docs/reports/flutter-integration">Dart/Flutter SDK</a>; WebAssembly is not covered by the .NET SDK.</p>
+<h2 id="compose-report-packs">Compose report packs</h2>
+<p>Use <code>section</code> for independent page settings and <code>subreports</code> plus a <code>subreport</code>
+block for imported v1 template snapshots. See the template format for data scopes,
+parameter inheritance and limits. Import files into the dictionary before delivery;
+never invent a runtime file/URL resolver. Validate the complete combined pair with
+<code>report-tool.py --template samples/composed-report.nrtemplate --data samples/composed-report.data.json</code>.
+Expect four pages: cover, landscape overview, portrait order and closing page.</p>

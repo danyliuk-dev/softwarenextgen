@@ -1,0 +1,96 @@
+<h1 id="remote-grouped-grid-data">Remote grouped Grid data</h1>
+<p><a href="/docs/components/manual/NgDataGrid">Grid manual</a> · <a href="/docs/components/manual/models">Models</a></p>
+<p>Use <code>ReadGroupedData</code> / <code>readGroupedData</code> when the server owns filtering, sorting, grouping and summaries. Use the ordinary <code>ReadData</code> adapter for ungrouped pages. These modes are mutually exclusive. Remote grouped mode also rejects local <code>GroupBy</code>, <code>GroupSelectors</code> and <code>GroupAggregates</code>: calculating a full group from one downloaded page would produce misleading results.</p>
+<h2 id="request">Request</h2>
+<p><code>NgGroupedDataRequest</code> contains a 1-based page, page size, search text, ordered sort descriptors and one to eight distinct, nonblank group field keys. Field keys are application-defined identifiers. The sample endpoint accepts only <code>name</code> and <code>availability</code> and explicitly maps them to selectors.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;pageSize&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;search&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Desk&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="nt">&quot;sorts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="nt">&quot;key&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;count&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">      </span><span class="nt">&quot;descending&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="p">],</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="nt">&quot;groupKeys&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="s2">&quot;name&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="s2">&quot;availability&quot;</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="15"><span class="p">}</span></span></code></pre></figure>
+<p>The Grid snapshots request lists. Changing <code>RemoteGroupKeys</code> / <code>remoteGroupKeys</code>, the reader or <code>DataVersion</code> / <code>dataVersion</code> resets paging and invalidates pending reads. Search, sorting and page-size changes request page 1. Stable adapter identity avoids unnecessary reads.</p>
+<h2 id="response">Response</h2>
+<p><code>NgGroupedDataResult&lt;T&gt;</code> contains the requested data rows with complete group paths, the total filtered record count, and metadata for exactly the group paths represented on that page (including every ancestor). Metadata order is irrelevant; row order determines group display order.</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;items&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="4"><span class="w">      </span><span class="nt">&quot;item&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="5"><span class="w">        </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;p40&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">        </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Desk&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">        </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">160</span></span>
+<span class="code-line" data-line="8"><span class="w">      </span><span class="p">},</span></span>
+<span class="code-line" data-line="9"><span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="10"><span class="w">        </span><span class="s2">&quot;Desk&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">        </span><span class="s2">&quot;Protected&quot;</span></span>
+<span class="code-line" data-line="12"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="p">],</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="nt">&quot;total&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">  </span><span class="nt">&quot;groups&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="18"><span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="19"><span class="w">        </span><span class="s2">&quot;Desk&quot;</span></span>
+<span class="code-line" data-line="20"><span class="w">      </span><span class="p">],</span></span>
+<span class="code-line" data-line="21"><span class="w">      </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">      </span><span class="nt">&quot;summaries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="23"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="24"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total quantity&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="25"><span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1680</span></span>
+<span class="code-line" data-line="26"><span class="w">        </span><span class="p">},</span></span>
+<span class="code-line" data-line="27"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="28"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Average&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="29"><span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">84</span></span>
+<span class="code-line" data-line="30"><span class="w">        </span><span class="p">}</span></span>
+<span class="code-line" data-line="31"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="32"><span class="w">    </span><span class="p">},</span></span>
+<span class="code-line" data-line="33"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="34"><span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="35"><span class="w">        </span><span class="s2">&quot;Desk&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="36"><span class="w">        </span><span class="s2">&quot;Protected&quot;</span></span>
+<span class="code-line" data-line="37"><span class="w">      </span><span class="p">],</span></span>
+<span class="code-line" data-line="38"><span class="w">      </span><span class="nt">&quot;count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span></span>
+<span class="code-line" data-line="39"><span class="w">      </span><span class="nt">&quot;summaries&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="40"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="41"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Total quantity&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="42"><span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1056</span></span>
+<span class="code-line" data-line="43"><span class="w">        </span><span class="p">},</span></span>
+<span class="code-line" data-line="44"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="45"><span class="w">          </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Average&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="46"><span class="w">          </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">132</span></span>
+<span class="code-line" data-line="47"><span class="w">        </span><span class="p">}</span></span>
+<span class="code-line" data-line="48"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="49"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="50"><span class="w">  </span><span class="p">]</span></span>
+<span class="code-line" data-line="51"><span class="p">}</span></span></code></pre></figure>
+<p>This response illustrates a request with <code>pageSize: 1</code>. The five-row request above must return five rows. Page length must equal <code>min(pageSize, max(0, total - (page - 1) * pageSize))</code>. An out-of-range page after data shrink therefore returns zero rows and no metadata; the Grid then requests the corrected last page.</p>
+<p>Each path has exactly as many string segments as requested group keys. Empty segments are valid values. Records belonging to each group must be contiguous, including at ancestor levels. Return counts and numeric summaries over the complete filtered group, before pagination. Compute parent averages from records, not by averaging child averages. The sample uses first-appearance group ordering after stable sorting; another backend may choose a different deterministic group order.</p>
+<h2 id="validation-and-failure-behavior">Validation and failure behavior</h2>
+<p>The client rejects invalid totals or page sizes, duplicate/blank row IDs, wrong path depth, interleaved groups, duplicate/missing/unused metadata, counts smaller than loaded membership, counts greater than the overall total, and sibling counts exceeding their parent count. Summary titles must be nonblank and unique per group; values must be finite numbers or null. A malformed envelope becomes a localized error with Retry; no partial rows or group metadata are exposed.</p>
+<p>These checks detect internal contradictions. They cannot independently prove the server's full counts or calculations. The backend must produce a consistent snapshot and correct filtered totals.</p>
+<p>The Grid renders server values directly. <code>RemoteSummaryText</code> / <code>remoteSummaryText</code> receives a title and nullable value for plain-text formatting; the default shows up to two decimal places and an em dash for null. Null means missing, not zero. Summary titles can be localized by the server. No HTML is interpreted.</p>
+<p>New requests, reader replacement and disposal invalidate older successes and failures. Blazor passes a cancellation token; the HTTP example forwards it. Flutter ignores obsolete futures but does not cancel the transport. Loading/error states clear rows and metadata and disable selection/expansion actions. A rejected grouped response never falls back to client-side grouping.</p>
+<h2 id="collapse-selection-and-page-scope">Collapse, selection and page scope</h2>
+<p>Collapse remains a caller-controlled view operation after record paging, using the same encoded full-path IDs as local grouping. It sends no HTTP request and does not change page ranges, total counts or summaries. Ancestor headers repeat across page boundaries, with the parent's saved collapsed state. Page selection affects only eligible rendered rows and preserves all other selected IDs.</p>
+<p>The bulk buttons are deliberately named <strong>Expand page groups</strong> and <strong>Collapse page groups</strong>. They affect all group paths in the current valid response, including children hidden by a collapsed parent. They preserve unknown and off-page collapsed IDs and never fetch other groups. Customize these labels with <code>ExpandPageGroupsText</code> / <code>expandPageGroupsText</code> and <code>CollapsePageGroupsText</code> / <code>collapsePageGroupsText</code>.</p>
+<h2 id="running-the-http-example">Running the HTTP example</h2>
+<p>Start the Blazor gallery on <code>http://127.0.0.1:5180</code> and the Flutter gallery on <code>http://127.0.0.1:5181</code>. The Grid manual preview includes local grouping, HTTP grouped inventory and the earlier ordinary remote paging example. Both HTTP examples call the same read-only <code>/api/grouped-inventory</code> fixture endpoint. The Flutter transport uses <code>package:web</code>; put the shown Dart imports at file scope and the remaining snippet inside a State class.</p>
+<p>The endpoint uses 40 synthetic product records and a 350 ms delay. It accepts POST requests with the schema above. Its explicit CORS origin is the local Flutter gallery. No database is involved.</p>
+<ul>
+<li><strong>Remote nested groups</strong> changes the request from one to two group keys and automatically resets the page.</li>
+<li><strong>Fail grouped requests</strong>, then <strong>Reload grouped source</strong>, produces an HTTP error. Clear the switch and use Retry.</li>
+<li><strong>Malformed grouped response</strong>, then reload, produces an internally inconsistent group count to demonstrate client validation. Clear the switch and retry.</li>
+<li><strong>Small remote dataset</strong> makes the next request use seven fixture rows. To exercise last-page correction, enable it on a later page and move to another page; reloading the source intentionally resets to page 1.</li>
+</ul>
+<p><code>NgGroupedData.Page</code> / <code>NgGroupedData.page&lt;T&gt;</code> is a reference adapter for an already filtered and sorted in-memory collection. It groups the full collection, computes summaries, pages the grouped records and emits only the metadata needed by that page. A database-backed application should implement the same contract using its own query/provider; this helper is not a SQL optimizer. <code>NgGroupedData.Validate</code> / <code>validate&lt;T&gt;</code> exposes the client validator for adapter tests. Flutter also supplies <code>request.toJson()</code> and <code>NgGroupedDataResult&lt;T&gt;.fromJson(json, decodeItem)</code>; Blazor uses System.Text.Json's web defaults in the example.</p>
+<h2 id="limits">Limits</h2>
+<p>This is record-page grouping, not lazy group paging or virtual scrolling. The server does not receive collapsed IDs. Loading unseen group contents, remote tree cascading, database query translation, built-in CRUD, export and native-target verification are separate blocks. Summaries use nullable double values; decimal accounting requires an application-specific contract and formatting policy.</p>

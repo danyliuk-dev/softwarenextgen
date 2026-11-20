@@ -1,0 +1,215 @@
+<h1 id="ngchart-chart">NgChart — Chart</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Visualize local series as column, bar, line, area, pie or donut charts.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgChart#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgChart#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>Categories define the shared domain; every series must have the same number of nullable numeric values. Null breaks a line instead of becoming zero. Point selection returns NgChartSelection with zero-based series/point indices, their names, the number and a ready-to-use label. The application chooses what to do with a point. Keep units explicit. See <span>analytics and scheduling</span> for mode-specific constraints; advanced axes, export, remote aggregation and broad chart-type parity are not implemented. HiddenSeries/hiddenSeries is optional: null keeps internal legend state, a set enables controlled visibility. HiddenSeriesChanged/onHiddenSeriesChanged proposes a fresh set; the parent must accept it. A controlled set without a callback is noninteractive. Unknown indices are ignored by drawing and retained in controlled proposals; the parent owns pruning and reordering. Series identity is its zero-based index. Keep the same ownership mode for the lifetime of a chart; returning to internal mode resumes its prior internal state. LegendReadOnly/legendReadOnly freezes user legend changes, while SelectionReadOnly/selectionReadOnly blocks point actions without hiding their data or tooltips. Programmatic visibility updates still work. PointLabel/pointLabel returns plain text for tooltips, point actions, accessible names and selected-point status; it does not change numeric values or axes. EmptyText/emptyText customizes the empty chart message. Selection survives equivalent data replacement, but clears when the selected point is hidden, removed, renamed or changes value, or when data becomes invalid. Invalid data recovery does not restore stale selection. Captured point callbacks are rejected if they no longer match a visible current point. This is chart-owned selection, not a controlled selection API.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;row&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Selection read-only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span><span class="p">/&gt;&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Legend read-only&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;legendReadOnly&quot;</span><span class="p">/&gt;&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Accept legend changes&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;accept&quot;</span><span class="p">/&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;hidden=[]&quot;</span><span class="p">&gt;</span>Show all series<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;revised=!revised&quot;</span><span class="p">&gt;</span>Update values<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;invalid=!invalid&quot;</span><span class="p">&gt;</span>Toggle invalid data<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgChart</span> <span class="na">Title</span><span class="o">=</span><span class="s">&quot;Weekly orders&quot;</span> <span class="na">Kind</span><span class="o">=</span><span class="s">&quot;NgChartKind.Column&quot;</span> <span class="na">Categories</span><span class="o">=</span><span class="s">&quot;categories&quot;</span> <span class="na">Series</span><span class="o">=</span><span class="s">&quot;Series&quot;</span> <span class="na">HiddenSeries</span><span class="o">=</span><span class="s">&quot;hidden&quot;</span> <span class="na">HiddenSeriesChanged</span><span class="o">=</span><span class="s">&quot;ChangeHidden&quot;</span> <span class="na">SelectionReadOnly</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span> <span class="na">LegendReadOnly</span><span class="o">=</span><span class="s">&quot;legendReadOnly&quot;</span> <span class="na">PointLabel</span><span class="o">=</span><span class="s">&quot;Label&quot;</span> <span class="na">EmptyText</span><span class="o">=</span><span class="s">&quot;All series hidden.&quot;</span> <span class="na">OnPointSelected</span><span class="o">=</span><span class="s">&quot;p=&gt;last=Label(p)&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Last callback: @last<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="6"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="p">,</span><span class="n">legendReadOnly</span><span class="p">,</span><span class="n">revised</span><span class="p">,</span><span class="n">invalid</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">accept</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="7"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hidden</span><span class="o">=</span><span class="p">[];</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">last</span><span class="o">=</span><span class="s">&quot;none&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="8"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="n">categories</span><span class="o">=</span><span class="p">[</span><span class="s">&quot;Mon&quot;</span><span class="p">,</span><span class="s">&quot;Tue&quot;</span><span class="p">,</span><span class="s">&quot;Wed&quot;</span><span class="p">];</span></span>
+<span class="code-line" data-line="9"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgChartSeries</span><span class="p">[]</span><span class="w"> </span><span class="n">Series</span><span class="o">=&gt;</span><span class="n">invalid</span><span class="o">?</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Orders&quot;</span><span class="p">,[</span><span class="mi">1</span><span class="p">])]:[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Orders&quot;</span><span class="p">,[</span><span class="n">revised</span><span class="o">?</span><span class="mi">40</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">25</span><span class="p">]),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Target&quot;</span><span class="p">,[</span><span class="mi">15</span><span class="p">,</span><span class="mi">25</span><span class="p">,</span><span class="mi">30</span><span class="p">])];</span></span>
+<span class="code-line" data-line="10"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">ChangeHidden</span><span class="p">(</span><span class="n">HashSet</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="k">value</span><span class="p">){</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">hidden</span><span class="o">=</span><span class="k">value</span><span class="p">;}</span></span>
+<span class="code-line" data-line="11"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="nf">Label</span><span class="p">(</span><span class="n">NgChartSelection</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="o">=&gt;</span><span class="s">$&quot;{p.Series} / {p.Category}: {p.Value:0} orders&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="12"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">legendReadOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">revised</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">invalid</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="n">accept</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="n">Set</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">hidden</span><span class="o">=</span><span class="p">{};</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">last</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kt">String</span><span class="w"> </span><span class="n">pointText</span><span class="p">(</span><span class="n">NgChartSelection</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;</span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">series</span><span class="si">}</span><span class="s1"> / </span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">category</span><span class="si">}</span><span class="s1">: </span><span class="si">${</span><span class="n">p</span><span class="p">.</span><span class="n">value</span><span class="p">.</span><span class="n">toStringAsFixed</span><span class="p">(</span><span class="m">0</span><span class="p">)</span><span class="si">}</span><span class="s1"> orders&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="4"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="w"> </span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Selection read-only&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">readOnly</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Legend read-only&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">legendReadOnly</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">legendReadOnly</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Accept legend changes&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">accept</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">accept</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">runSpacing:</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="w"> </span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">hidden</span><span class="o">=</span><span class="p">{}),</span><span class="w"> </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Show all series&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="w"> </span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">revised</span><span class="o">=!</span><span class="n">revised</span><span class="p">),</span><span class="w"> </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Update values&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="w"> </span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">invalid</span><span class="o">=!</span><span class="n">invalid</span><span class="p">),</span><span class="w"> </span><span class="nl">child:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle invalid data&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="p">]),</span></span>
+<span class="code-line" data-line="13"><span class="w">  </span><span class="n">NgChart</span><span class="p">(</span><span class="nl">title:</span><span class="w"> </span><span class="s1">&#39;Weekly orders&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">categories:</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;Mon&#39;</span><span class="p">,</span><span class="s1">&#39;Tue&#39;</span><span class="p">,</span><span class="s1">&#39;Wed&#39;</span><span class="p">],</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="nl">series:</span><span class="w"> </span><span class="n">invalid</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgChartSeries</span><span class="p">(</span><span class="s1">&#39;Orders&#39;</span><span class="p">,[</span><span class="m">1</span><span class="p">])]</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="n">NgChartSeries</span><span class="p">(</span><span class="s1">&#39;Orders&#39;</span><span class="p">,[</span><span class="n">revised</span><span class="o">?</span><span class="m">40</span><span class="o">:</span><span class="m">10</span><span class="p">,</span><span class="m">20</span><span class="p">,</span><span class="m">25</span><span class="p">]),</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">NgChartSeries</span><span class="p">(</span><span class="s1">&#39;Target&#39;</span><span class="p">,[</span><span class="m">15</span><span class="p">,</span><span class="m">25</span><span class="p">,</span><span class="m">30</span><span class="p">])],</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="nl">hiddenSeries:</span><span class="w"> </span><span class="n">hidden</span><span class="p">,</span><span class="w"> </span><span class="nl">onHiddenSeriesChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">){</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">hidden</span><span class="o">=</span><span class="n">v</span><span class="p">);},</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="nl">selectionReadOnly:</span><span class="w"> </span><span class="n">readOnly</span><span class="p">,</span><span class="w"> </span><span class="nl">legendReadOnly:</span><span class="w"> </span><span class="n">legendReadOnly</span><span class="p">,</span><span class="w"> </span><span class="nl">pointLabel:</span><span class="w"> </span><span class="n">pointText</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="nl">emptyText:</span><span class="w"> </span><span class="s1">&#39;All series hidden.&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">onPointSelected:</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">last</span><span class="o">=</span><span class="n">pointText</span><span class="p">(</span><span class="n">p</span><span class="p">))),</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Last callback: </span><span class="si">$</span><span class="n">last</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="19"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HiddenSeries</code></td>
+<td><code>HashSet&lt;int&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>HiddenSeriesChanged</code></td>
+<td><code>EventCallback&lt;HashSet&lt;int&gt;&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>LegendReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>SelectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>PointLabel</code></td>
+<td><code>Func&lt;NgChartSelection,string&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No chart data.&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td><code>string</code></td>
+<td>&quot;Chart&quot;</td>
+<td>Heading for the section or dialog.</td>
+</tr>
+<tr>
+<td><code>Kind</code></td>
+<td><code>NgChartKind</code></td>
+<td>NgChartKind.Column</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Categories</code></td>
+<td><code>IReadOnlyList&lt;string&gt;</code></td>
+<td>[]</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Series</code></td>
+<td><code>IReadOnlyList&lt;NgChartSeries&gt;</code></td>
+<td>[]</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnPointSelected</code></td>
+<td><code>EventCallback&lt;NgChartSelection&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title</code></td>
+<td><code>String</code></td>
+<td>Heading for the section or dialog.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>hiddenSeries</code></td>
+<td><code>Set&lt;int&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onHiddenSeriesChanged</code></td>
+<td><code>ValueChanged&lt;Set&lt;int&gt;&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>legendReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>selectionReadOnly</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>pointLabel</code></td>
+<td><code>String Function(NgChartSelection)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>NgChartKind</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>categories</code></td>
+<td><code>List&lt;String&gt;</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>series</code></td>
+<td><code>List&lt;NgChartSeries&gt;</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onPointSelected</code></td>
+<td><code>ValueChanged&lt;NgChartSelection&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgChart</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Chart&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No chart data.&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">hiddenSeries</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onHiddenSeriesChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">legendReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectionReadOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">pointLabel</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">kind</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NgChartKind</span><span class="p">.</span><span class="n">column</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">categories</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">series</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onPointSelected</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

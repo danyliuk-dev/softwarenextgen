@@ -1,0 +1,121 @@
+<h1 id="derived-tables-and-visual-data-preparation">Derived tables and visual data preparation</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>Data → <strong>Prepare data</strong> builds reusable derived arrays without changing source
+JSON. Rules are stored as <code>dataTables</code> in the report template and travel with
+Save template / Save project. They run for every generation and every export,
+including API, Python CLI and the standalone .NET CLI. No script opt-in is needed.</p>
+<h2 id="try-it">Try it</h2>
+<p>Download <strong>Prepared sales project</strong> from the built-in manual and Open project.
+The source pair is <code>samples/data-preparation.nrtemplate</code> and
+<code>samples/data-preparation.data.json</code>. All records are synthetic.</p>
+<ol>
+<li>Generate preview. The table and chart show West 120.00 and East 70.00; total
+revenue is 190.00 across three qualifying orders.</li>
+<li>In Data → Prepare data, select a table to inspect its rules. Choose
+<strong>Preview data</strong>: <code>sales</code> has four paid rows, <code>qualified</code> has three rows,
+<code>regional</code> groups those rows and <code>ranked</code> sorts revenue descending.</li>
+<li>Change parameter <code>minimum</code> to 60 outside the dialog, reopen and preview.
+Only West remains, with revenue 120. Preview uses the current root parameter
+values/defaults; it does not open or execute parameter dialogs.</li>
+<li>Cancel discards all edits. <strong>Apply rules</strong> is enabled only after successful
+preview of the current rules. It changes the template, not source data.
+Generate preview updates report pages. Undo/Redo restores the rules.</li>
+</ol>
+<p>The Data tab's ordinary Table/JSON view and dictionary continue to represent raw
+source data. Inspect generated arrays in Prepare data → Preview data. Enter a
+produced table name, e.g. <code>ranked</code>, in a report Table or Chart's Data source.
+Output field names are those defined by the rules; they may not appear in raw
+source suggestions. Generated rows are not persisted in project data.</p>
+<h2 id="build-a-pipeline">Build a pipeline</h2>
+<p><strong>Add table</strong> creates a rule. Set a unique output name and a dotted <strong>Source
+array</strong> path into raw data or a table produced by an earlier rule. Output names
+must not already exist at the data root. Names are case-sensitive identifiers:
+letters/digits/underscore, starting with a letter/underscore, 1–80 characters;
+<code>__proto__</code>, <code>prototype</code> and <code>constructor</code> are reserved. Paths use these segments.
+Moving a dependent table before its producer fails preview without saving it.
+There is no implicit overwrite, forward reference or dependency reordering.</p>
+<p>Each rule executes in this fixed order:</p>
+<ol>
+<li><strong>Filter source rows</strong>: up to 20 conditions with All/Any. Use <code>eq</code>, <code>ne</code>, <code>gt</code>,
+<code>gte</code>, <code>lt</code>, <code>lte</code>, <code>contains</code>, <code>isNull</code>, <code>isNotNull</code>. Values can be a named
+report parameter or a scalar constant. Numbers and booleans use JSON syntax;
+quote strings to distinguish <code>&quot;123&quot;</code> from <code>123</code>. Plain non-JSON text is also
+treated as a string. Null tests do not use a value. Comparisons follow the
+existing table-filter rules; text matching is ordinal and case-sensitive.</li>
+<li><strong>Sort source rows</strong>: up to five dotted fields with Ascending/Descending.
+Ties retain source order. Non-null values within one sort field must have
+the same scalar type. Null sorts first ascending, last descending.</li>
+<li><strong>Output columns and groups</strong>: choose projection or aggregation as below.</li>
+</ol>
+<p>With no output columns and no grouping, complete source records are preserved.
+With columns, each output identifier copies a <strong>Field</strong> (including nested JSON)
+or evaluates a <strong>Numeric expression</strong>, e.g. <code>row.quantity * row.price</code> or
+<code>coalesce(row.discount, 0)</code>. Expressions use the existing bounded decimal table
+language and numeric <code>parameters.name</code>. Columns evaluate against the source
+row independently, not earlier output columns. Use another derived table to
+filter/sort/calculate from newly produced fields.</p>
+<p>For a summary, set up to three comma-separated <strong>Group fields</strong>, then add output
+columns for each desired group field and aggregate columns: Sum, Average, Min,
+Max or Count. A nonaggregate output column must copy a group field. Count counts
+rows and takes no field/expression. Other aggregates require decimal numbers in
+every row; handle null explicitly with a numeric expression such as
+<code>coalesce(row.amount, 0)</code>. Mixed or nonnumeric values fail with the table name.
+Groups follow first occurrence after source sorting. For sorting by totals,
+add a subsequent rule whose source is the grouped result.</p>
+<p>Group keys are typed scalars: numeric <code>1</code>/<code>1.0</code> share a group, string <code>&quot;1&quot;</code> is
+separate; null is a valid key. Nested object/array keys are rejected. A summary
+without group fields produces one global row, including on empty input:
+Count/Sum = 0, Average/Min/Max = null. A grouped empty input produces no rows.
+Average is based on source rows, not group averages. Decimal overflow and division
+by zero are errors. Missing fields use the engine's existing binding errors.</p>
+<h2 id="execution-and-errors">Execution and errors</h2>
+<p>The order is parameter normalization → derived tables → trusted script events
+(including beforeRender) → layout → exporters. Scripts see generated arrays and
+can change them afterward. Data preview runs only the preparation rules, never
+scripts or layout: it can succeed while a later script/report fails. The report
+uses its own final calculated data, including for drill-down snapshots.</p>
+<p>Preparation starts from raw input on every render; results are not fed back into
+source JSON. A failure does not partially update the source/editor, saved rules,
+or previous report. Editing any rule invalidates its preview. Apply checks that
+source/template/parameters have not changed since opening the dialog. Preview
+shows up to 20 rows and 50 columns per table; nested/long cells are truncated
+only in this display. Outputs used by the report retain their complete values.</p>
+<p>Limits: 20 derived tables, 10,000 input rows per rule, 100,000 input rows across
+all rules, 50 output columns, 3 group keys, 8 MB complete prepared data (raw data
+plus all outputs). Filtering does not bypass the input-row limit. Existing
+project/request/expression/layout limits also apply. Reduce source data or remove
+unused intermediate tables when limits are exceeded. No joins, SQL/HTTP refresh,
+visual text formulas, nested filter groups, or dependency graph editor in this
+stage; trusted beforeRender remains available for other transformations.</p>
+<h2 id="template-and-api">Template and API</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="nt">&quot;dataTables&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="p">{</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;totals&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;items&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;groupBy&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;region&quot;</span><span class="p">],</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;region&quot;</span><span class="p">,</span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="s2">&quot;region&quot;</span><span class="p">},</span></span>
+<span class="code-line" data-line="6"><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;revenue&quot;</span><span class="p">,</span><span class="nt">&quot;expression&quot;</span><span class="p">:</span><span class="s2">&quot;row.quantity * row.price&quot;</span><span class="p">,</span><span class="nt">&quot;aggregate&quot;</span><span class="p">:</span><span class="s2">&quot;sum&quot;</span><span class="p">},</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="p">{</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;orders&quot;</span><span class="p">,</span><span class="nt">&quot;aggregate&quot;</span><span class="p">:</span><span class="s2">&quot;count&quot;</span><span class="p">}</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="p">]</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="10"><span class="p">]</span></span></code></pre></figure>
+<p>Optional fields default to empty lists, <code>filterMatch: &quot;all&quot;</code>, output name
+<code>prepared</code>, source <code>items</code>. Lists must not be null. <code>field</code>, <code>expression</code> and
+<code>aggregate</code> may be omitted/null, subject to the column rules above. Version stays
+1 and the versioned schema includes <code>dataTables</code>. Static template checking
+validates rule definitions; actual source fields, collisions and numeric types
+are checked when preparing data.</p>
+<p><code>POST /api/data/prepare</code> accepts the same <code>{template,data,parameters}</code> body as
+preview, returning <code>{data: {...rawData, ...derivedTables}}</code>. It does not validate
+layout or execute scripts. Errors return HTTP 400 with a detail message.
+From .NET, submit the documented request to this endpoint. Normal SDK preview/export requests also run the same preparation automatically in the installed engine.</p>
+<p>With Studio running:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/data-preparation.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span>--data<span class="w"> </span>samples/data-preparation.data.json<span class="w"> </span>--format<span class="w"> </span>prepared-data<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span>--output<span class="w"> </span>artifacts/prepared.json</span>
+<span class="code-line" data-line="4">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/data-preparation.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span>--data<span class="w"> </span>samples/data-preparation.data.json<span class="w"> </span>--format<span class="w"> </span>pdf<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span>--output<span class="w"> </span>artifacts/prepared.pdf</span></code></pre></figure>
+<p><code>prepared-data</code> writes the API response envelope and reports <code>pages: null</code>; other
+formats retain their existing behavior. Its output is a computed snapshot, not
+source data for the same pipeline (existing output names would collide).
+Verified platform: local Linux on iMac. macOS and Windows remain unverified.</p>

@@ -1,0 +1,82 @@
+[
+  {
+    "Title": "NextgenReportEngine",
+    "Path": "overview"
+  },
+  {
+    "Title": "Nextgen Reports documentation",
+    "Path": "index"
+  },
+  {
+    "Title": "Authoring reports with Codex or another agent",
+    "Path": "agent-authoring"
+  },
+  {
+    "Title": "CSV / TSV / Excel data import",
+    "Path": "data-import"
+  },
+  {
+    "Title": "Derived tables and visual data preparation",
+    "Path": "data-preparation"
+  },
+  {
+    "Title": "SQL, JSON and .NET object data",
+    "Path": "data-sources"
+  },
+  {
+    "Title": "Desktop Studio for Linux, macOS and Windows",
+    "Path": "desktop"
+  },
+  {
+    "Title": "Developer guide and code examples",
+    "Path": "developer-guide"
+  },
+  {
+    "Title": ".NET client and Blazor viewer",
+    "Path": "dotnet-integration"
+  },
+  {
+    "Title": "Row drill-down and detail reports",
+    "Path": "drill-down"
+  },
+  {
+    "Title": "Flutter SDK and web demo",
+    "Path": "flutter-integration"
+  },
+  {
+    "Title": "Refreshable HTTP JSON sources",
+    "Path": "http-connections"
+  },
+  {
+    "Title": "Page image export",
+    "Path": "image-export"
+  },
+  {
+    "Title": "Excel and Word export",
+    "Path": "office-export"
+  },
+  {
+    "Title": "Nextgen Reports user manual",
+    "Path": "report-authoring-manual"
+  },
+  {
+    "Title": "Report library and version history",
+    "Path": "report-library"
+  },
+  {
+    "Title": "TypeScript and report events",
+    "Path": "report-logic-manual"
+  },
+  {
+    "Title": "Template format v1",
+    "Path": "template-format"
+  },
+  {
+    "Title": "Dialog Toolbox",
+    "Path": "toolbox"
+  },
+  {
+    "Title": "Installation and first launch",
+    "Path": "installation"
+  }
+]

@@ -1,0 +1,226 @@
+<h1 id="ngdaterangepicker-date-range">NgDateRangePicker — Date range</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Edit a linked start and end date.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgDateRangePicker#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgDateRangePicker#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>NgDateRange contains nullable Start/End (Blazor DateOnly, Flutter DateTime). An end before the start is invalid. Min/Max constrain both endpoints. Callbacks replace the whole range. A partially filled draft may exist; the form determines whether it is valid for submission. Do not save the last valid model while an invalid draft is visible: submit through NgForm. This is a calendar-date range, not a timezone-aware interval.</p>
+<p>ReadOnly/readOnly prevents user changes. Disabled/enabled also disables interaction. Date editors keep readable, focusable text in read-only mode and disable their picker action; Calendar blocks selection and navigation (Flutter also excludes keyboard focus). Bounds must be ordered; invalid configuration throws. Values are Gregorian calendar dates; date text is ISO yyyy-MM-dd, independent of Blazor's current culture. Empty optional input clears to null.</p>
+<p>DisabledDate/disabledDate applies to typing and calendar selection. In a range it checks both endpoints, not every date between them. Partial and reversed ranges fail form validation. Flutter range validation reads the current parent value after replacement. Applications own validation of external single-date values. Replace the form key to discard an invalid draft when the model value is unchanged.</p>
+<p>Flutter calendars use Material locale/week-start and default bounds 1900–2100; Blazor uses Culture/FirstDayOfWeek and DateOnly bounds. Supply explicit bounds for matching domains. Calendar selection is single-date only. Shared range highlighting, multiple calendar views, cell templates, week numbers, segmented/custom-format input and complete keyboard/screen-reader parity remain open. Flutter popup results are ignored after a parent rebuild, edit or disposal.</p>
+<h3 id="presets-and-clearing-058">Presets and clearing (0.58)</h3>
+<p>Presets/presets is an optional ordered list of NgDateRangePreset descriptors. Each has a nonblank unique Id/id, nonblank Label/label, Start/start, End/end and optional Disabled/disabled (false). Dates must be ordered; malformed descriptors fail early. Flutter uses the calendar-date portions and accepts years 1–9999. Compute relative periods in the application using its chosen clock/time zone; the component never evaluates labels such as Today automatically.</p>
+<p>A preset is unavailable if explicitly disabled or either endpoint violates Min/Max/DisabledDate. Interior days are not checked: Across weekend remains valid even though Sunday is unavailable as an endpoint. Read-only, disabled and missing change callbacks block preset/clear actions. Current descriptors and constraints are checked again at activation; removed/replaced preset callbacks cannot apply a stale range.</p>
+<p>Applying a preset emits one complete range through ValueChanged/onChanged, with no intermediate half-range. Selecting the same preset again still emits once and repairs invalid drafts in both date editors. The parent should store the emitted value. The accepted dates determine selected presentation; this does not mean that an uncommitted manual draft is valid.</p>
+<p>ShowClearButton/showClearButton (default false) adds an atomic clear action; ClearText/clearText defaults to Clear range and can be localized. Clear emits null once and resets both drafts even when the accepted value is already empty. Required validation remains application-owned (Flutter also supports required). Preset/clear reset recreates the two inner editors, closes open pickers and drops their local focus/selection state. It never submits the form. External assignments and manual typing retain their existing behavior.</p>
+<p>Shared dual-calendar highlighting, relative-date engines and native/screen-reader certification remain open. These original preset contracts do not claim third-party API compatibility.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgForm</span> <span class="na">Model</span><span class="o">=</span><span class="s">&quot;model&quot;</span> <span class="na">OnValidSubmit</span><span class="o">=</span><span class="s">&quot;()=&gt;saved=true&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgDateRangePicker</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Delivery period&quot;</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;range&quot;</span> <span class="na">ValueChanged</span><span class="o">=</span><span class="s">&quot;Changed&quot;</span> <span class="na">ValueExpression</span><span class="o">=</span><span class="s">&quot;()=&gt;range&quot;</span> <span class="na">Presets</span><span class="o">=</span><span class="s">&quot;presets&quot;</span> <span class="na">ShowClearButton</span><span class="o">=</span><span class="s">&quot;true&quot;</span> <span class="na">Min</span><span class="o">=</span><span class="s">&quot;min&quot;</span> <span class="na">Max</span><span class="o">=</span><span class="s">&quot;@(restricted?new DateOnly(2026,10,21):max)&quot;</span> <span class="na">DisabledDate</span><span class="o">=</span><span class="s">&quot;d=&gt;d.DayOfWeek==DayOfWeek.Sunday&quot;</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span> <span class="na">Disabled</span><span class="o">=</span><span class="s">&quot;disabled&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">button</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-button&quot;</span><span class="p">&gt;</span>Validate range<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;/</span><span class="nt">NgForm</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ng-prompt-actions&quot;</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;readOnly=!readOnly&quot;</span><span class="p">&gt;</span>Toggle read only<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;disabled=!disabled&quot;</span><span class="p">&gt;</span>Toggle disabled<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;restricted=!restricted&quot;</span><span class="p">&gt;</span>Toggle bounds<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Changes: @changes · Range: @(range?.Start?.ToString(&quot;yyyy-MM-dd&quot;)??&quot;empty&quot;) / @(range?.End?.ToString(&quot;yyyy-MM-dd&quot;)??&quot;empty&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Validated: @saved<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="9"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">object</span><span class="w"> </span><span class="n">model</span><span class="o">=</span><span class="k">new</span><span class="p">();</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgDateRange</span><span class="o">?</span><span class="w"> </span><span class="n">range</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">23</span><span class="p">));</span></span>
+<span class="code-line" data-line="10"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">changes</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="p">,</span><span class="n">disabled</span><span class="p">,</span><span class="n">restricted</span><span class="p">,</span><span class="n">saved</span><span class="p">;</span></span>
+<span class="code-line" data-line="11"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">DateOnly</span><span class="w"> </span><span class="n">min</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span><span class="n">max</span><span class="o">=</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">31</span><span class="p">);</span></span>
+<span class="code-line" data-line="12"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgDateRangePreset</span><span class="p">[]</span><span class="w"> </span><span class="n">presets</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;week&quot;</span><span class="p">,</span><span class="s">&quot;Work week&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">19</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">23</span><span class="p">)),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;weekend&quot;</span><span class="p">,</span><span class="s">&quot;Across weekend&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">23</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">26</span><span class="p">)),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;sunday&quot;</span><span class="p">,</span><span class="s">&quot;Sunday start&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">25</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">26</span><span class="p">)),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;outside&quot;</span><span class="p">,</span><span class="s">&quot;Outside bounds&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;locked&quot;</span><span class="p">,</span><span class="s">&quot;Unavailable preset&quot;</span><span class="p">,</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="mi">2026</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">23</span><span class="p">),</span><span class="k">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Changed</span><span class="p">(</span><span class="n">NgDateRange</span><span class="o">?</span><span class="w"> </span><span class="n">next</span><span class="p">){</span><span class="n">range</span><span class="o">=</span><span class="n">next</span><span class="p">;</span><span class="n">changes</span><span class="o">++</span><span class="p">;</span><span class="n">saved</span><span class="o">=</span><span class="k">false</span><span class="p">;}</span></span>
+<span class="code-line" data-line="14"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">NgDateRange</span><span class="o">?</span><span class="w"> </span><span class="n">range</span><span class="o">=</span><span class="n">NgDateRange</span><span class="p">(</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">20</span><span class="p">),</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">23</span><span class="p">));</span></span>
+<span class="code-line" data-line="2"><span class="kt">int</span><span class="w"> </span><span class="n">changes</span><span class="o">=</span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">disabled</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">restricted</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">saved</span><span class="o">=</span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kd">final</span><span class="w"> </span><span class="n">presets</span><span class="o">=</span><span class="p">[</span><span class="n">NgDateRangePreset</span><span class="p">(</span><span class="nl">id:</span><span class="s1">&#39;week&#39;</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Work week&#39;</span><span class="p">,</span><span class="nl">start:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">19</span><span class="p">),</span><span class="nl">end:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">23</span><span class="p">)),</span><span class="n">NgDateRangePreset</span><span class="p">(</span><span class="nl">id:</span><span class="s1">&#39;weekend&#39;</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Across weekend&#39;</span><span class="p">,</span><span class="nl">start:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">23</span><span class="p">),</span><span class="nl">end:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">26</span><span class="p">)),</span><span class="n">NgDateRangePreset</span><span class="p">(</span><span class="nl">id:</span><span class="s1">&#39;sunday&#39;</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Sunday start&#39;</span><span class="p">,</span><span class="nl">start:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">25</span><span class="p">),</span><span class="nl">end:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">26</span><span class="p">)),</span><span class="n">NgDateRangePreset</span><span class="p">(</span><span class="nl">id:</span><span class="s1">&#39;outside&#39;</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Outside bounds&#39;</span><span class="p">,</span><span class="nl">start:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">30</span><span class="p">),</span><span class="nl">end:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">11</span><span class="p">,</span><span class="m">2</span><span class="p">)),</span><span class="n">NgDateRangePreset</span><span class="p">(</span><span class="nl">id:</span><span class="s1">&#39;locked&#39;</span><span class="p">,</span><span class="nl">label:</span><span class="s1">&#39;Unavailable preset&#39;</span><span class="p">,</span><span class="nl">start:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">20</span><span class="p">),</span><span class="nl">end:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">23</span><span class="p">),</span><span class="nl">disabled:</span><span class="kc">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="4"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">start</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="n">NgForm</span><span class="p">(</span><span class="nl">submitLabel:</span><span class="s1">&#39;Validate range&#39;</span><span class="p">,</span><span class="nl">onValidSubmit:</span><span class="p">()</span><span class="kd">async</span><span class="p">{</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">saved</span><span class="o">=</span><span class="kc">true</span><span class="p">);},</span><span class="nl">child:</span><span class="n">NgDateRangePicker</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Delivery period&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">range</span><span class="p">,</span><span class="nl">presets:</span><span class="n">presets</span><span class="p">,</span><span class="nl">showClearButton:</span><span class="kc">true</span><span class="p">,</span><span class="nl">min:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="m">1</span><span class="p">),</span><span class="nl">max:</span><span class="n">DateTime</span><span class="p">(</span><span class="m">2026</span><span class="p">,</span><span class="m">10</span><span class="p">,</span><span class="n">restricted</span><span class="o">?</span><span class="m">21</span><span class="o">:</span><span class="m">31</span><span class="p">),</span><span class="nl">readOnly:</span><span class="n">readOnly</span><span class="p">,</span><span class="nl">enabled:</span><span class="o">!</span><span class="n">disabled</span><span class="p">,</span><span class="nl">disabledDate:</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">d</span><span class="p">.</span><span class="n">weekday</span><span class="o">==</span><span class="n">DateTime</span><span class="p">.</span><span class="n">sunday</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">range</span><span class="o">=</span><span class="n">v</span><span class="p">;</span><span class="n">changes</span><span class="o">++</span><span class="p">;</span><span class="n">saved</span><span class="o">=</span><span class="kc">false</span><span class="p">;}))),</span></span>
+<span class="code-line" data-line="6"><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=!</span><span class="n">readOnly</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle read only&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">disabled</span><span class="o">=!</span><span class="n">disabled</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle disabled&#39;</span><span class="p">)),</span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">restricted</span><span class="o">=!</span><span class="n">restricted</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle bounds&#39;</span><span class="p">))]),</span></span>
+<span class="code-line" data-line="7"><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Changes: </span><span class="si">$</span><span class="n">changes</span><span class="s1"> · Range: </span><span class="si">${</span><span class="n">range</span><span class="o">?</span><span class="p">.</span><span class="n">start</span><span class="o">==</span><span class="kc">null</span><span class="o">?</span><span class="s1">&#39;empty&#39;</span><span class="o">:</span><span class="n">NgDateRules</span><span class="p">.</span><span class="n">dateText</span><span class="p">(</span><span class="n">range</span><span class="o">!</span><span class="p">.</span><span class="n">start</span><span class="p">)</span><span class="si">}</span><span class="s1"> / </span><span class="si">${</span><span class="n">range</span><span class="o">?</span><span class="p">.</span><span class="n">end</span><span class="o">==</span><span class="kc">null</span><span class="o">?</span><span class="s1">&#39;empty&#39;</span><span class="o">:</span><span class="n">NgDateRules</span><span class="p">.</span><span class="n">dateText</span><span class="p">(</span><span class="n">range</span><span class="o">!</span><span class="p">.</span><span class="n">end</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Validated: </span><span class="si">$</span><span class="n">saved</span><span class="s1">&#39;</span><span class="p">)]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Date range&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>NgDateRange?</code></td>
+<td>not set</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;NgDateRange?&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>ValueExpression</code></td>
+<td><code>Expression&lt;Func&lt;NgDateRange?&gt;&gt;?</code></td>
+<td>not set</td>
+<td>Expression identifying the model field; @bind-Value supplies it automatically.</td>
+</tr>
+<tr>
+<td><code>Min</code></td>
+<td><code>DateOnly?</code></td>
+<td>not set</td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>Max</code></td>
+<td><code>DateOnly?</code></td>
+<td>not set</td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>DisabledDate</code></td>
+<td><code>Func&lt;DateOnly,bool&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Presets</code></td>
+<td><code>IReadOnlyList&lt;NgDateRangePreset&gt;</code></td>
+<td>Array.Empty&lt;NgDateRangePreset&gt;()</td>
+<td>Ordered named date ranges with unique IDs; unavailable endpoints disable the action.</td>
+</tr>
+<tr>
+<td><code>ShowClearButton</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Show an atomic clear action that resets both drafts and emits null.</td>
+</tr>
+<tr>
+<td><code>ClearText</code></td>
+<td><code>string</code></td>
+<td>&quot;Clear range&quot;</td>
+<td>Nonblank localized clear-action label; default Clear range.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>NgDateRange?</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>min</code></td>
+<td><code>DateTime?</code></td>
+<td>Inclusive minimum.</td>
+</tr>
+<tr>
+<td><code>max</code></td>
+<td><code>DateTime?</code></td>
+<td>Inclusive maximum.</td>
+</tr>
+<tr>
+<td><code>enabled</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td><code>bool</code></td>
+<td>Require a nonempty/selected value during form validation.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>disabledDate</code></td>
+<td><code>bool Function(DateTime)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;NgDateRange?&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>presets</code></td>
+<td><code>List&lt;NgDateRangePreset&gt;</code></td>
+<td>Ordered named date ranges with unique IDs; unavailable endpoints disable the action.</td>
+</tr>
+<tr>
+<td><code>showClearButton</code></td>
+<td><code>bool</code></td>
+<td>Show an atomic clear action that resets both drafts and emits null.</td>
+</tr>
+<tr>
+<td><code>clearText</code></td>
+<td><code>String</code></td>
+<td>Nonblank localized clear-action label; default Clear range.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgDateRangePicker</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Date range&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">min</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">max</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="kd">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabledDate</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">presets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[],</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">showClearButton</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">clearText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Clear range&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

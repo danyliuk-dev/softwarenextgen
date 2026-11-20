@@ -1,0 +1,38 @@
+[
+  {
+    "id": "17dfc9b2-ff95-59d0-ae8c-91ae36111b58",
+    "product": "remote",
+    "version": "0.4.0",
+    "platform": "Linux x64",
+    "filename": "nextgen-remote-0.4.0-linux-x86_64.tar.gz",
+    "storage_name": "remote/0.4.0/11b7a38-20261117/nextgen-remote-0.4.0-linux-x86_64.tar.gz",
+    "size": 5341334,
+    "sha256": "C7A61D1E16729358B135416842C7A7CF0D2EF46D7A51E38365B849287B0D844F",
+    "notes": "Automatic signed updates after one-time computer authorization with MFA. Includes compact tabs and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.0/nextgen-remote-0.4.0-linux-x86_64.tar.gz"
+  },
+  {
+    "id": "605df7aa-4113-5c10-9ace-1181a686c2b9",
+    "product": "remote",
+    "version": "0.4.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "nextgen-remote-0.4.0-macos-aarch64.zip",
+    "storage_name": "remote/0.4.0/11b7a38-20261117/nextgen-remote-0.4.0-macos-aarch64.zip",
+    "size": 50361305,
+    "sha256": "4E4C83C781290BF9D29605B08B40B0B47AC108B9E690140433D1B0F7F5DE61DD",
+    "notes": "Automatic signed updates after one-time computer authorization with MFA. Includes compact tabs and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.0/nextgen-remote-0.4.0-macos-aarch64.zip"
+  },
+  {
+    "id": "e2986fa5-57f8-5e55-a07b-bc04839cddbe",
+    "product": "remote",
+    "version": "0.4.0",
+    "platform": "Windows x64",
+    "filename": "nextgen-remote-0.4.0-windows-x86_64.zip",
+    "storage_name": "remote/0.4.0/11b7a38-20261117/nextgen-remote-0.4.0-windows-x86_64.zip",
+    "size": 75312154,
+    "sha256": "AAC2B12305CF887236C218EE5D1D3646E98808A65D5DEEA9C437FD00A56490CA",
+    "notes": "Automatic signed updates after one-time computer authorization with MFA. Includes compact tabs and offline manuals. Portable package; see installation guide for permissions and signing.",
+    "local_path": "/home/kolizej/development/git/NextgenRemote/dist/published/0.4.0/nextgen-remote-0.4.0-windows-x86_64.zip"
+  }
+]

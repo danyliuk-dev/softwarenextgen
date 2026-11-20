@@ -1,0 +1,8 @@
+{
+  "diagnostics": [
+    {
+      "path": "$",
+      "message": "Read unrecognized type discriminator id 'unknown-control'. Path: $.blocks[0] | LineNumber: 0 | BytePositionInLine: 194."
+    }
+  ]
+}

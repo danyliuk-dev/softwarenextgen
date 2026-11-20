@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><title>Nextgen Meet</title>
+<link rel="stylesheet" href="/meet/join.css">
+<script defer src="/meet/crypto.js"></script><script defer src="/meet/media.js"></script><script defer src="/meet/join.js"></script><script defer src="/meet/devices.js"></script><script defer src="/meet/transfers.js"></script><script defer src="/meet/collaboration.js"></script>
+</head><body><main>
+<header><b>Nextgen Meet</b><h1 id="title">Join the meeting</h1></header>
+<p id="status" role="status">Checking your invitation…</p>
+<section id="lobby" hidden>
+<form id="join"><label>Your name<input id="name" maxlength="60" required autocomplete="given-name"></label>
+<div class="actions"><button class="primary" id="connect">Join in browser</button><a id="open">Open desktop app</a></div></form>
+<details><summary>Install the guest app</summary><nav><a href="/meet/download/linux">Linux (.deb)</a><a href="/meet/download/windows">Windows</a><a href="/meet/download/macos">macOS</a></nav></details>
+</section>
+<section id="meeting" hidden aria-label="Meeting">
+<header class="meet-head"><strong>Nextgen Meet</strong><span class="role" id="my-role">Guest</span>
+<details id="host-actions" hidden><summary>Meeting actions</summary><div><button id="copy-invite">Copy invitation link</button><button id="email-invite">Email invitation</button><button id="end-meeting">End for everyone</button></div></details><button class="icon" id="devices" title="Audio and video devices" aria-label="Audio and video devices" aria-haspopup="dialog"></button><small>© softwarenextgen.com</small></header>
+<div class="workspace">
+<section class="glass stage" aria-label="Meeting stage">
+<button id="cards" class="icon" aria-label="Show participant cards" title="Show participant cards" aria-expanded="false" hidden></button>
+<div id="filmstrip" hidden></div>
+<div id="portraits" aria-label="Participant gallery"></div>
+<div id="presenters" hidden><label>Shared screen <select id="watch"></select></label><button id="switch-view">Show cameras</button><button id="control-mode" hidden>Control screen</button></div>
+<div id="display" hidden><div id="surface"><img id="frame" hidden alt="Shared screen" draggable="false">
+<svg id="presenter-pointer" aria-hidden="true" hidden width="19" height="25" viewBox="0 0 19 25"><path d="M1 1v18l5-4 4 8 4-2-4-8h7z" fill="#19262d" stroke="white" stroke-width="1.7"/></svg></div></div><p id="sharing-note" hidden>You are sharing your screen</p>
+</section>
+<aside id="sidebar" class="glass"><section id="roster-panel"><h2>Participants (<span id="count"></span>)</h2><ul id="people"></ul></section>
+<section id="chat-panel" hidden><h2>Chat</h2><ol id="messages" role="log"></ol>
+<section id="files-panel" hidden><h3>Files</h3><ul id="transfers"></ul></section><form id="chat"><input id="text" aria-label="Message everyone" placeholder="Message everyone" required maxlength="8192" autocomplete="off"><button class="icon" aria-label="Send message" title="Send message"></button></form></section></aside>
+<nav class="glass rail" aria-label="Meeting panels">
+<button class="icon" id="participants-tab" title="Participants" aria-label="Participants" aria-controls="roster-panel"></button>
+<button class="icon" id="chat-tab" title="Chat" aria-label="Chat" aria-controls="chat-panel"><span id="unread" hidden></span></button>
+<button class="icon" id="collapse" aria-controls="sidebar"></button></nav></div>
+<div id="clip-offer" hidden><span></span> <button id="clip-copy">Copy received text</button><button id="clip-dismiss">Dismiss</button></div>
+<input id="file-picker" type="file" hidden>
+<p id="meeting-status" role="status"></p>
+<footer class="glass controls"><button id="mic" title="Unmute" aria-label="Unmute">Unmute</button>
+<div class="meters"><label>MIC <meter id="input-level" min="0" max="1" value="0"></meter></label><label>OUT <meter id="output-level" min="0" max="1" value="0"></meter></label></div>
+<button id="camera" title="Start camera" aria-label="Start camera">Start camera</button><button id="screen" title="Share screen" aria-label="Share screen">Share screen</button><button id="leave" title="Leave meeting" aria-label="Leave meeting">Leave</button></footer>
+<dialog id="device-dialog" aria-labelledby="device-title">
+<h2 id="device-title">Audio and video devices</h2>
+<label>Microphone<select id="device-mic"></select></label><button id="access-mic" hidden>Allow microphone access</button>
+<label>Speaker<select id="device-speaker"></select></label><small id="speaker-help" hidden>Choose the output in your system sound settings.</small><button id="access-speaker" hidden>Choose another output…</button>
+<label>Camera<select id="device-camera"></select></label><button id="access-camera" hidden>Allow camera access</button>
+<p id="device-status" role="status"></p><form method="dialog"><button autofocus>Done</button></form>
+</dialog>
+</section></main></body></html>

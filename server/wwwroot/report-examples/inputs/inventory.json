@@ -1,0 +1,22 @@
+{
+  "items": [
+    {
+      "item": "Monitor",
+      "region": "East",
+      "quantity": 8,
+      "price": 240
+    },
+    {
+      "item": "Desk",
+      "region": "West",
+      "quantity": 2,
+      "price": 450
+    },
+    {
+      "item": "Chair",
+      "region": "East",
+      "quantity": 12,
+      "price": 120
+    }
+  ]
+}

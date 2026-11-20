@@ -1,0 +1,108 @@
+<h1 id="ngpdfviewer-pdf-viewer">NgPdfViewer — PDF viewer</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Browse page thumbnails, navigate, search and copy text from PDF documents.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgPdfViewer#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgPdfViewer#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="hosting-and-sources">Hosting and sources</h3>
+<p>Source is a relative or HTTP(S) URL resolved from the app base URI. Host the file yourself in wwwroot/samples (Blazor) or web/samples (Flutter). Empty source opens the viewer with Open PDF. Browser requests send same-origin cookies only to their origin; remote servers must allow CORS. Open PDF reads a local file without upload. PDF.js, worker, CMaps and fonts are packaged locally; no CDN or additional script tag is needed.</p>
+<p>Blazor serves _content/NextgenComponents.Blazor/pdf-viewer/. With UseStaticFiles map .mjs to text/javascript and .bcmap/.pfb to application/octet-stream (see gallery Program.cs). The iframe works under SSR; parent parameter changes require interactivity. Flutter package assets supply the viewer. CSP must permit the required local frame/scripts/styles/workers/fonts and source connections, including blob workers/fonts where used; configure it in the host.</p>
+<h3 id="navigation-search-and-state">Navigation, search and state</h3>
+<p>Previous/Next and Page use one-based page numbers. Zoom is 10–300%, with 25-point button increments. Fit width/page recomputes on viewport resize. Enlarged pages scroll internally. Height is 400–1600, default 640; the toolbar wraps on narrow widths and leaves at least 100 px for the page.</p>
+<p>Thumbnails opens a collapsible page rail. Buttons show page numbers and mark the current page with aria-current. Click or use Tab then Enter/Space to navigate. Previous/Next, direct page entry and search results keep the rail selection synchronized. Only visible previews render, sequentially; each raster is at most 224 by 288 pixels. Scrolling away, hiding the rail or replacing the document releases preview canvases. A failed preview retains its page button. The rail starts closed for each document and narrows on small screens.</p>
+<p>Find searches a case-insensitive substring across every page, normalizing whitespace and matching across text items/lines. Results list page numbers; selecting one opens that page and Page text. Clear removes query/results/highlights. Page text supports ordinary selection/copy. Text can also be selected over the rendered page; Ctrl/Cmd+C uses the browser clipboard. Current-page matches are highlighted (up to 1,000 non-overlapping matches), surviving zoom/navigation/fit. Find applies a changed query; Clear, an empty Find and document changes reset it. Redrawing clears ordinary selection. Highlight geometry depends on PDF fonts/text; CSS Custom Highlight API is used in Chrome, with page search and selection as fallback. No OCR: scanned PDFs without text cannot be searched. Hyphenation, ligatures and source text order may affect matching.</p>
+<p>Download saves the original bytes, including locally opened files. Filenames from URLs/files are stripped of control characters/path separators. The viewer does not edit PDF. Page/zoom/search/local-file state belongs to the iframe. Source or theme changes recreate it and reset state; reopen local files after a theme change. Identical parent rebuilds preserve it. Page/load callbacks and controlled page binding are not implemented.</p>
+<h3 id="limits-and-failures">Limits and failures</h3>
+<p>At most 20 MiB and 200 pages, including streamed URL downloads. One page is rendered at a time in the main viewport; raster output is capped at 16 million pixels and an 8192-pixel side, reducing quality at extreme zoom if necessary. Corrupt files, CORS/access errors and password-protected documents show an error and allow another file. No passwords, forms, annotations, signatures, PDF links, print, OCR or built-in localization. PDF JavaScript/actions are not executed.</p>
+<p>Flutter currently supports this component on Web only; native displays an explicit unsupported message. Native support and full screen-reader certification are not part of this release.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgPdfViewer</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Guide&quot;</span> <span class="na">Source</span><span class="o">=</span><span class="s">&quot;samples/nextgen-guide.pdf&quot;</span> <span class="na">Height</span><span class="o">=</span><span class="s">&quot;720&quot;</span> <span class="na">Dark</span><span class="o">=</span><span class="s">&quot;false&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>PDF must be hosted by the application at this address.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">NgPdfViewer</span><span class="p">(</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Guide&#39;</span><span class="p">,</span><span class="w"> </span><span class="k">source</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;samples/nextgen-guide.pdf&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">height:</span><span class="w"> </span><span class="m">720</span><span class="p">);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;PDF viewer&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Source</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Height</code></td>
+<td><code>int</code></td>
+<td>640</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Dark</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td><code>String?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>height</code></td>
+<td><code>double</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgPdfViewer</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;PDF viewer&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="k">source</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">640</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

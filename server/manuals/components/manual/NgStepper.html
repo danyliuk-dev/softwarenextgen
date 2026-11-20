@@ -1,0 +1,213 @@
+<h1 id="ngstepper-step-progress">NgStepper — Step progress</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Display progress through a sequence and request a different active step.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgStepper#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgStepper#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="state-and-display">State and display</h3>
+<p>Value/value is a zero-based, enabled index owned by the parent. ValueChanged/onChanged requests a new index; selecting the current step does nothing. A missing callback or Disabled/disabled disables navigation. Linear/linear defaults to false: when enabled, allow earlier enabled steps or the next enabled step; disabled steps are skipped. Optional and Valid are display metadata, not automatic validation or a skip command. Use 1–30 steps with nonempty labels of at most 120 UTF-16 units.</p>
+<p>DisplayMode/displayMode is <code>all</code> (default), <code>labels</code> or <code>indicators</code>. Vertical/vertical controls orientation; horizontal steps wrap. Rtl/rtl defaults to false and mirrors the layout. IndicatorTemplate/indicatorBuilder and LabelTemplate/labelBuilder receive NgStepContext with the step, zero-based index and current-state flag. They replace display content only. Do not put interactive/focusable controls inside either template.</p>
+<h3 id="accessibility-and-integration">Accessibility and integration</h3>
+<p>The accessible name retains the step number, model label, optional and validity state even in indicators-only mode or with custom templates. Blazor exposes aria-current=step; Flutter exposes selected semantics. Every enabled step remains a native Tab stop with Enter/Space activation; arrow-key roving focus and automatic focus movement are not implemented. To reject asynchronous transitions, use Wizard BeforeChange or handle the controlled callback in the application. Replace the item collection when changing metadata. Display mode and templates use an original API; no third-party theme or declarative-child compatibility is implied.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Right-to-left&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;rtl&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgDropDownList</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Step display&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;modes&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;mode&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgStepper</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Publishing progress&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;steps&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;current&quot;</span> <span class="na">Rtl</span><span class="o">=</span><span class="s">&quot;rtl&quot;</span> <span class="na">DisplayMode</span><span class="o">=</span><span class="s">&quot;@mode&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4">  <span class="p">&lt;</span><span class="nt">IndicatorTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;step&quot;</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>@(step.Current?&quot;★&quot;:&quot;○&quot;)<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">IndicatorTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5">  <span class="p">&lt;</span><span class="nt">LabelTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;step&quot;</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>@step.Step.Label<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">LabelTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;/</span><span class="nt">NgStepper</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected step: @(current+1)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">current</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">rtl</span><span class="p">;</span><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">mode</span><span class="o">=</span><span class="s">&quot;all&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgStep</span><span class="p">[]</span><span class="w"> </span><span class="n">steps</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Draft&quot;</span><span class="p">,</span><span class="n">Valid</span><span class="p">:</span><span class="k">true</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Details&quot;</span><span class="p">,</span><span class="n">Optional</span><span class="p">:</span><span class="k">true</span><span class="p">,</span><span class="n">Valid</span><span class="p">:</span><span class="k">false</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;Publish&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgOption</span><span class="p">[]</span><span class="w"> </span><span class="n">modes</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;all&quot;</span><span class="p">,</span><span class="s">&quot;Indicators and labels&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;labels&quot;</span><span class="p">,</span><span class="s">&quot;Labels only&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;indicators&quot;</span><span class="p">,</span><span class="s">&quot;Indicators only&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="12"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">int</span><span class="w"> </span><span class="n">current</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">;</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;all&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="kd">final</span><span class="w"> </span><span class="n">steps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgStep</span><span class="p">(</span><span class="s1">&#39;Draft&#39;</span><span class="p">,</span><span class="nl">valid:</span><span class="kc">true</span><span class="p">),</span><span class="n">NgStep</span><span class="p">(</span><span class="s1">&#39;Details&#39;</span><span class="p">,</span><span class="nl">optional:</span><span class="kc">true</span><span class="p">,</span><span class="nl">valid:</span><span class="kc">false</span><span class="p">),</span><span class="n">NgStep</span><span class="p">(</span><span class="s1">&#39;Publish&#39;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="3"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Right-to-left&#39;</span><span class="p">,</span><span class="nl">value:</span><span class="n">rtl</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">rtl</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="5"><span class="w">  </span><span class="n">DropdownButtonFormField</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">(</span><span class="nl">initialValue:</span><span class="n">mode</span><span class="p">,</span><span class="nl">decoration:</span><span class="k">const</span><span class="w"> </span><span class="n">InputDecoration</span><span class="p">(</span><span class="nl">labelText:</span><span class="s1">&#39;Step display&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="nl">items:</span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="nl">value:</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="nl">child:</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Indicators and labels&#39;</span><span class="p">)),</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="nl">value:</span><span class="s1">&#39;labels&#39;</span><span class="p">,</span><span class="nl">child:</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Labels only&#39;</span><span class="p">)),</span><span class="n">DropdownMenuItem</span><span class="p">(</span><span class="nl">value:</span><span class="s1">&#39;indicators&#39;</span><span class="p">,</span><span class="nl">child:</span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Indicators only&#39;</span><span class="p">))],</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">mode</span><span class="o">=</span><span class="n">v</span><span class="o">!</span><span class="p">)),</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="k">const</span><span class="w"> </span><span class="n">SizedBox</span><span class="p">(</span><span class="nl">height:</span><span class="m">16</span><span class="p">),</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="n">NgStepper</span><span class="p">(</span><span class="nl">label:</span><span class="s1">&#39;Publishing progress&#39;</span><span class="p">,</span><span class="nl">items:</span><span class="n">steps</span><span class="p">,</span><span class="nl">value:</span><span class="n">current</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">current</span><span class="o">=</span><span class="n">v</span><span class="p">),</span><span class="nl">rtl:</span><span class="n">rtl</span><span class="p">,</span><span class="nl">displayMode:</span><span class="n">mode</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="nl">indicatorBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">step</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Icon</span><span class="p">(</span><span class="n">step</span><span class="p">.</span><span class="n">current</span><span class="o">?</span><span class="n">Icons</span><span class="p">.</span><span class="nl">star:</span><span class="n">Icons</span><span class="p">.</span><span class="n">circle_outlined</span><span class="p">,</span><span class="nl">size:</span><span class="m">20</span><span class="p">),</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="nl">labelBuilder:</span><span class="p">(</span><span class="n">_</span><span class="p">,</span><span class="n">step</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Text</span><span class="p">(</span><span class="n">step</span><span class="p">.</span><span class="n">step</span><span class="p">.</span><span class="n">label</span><span class="p">,</span><span class="nl">style:</span><span class="k">const</span><span class="w"> </span><span class="n">TextStyle</span><span class="p">(</span><span class="nl">fontWeight:</span><span class="n">FontWeight</span><span class="p">.</span><span class="n">bold</span><span class="p">))),</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected step: </span><span class="si">${</span><span class="n">current</span><span class="o">+</span><span class="m">1</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="13"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Progress&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgStep&gt;</code></td>
+<td>required</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;int&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>Linear</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Restrict forward navigation to the next enabled step; earlier steps remain accessible.</td>
+</tr>
+<tr>
+<td><code>Vertical</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Rtl</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>DisplayMode</code></td>
+<td><code>string</code></td>
+<td>&quot;all&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>IndicatorTemplate</code></td>
+<td><code>RenderFragment&lt;NgStepContext&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>LabelTemplate</code></td>
+<td><code>RenderFragment&lt;NgStepContext&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>displayMode</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgStep&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>int</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;int&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>linear</code></td>
+<td><code>bool</code></td>
+<td>Restrict forward navigation to the next enabled step; earlier steps remain accessible.</td>
+</tr>
+<tr>
+<td><code>vertical</code></td>
+<td><code>bool</code></td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>rtl</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>indicatorBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgStepContext)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>labelBuilder</code></td>
+<td><code>Widget Function(BuildContext, NgStepContext)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgStepper</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Progress&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">linear</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">vertical</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">displayMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;all&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">indicatorBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">labelBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

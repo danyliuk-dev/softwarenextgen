@@ -1,0 +1,494 @@
+<h1 id="ngchiplist-controlled-tag-collection">NgChipList — Controlled tag collection</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Present filter topics or selected tags with single/multiple selection and application-owned removal.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgChipList#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgChipList#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="state-and-events">State and events</h3>
+<p>The parent owns Value/value and stores selection callbacks. Selectable/selectable defaults to true. Disable it for a display-only label. OnRemove/onRemove is optional: providing it shows a separate, named remove action. Removal never changes selection or data automatically. Reject a request by leaving state unchanged; accept it by removing the ID from both items and selected values in one update. Removal does not fire the selection callback. Keep durable state in the parent.</p>
+<h3 id="keyboard-and-accessibility">Keyboard and accessibility</h3>
+<p>Selection and removal have separate accessible actions. Tab enters the list once and then leaves; arrows move inside; Enter or Space activates the focused action. Selected state is exposed to assistive technology. Disabled chips cannot be selected or removed. Delete or Backspace requests removal from a focused interactive chip. Holding the key does not repeatedly remove chips. ChipList adds Left/Right and Home/End navigation with focus recovery after removal; see the keyboard rules below. Test screen-reader behavior in your target browser.</p>
+<h3 id="scope">Scope</h3>
+<p>Labels must be nonblank and at most 120 UTF-16 code units. Labels render as text, never HTML. Light/dark styling and wrapping are supported. Icons and avatars can be supplied as leading content, and custom labels and remove icons are supported. Drag sorting, editable tags and virtualization are not established third-party Chip/ChipList requirements and remain possible extensions, not parity claims. Web is the verified target; mobile verification is a separate phase.</p>
+<h3 id="collection-contract">Collection contract</h3>
+<p>Use NgOption IDs, not display labels. IDs must be unique, 1–64 ASCII letters, digits, underscores or hyphens. Since 0.19, ChipList has no fixed item-count cap. Selected IDs must be unique and exist in items; single mode accepts at most one. Multiple/multiple defaults to false. AllowEmpty/allowEmpty defaults to true; false prevents deselecting the last choice, but does not invent an initial selection or block application-owned removal. Callbacks return IDs in item order. No-op selection does not emit a callback. Empty items with empty value displays No tags.</p>
+<p>When switching from multiple to single selection, normalize the selection in the same update. Disabled selected items stay visible; another single choice can replace them. The example below removes both the item and its selected ID atomically. For async removal, hold state until success and disable controls while pending.</p>
+<h3 id="appearance-and-custom-content-015">Appearance and custom content (0.15)</h3>
+<p>Size/size accepts sm, md or lg. Rounded/rounded accepts sm, md, lg or full. FillMode/fillMode accepts solid or outline. ThemeColor/themeColor accepts base, info, success, warning or error. Invalid values throw; defaults remain md/full/outline/base for compatibility with 0.14. These defaults differ from third-party. Colors adapt to light/dark themes; this is not a pixel-match claim.</p>
+<p>Leading/leading accepts decorative content such as a small icon or avatar. ChildContent/child replaces the visible label. RemoveContent/removeIcon replaces the removal symbol. Always retain a meaningful Label/label: it supplies the accessible name regardless of the visual template. Do not put buttons, links, text fields or other interactive controls inside these templates. The parent owns image loading and image errors; there is no built-in avatar downloader or third-party SVG icon registry.</p>
+<p>OnClick/onClick is independent of selection: it runs after the selection callback on activation, also when selection is disabled. Removal only invokes the remove callback. Disabled chips invoke neither. A missing selection callback keeps selection unchanged, while an available click callback can still run a command. Blazor awaits the selection handler before invoking click; the next boolean is calculated before either callback. Flutter callbacks are synchronous. Do not use click to toggle selection a second time.</p>
+<h3 id="per-item-presentation">Per-item presentation</h3>
+<p>ItemTemplate/itemBuilder and LeadingTemplate/leadingBuilder receive NgOption. ItemAppearance/itemAppearance returns NgChipAppearance: its nullable size, rounded, fill mode and theme color override list defaults independently. CanRemove/canRemove hides the remove action for selected items without disabling selection. It defaults to true and still requires the list removal callback. This predicate controls availability; reject a permitted request by leaving parent state unchanged. Functions should be pure, because rendering can evaluate them again.</p>
+<p>This is a typed NgOption adapter contract, not third-party generic model reflection or property-name binding. Map application data to NgOption and resolve additional fields by stable ID in the template. ChipList no longer has a fixed item-count cap; remaining keyboard/listbox differences are tracked in the feature parity matrix.</p>
+<h3 id="keyboard-and-focus-016">Keyboard and focus (0.16)</h3>
+<p>Left/Right moves to the adjacent enabled interactive chip, reversing direction in RTL. Home/End focuses the first/last available chip. Navigation clamps at the ends and does not change selection. Enter/Space activates selection and click. Delete/Backspace requests removal if allowed; a nonremovable chip keeps focus. Modified shortcuts (Alt/Ctrl/Meta) are left to the application. Repeated deletion keydown is ignored.</p>
+<p>After accepted removal of the focused item, focus moves to the next enabled item at the former position, otherwise the nearest previous enabled item. When none remains, the named list container receives focus. A rejected request keeps focus. Delayed data updates do not pull focus back when the user has moved to another control. Stable IDs preserve focus on reorder. Changing a focused item to disabled uses the same fallback. Do not reuse IDs for unrelated records.</p>
+<p>Since 0.17, the list has one Tab stop. On first entry, focus goes to the first selected enabled interactive chip, otherwise the first available chip. Arrows change the remembered entry without changing selection. Tab leaves the list; Shift+Tab returns to that entry. If it disappears or becomes disabled, the entry falls back to a selected enabled chip or the first available chip. Empty and fully disabled lists add no Tab stop. Use Delete/Backspace to request removal; removal icons remain available to pointer and assistive-technology actions. Custom templates should contain display content, not extra interactive controls.</p>
+<p>Single Tab entry does not imply full listbox semantics: Blazor uses listbox/options for selection-only lists since 0.24 and a group of pressed buttons for removable lists; Flutter retains native chip semantics. Flutter SDK used for this release lacks listbox/option roles. Remaining role differences and screen-reader validation are tracked in the parity matrix; public identity, naming and help hooks are available since 0.22.</p>
+<p>Blazor exposes FocusAsync() on NgChipList via @ref after interactive rendering. It focuses the first available action or the list container. The JS module is initialized automatically and disposed with the component. Flutter owns and disposes internal focus nodes; use the public NgChipListController described below.</p>
+<p>Blazor serializes pending remove callbacks. Flutter removal callbacks remain synchronous requests: if the application performs async deletion, it must handle duplicate requests, errors and cancellation, then update items and selected IDs together. Focus restoration tracks that later state update; it does not await network operations. Removing a standalone chip requires the application to move focus explicitly.</p>
+<h3 id="action-labels-018">Action labels (0.18)</h3>
+<p>NgChip.RemoveLabel / removeLabel overrides the complete accessible removal name and Flutter delete tooltip. Null keeps &quot;Remove {label}&quot;. Supply a nonblank phrase including the item name, such as &quot;Dismiss Design&quot;; a visual remove icon alone is not an accessible name. Text is escaped, not treated as markup. Obtain translations from your application's localization resources; the library does not select a locale or ship translation dictionaries.</p>
+<p>For lists, RemoveLabel (Blazor) / removeLabelBuilder (Flutter) receives each NgOption and supplies that chip's removal phrase. Keep the callback pure. EmptyText / emptyText changes the empty collection message; the default remains &quot;No tags&quot; and blank text is rejected. Label / label still supplies the list name. Changing these strings does not change IDs, selection or removal permissions. Changing the application locale must trigger a normal parent rerender/rebuild. RTL direction is inherited from the surrounding HTML direction or Flutter Directionality; these label hooks do not set direction.</p>
+<h3 id="focus-from-application-code-018">Focus from application code (0.18)</h3>
+<p>Blazor: keep an @ref and await FocusAsync() after interactive rendering. It focuses the first enabled action, or the list container when none exists. Calling before initialization is a no-op.</p>
+<p>Flutter: create one NgChipListController in the owning State, pass it as focusController, and dispose it in that State's dispose(). Never create a controller inside build or share one between simultaneous lists. A shared or previously disposed controller throws StateError on attachment. Changing focusController detaches the old handle; removing the list detaches it automatically. The list continues to own its internal FocusNodes.</p>
+<p>focus() requests the first enabled interactive chip, or the container for an empty/all-disabled list. The Flutter container shows a focus outline when it receives primary focus. focus(itemId: 'web') targets an enabled interactive chip by stable ID. It returns false without moving focus if detached, disposed, not yet laid out, or if the explicit ID is missing/disabled. A true return means a focus request was issued; Flutter applies it on the next frame. isAttached reports attachment, not layout readiness. Call from an event callback or a post-frame callback after mounting. Focus never changes selection or invokes click/removal callbacks. The example intentionally uses English custom labels; substitute application translations as needed.</p>
+<h3 id="larger-collections-019">Larger collections (0.19)</h3>
+<p>The Web demo and interaction tests cover 500 tags, including disabled items, selection, Home/End and removal with focus recovery. Data-rule tests additionally cover 5,000 records in Flutter; that is not a rendering or performance guarantee. All chips are rendered eagerly and retain their own focus state. There is no virtualization, lazy fetching or automatic paging. For thousands of visible records, filter the application data or use a data-oriented control and measure on your target device. The limit removal does not imply unlimited practical capacity.</p>
+<p>IDs still must be unique and valid, labels must be nonblank and at most 120 UTF-16 code units, and selected IDs must exist in the current items. Update items and value together when filtering/removing records; do not leave selected IDs outside the supplied collection. Selection validation and membership checks use sets rather than rescanning the entire list per selected ID. ButtonGroup retains its 50-option limit and Drawer its 100-item limit.</p>
+<p>Flutter scrolls focused chips into ancestor scrollable viewports when keyboard or application focus moves. Put the list inside a bounded scrollable page, as in the gallery. Blazor uses native browser scrolling on focus. Keep templates display-only and prefer short labels. The Load 500 tags example resets selection deliberately; adapt this policy to your application.</p>
+<h3 id="bind-business-records-020">Bind business records (0.20)</h3>
+<p>Create NgChipData&lt;T&gt; once for each data snapshot. Required value/text selectors map stable IDs and accessible labels. Optional disabled (default false), removable (default true) and appearance selectors map behavior and nullable style overrides. Each selector runs once per record when constructing the adapter. Pass Items/items, CanRemove/canRemove and GetAppearance/getAppearance to ChipList explicitly; the adapter does not attach itself to a widget.</p>
+<p>GetItem(id)/getItem(id) returns the original record for templates and click/removal handlers. Resolve it before deleting or rebuilding the snapshot. Unknown IDs throw KeyNotFoundException in Blazor and ArgumentError in Flutter. Duplicate or invalid IDs, blank/oversized labels and invalid appearance values fail at construction. There is no fixed collection cap. IDs are case-sensitive and must be 1–64 ASCII letters, digits, underscores or hyphens.</p>
+<p>The options collection is read-only; original records are not deep-cloned. After editing fields, adding, removing or reordering records, construct a new adapter. Keep stable IDs to preserve selection and keyboard identity. When removing records, update the selected IDs in the same state update. Disabled guards belong to ChipList; removable only controls the remove action, not selection. Omit OnRemove/onRemove for a read-only removal policy.</p>
+<p>The following example pins Finance, disables Archive and resolves an owner from the clicked record. This is a typed-selector alternative to property-name reflection; there are no string field-name parameters. Icons and additional fields can be rendered through ItemTemplate/itemBuilder using GetItem/getItem. Templates must remain noninteractive. The Business records demo additionally exercises rename, reverse and reset without changing IDs.</p>
+<h3 id="right-to-left-layout-021">Right-to-left layout (0.21)</h3>
+<p>Blazor inherits the nearest HTML dir attribute. Wrap a component or a group in a div with dir=&quot;rtl&quot; (or dir=&quot;ltr&quot;). Flutter inherits Directionality: wrap a component or group with Directionality(textDirection: TextDirection.rtl, child: ...). Keep the direction wrapper outside NgChipList so layout and keyboard handling read the same direction. No data reversal is required. Mixed LTR/RTL regions may coexist; omit the wrapper to inherit the application setting.</p>
+<p>Chips start at the reading edge and wrap in source order. Leading content appears at the reading start, removal at the reading end, and the Blazor separator follows that edge. Changing direction at runtime preserves stable IDs, selection and the remembered keyboard entry. In RTL, Left moves to the next enabled record and Right to the previous; Home/End still target the first/last enabled record in data order. Removal keeps the existing next/previous focus policy, including wrapped rows. Up/Down spatial navigation is not provided.</p>
+<p>Direction changes layout; it does not translate labels or reverse application strings. Supply translated labels and RemoveLabel/removeLabel (or the list callback) and EmptyText/emptyText yourself. Use bdi/dir on a Blazor template or a nested Directionality/Text.textDirection in Flutter to isolate mixed-direction identifiers when appropriate. Directional custom icons are application-owned; they are not automatically mirrored. Keep templates noninteractive.</p>
+<p>The English Reading direction demo includes a constrained wrapping region, decorative leading stars, a disabled record, a static status chip and a runtime direction switch. The rest of the demo remains LTR. Verification covers Chip/ChipList layout and keyboard behavior on Web, not every component or screen-reader pronunciation.</p>
+<h3 id="identity-accessible-names-and-contextual-help-022">Identity, accessible names and contextual help (0.22)</h3>
+<p>Blazor Id identifies the outer component element, and Class appends application CSS classes while preserving built-in classes. Neither creates a focus target or changes keyboard behavior. Supply unique IDs per rendered instance; Id must be nonblank and contain no whitespace. Classes can affect layout and contrast, so review custom styles in both themes.</p>
+<p>AriaLabelledBy accepts one or more space-separated IDs of existing elements. Browser accessible-name computation gives these references priority over Label. Keep Label meaningful as the visible text/fallback, and ensure every referenced element exists. AriaDescribedBy accepts a similar list for contextual instructions. On ChipList, naming and description apply to the group; they are not duplicated on every item. On a standalone Chip, references apply to its label element/action, and the description also applies to removal. The remove action retains its own RemoveLabel; it never borrows the selection action's name. Static text chips remain noninteractive; when a Blazor static chip has naming/description references, its label becomes a named group without a Tab stop so the references have a semantic target. Null omits a hook; blank reference lists are rejected. The library cannot validate DOM existence or global ID uniqueness during server rendering.</p>
+<p>Flutter semanticIdentifier identifies a semantics node for automation; it is not a widget Key, HTML id, user-facing label or selection ID. semanticHint provides contextual guidance in that node's semantics. Both are optional nonblank strings. On Web, the installed Flutter engine exports identifiers as flt-semantics-identifier attributes when semantics are enabled; this is an engine detail, not a CSS styling API. Metadata is additive: it must not replace the child selection/removal actions.</p>
+<p>Flutter has no DOM Class or aria-labelledby relationship in this API. Use the existing theme/appearance parameters for styling. For a shared heading, keep one application string and pass it to Text and the list's label; update both together. Use semanticHint for concise guidance and show the same text visibly when it helps users. A hint is not an exact aria-describedby equivalent; assistive-technology announcement varies by platform. Application code owns translations. Do not include secrets or personal data in automation identifiers.</p>
+<p>The examples wire contextual help to the list and a standalone command. The Business records demo can update its heading and guidance at runtime while retaining selection and identity. Browser accessibility-tree inspection and widget tests verify the exported information and actions; screen-reader testing/certification remains separate. TabIndex supports -1 and 0 since 0.23; selection-only Blazor listbox semantics are available since 0.24.</p>
+<h3 id="participation-in-tab-navigation-023">Participation in Tab navigation (0.23)</h3>
+<p>TabIndex/tabIndex defaults to 0. Set -1 to skip the component during forward and reverse Tab traversal. Only -1 and 0 are accepted; positive indices and other negative values throw. This deliberately limited cross-platform contract does not reproduce every integer value of third-party Chip.TabIndex. Use the application's layout/traversal policy to establish logical order instead of positive indices.</p>
+<p>For a standalone Chip, the setting applies to both its main action and removal action. Static labels and disabled actions never acquire a Tab stop. For ChipList, 0 retains one remembered enabled entry; -1 excludes the entire collection from Tab traversal. The list container remains a programmatic fallback, not an additional Tab stop. Individual items inside a list do not expose independent traversal indices.</p>
+<p>Exclusion does not disable the control: mouse/touch, accessibility activation, application focus, arrow navigation and removal continue to work. A focused item is not blurred when the setting changes. FocusAsync()/NgChipListController.focus() can still enter a skipped list, and Tab then leaves it. Returning the setting to 0 restores its remembered enabled entry. Selection and collection state remain parent-owned. Provide another accessible way to enter a list when excluding it; the demo includes a Focus directional topics button.</p>
+<h3 id="space-between-tags-023">Space between tags (0.23)</h3>
+<p>Gap/gap accepts sm (4), md (8, default) and lg (12). Blazor uses CSS pixels; Flutter uses logical pixels. The preset applies to both horizontal spacing and the distance between wrapped rows. It does not alter chip padding, font size, focus-outline padding or data order. Invalid strings throw. These are Nextgen spacing tokens; exact third-party theme pixel matching is not claimed.</p>
+<p>Change the preset at runtime without rebuilding records. The Reading direction demo combines a gap selector, RTL switching, skipped Tab traversal and explicit focus. Flutter focus frames add their existing internal padding around each chip, so the visible border-to-border distance is not necessarily identical to Blazor even with equal spacing tokens. Use the controls at narrow widths to assess wrapping with your labels.</p>
+<h3 id="selection-semantics-and-removal-024">Selection semantics and removal (0.24)</h3>
+<p>Blazor automatically exposes role=listbox when Selectable is true and no OnRemove callback is supplied. Each main action becomes role=option with aria-selected=true/false instead of aria-pressed. The list declares horizontal orientation; Multiple=true adds aria-multiselectable=true. Single selection omits that attribute. Label or AriaLabelledBy names the list and AriaDescribedBy links guidance. Disabled options remain visible to accessibility tools but are skipped by keyboard navigation.</p>
+<p>Arrow keys move focus without changing selection. Enter/Space requests selection through ValueChanged; the parent must assign the new value. One remembered Tab entry initially prefers an enabled selected option. Home/End, RTL, TabIndex and FocusAsync keep their existing behavior. This release does not implement type-ahead, range selection or screen-reader certification.</p>
+<p>Supplying OnRemove switches the entire list to role=group, even when CanRemove currently rejects every item. Main actions then expose pressed state and removal remains a separately named button. Removing the callback restores listbox semantics without resetting selected IDs or focus. Selectable=false also uses group semantics. ItemTemplate and LeadingTemplate must remain display-only: do not insert links, buttons or inputs into an option. Standalone NgChip retains its button contract.</p>
+<p>This boundary follows the WAI-ARIA listbox interaction model, which does not support interactive descendants inside an option. See <a href="https://www.w3.org/WAI/ARIA/apg/patterns/listbox/">W3C listbox guidance</a>. It deliberately leaves removable-list parity open instead of concealing removal actions from accessibility tools.</p>
+<p>Flutter keeps Material chip selection semantics (checkbox/checked in the verified Web accessibility tree). The installed SDK does not provide listbox/option SemanticsRole values. Do not depend on equal DOM roles across frameworks or describe this release as full third-party accessibility parity.</p>
+<p>To try the selection-only contract, omit OnRemove/onRemove from the compiled example; keep ValueChanged/onChanged and the state assignment. The Blazor demo's Selection semantics section switches Multiple and removal at runtime so you can compare the exported roles while preserving state.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Selection-only listbox<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgChipList</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Selection-only business topics&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;data.Items&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">Multiple</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">h2</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;topics-heading&quot;</span><span class="p">&gt;</span>Business topics<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;topics-help&quot;</span><span class="p">&gt;</span>Choose topics for this workspace.<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Right-to-left layout&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;rtl&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">dir</span><span class="o">=</span><span class="s">&quot;@(rtl ? &quot;</span><span class="na">rtl</span><span class="err">&quot;</span> <span class="na">:</span> <span class="err">&quot;</span><span class="na">ltr</span><span class="err">&quot;)&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgChipList</span> <span class="na">Gap</span><span class="o">=</span><span class="s">&quot;lg&quot;</span> <span class="na">TabIndex</span><span class="o">=</span><span class="s">&quot;0&quot;</span> <span class="na">Id</span><span class="o">=</span><span class="s">&quot;business-topics&quot;</span> <span class="na">Class</span><span class="o">=</span><span class="s">&quot;business-topics&quot;</span> <span class="na">AriaLabelledBy</span><span class="o">=</span><span class="s">&quot;topics-heading&quot;</span> <span class="na">AriaDescribedBy</span><span class="o">=</span><span class="s">&quot;topics-help&quot;</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Business topics&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;data.Items&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span></span>
+<span class="code-line" data-line="8">    <span class="na">Multiple</span> <span class="na">CanRemove</span><span class="o">=</span><span class="s">&quot;data.CanRemove&quot;</span> <span class="na">ItemAppearance</span><span class="o">=</span><span class="s">&quot;data.GetAppearance&quot;</span></span>
+<span class="code-line" data-line="9">    <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;Open&quot;</span> <span class="na">OnRemove</span><span class="o">=</span><span class="s">&quot;Remove&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span> <span class="na">role</span><span class="o">=</span><span class="s">&quot;status&quot;</span><span class="p">&gt;</span>@message<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">sealed</span><span class="w"> </span><span class="k">record</span><span class="w"> </span><span class="nf">Topic</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">Id</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Name</span><span class="p">,</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">Owner</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">Pinned</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">Disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">);</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">List</span><span class="o">&lt;</span><span class="n">Topic</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;ops&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Operations&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Morgan&quot;</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;finance&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Finance&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Alex&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Pinned</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">),</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="s">&quot;archive&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Archive&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Sam&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">Disabled</span><span class="p">:</span><span class="w"> </span><span class="k">true</span><span class="p">)];</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;finance&quot;</span><span class="p">];</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">NgChipData</span><span class="o">&lt;</span><span class="n">Topic</span><span class="o">&gt;</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">default</span><span class="o">!</span><span class="p">;</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Select a topic&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">protected</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">OnInitialized</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Rebind</span><span class="p">();</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Rebind</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="n">records</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">,</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">        </span><span class="n">disabled</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Disabled</span><span class="p">,</span><span class="w"> </span><span class="n">removable</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">x</span><span class="p">.</span><span class="n">Pinned</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">        </span><span class="n">appearance</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="n">ThemeColor</span><span class="p">:</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Pinned</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;success&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;base&quot;</span><span class="p">));</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Open</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;Owner: {data.GetItem(id).Owner}&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Remove</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="25"><span class="w">        </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">$&quot;Removed {data.GetItem(id).Name}&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="26"><span class="w">        </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">id</span><span class="p">).</span><span class="n">ToList</span><span class="p">();</span></span>
+<span class="code-line" data-line="27"><span class="w">        </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">selected</span><span class="p">.</span><span class="n">Where</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">id</span><span class="p">).</span><span class="n">ToArray</span><span class="p">();</span></span>
+<span class="code-line" data-line="28"><span class="w">        </span><span class="n">Rebind</span><span class="p">();</span></span>
+<span class="code-line" data-line="29"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="30"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">List</span><span class="o">&lt;</span><span class="p">({</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">pinned</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">disabled</span><span class="p">})</span><span class="o">&gt;</span><span class="w"> </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="p">(</span><span class="nl">id:</span><span class="w"> </span><span class="s1">&#39;ops&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;Operations&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">owner:</span><span class="w"> </span><span class="s1">&#39;Morgan&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">pinned:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">disabled:</span><span class="w"> </span><span class="kc">false</span><span class="p">),</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="p">(</span><span class="nl">id:</span><span class="w"> </span><span class="s1">&#39;finance&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;Finance&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">owner:</span><span class="w"> </span><span class="s1">&#39;Alex&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">pinned:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nl">disabled:</span><span class="w"> </span><span class="kc">false</span><span class="p">),</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="p">(</span><span class="nl">id:</span><span class="w"> </span><span class="s1">&#39;archive&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">name:</span><span class="w"> </span><span class="s1">&#39;Archive&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">owner:</span><span class="w"> </span><span class="s1">&#39;Sam&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">pinned:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w"> </span><span class="nl">disabled:</span><span class="w"> </span><span class="kc">true</span><span class="p">),</span></span>
+<span class="code-line" data-line="5"><span class="p">];</span></span>
+<span class="code-line" data-line="6"><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;finance&#39;</span><span class="p">];</span></span>
+<span class="code-line" data-line="7"><span class="kd">final</span><span class="w"> </span><span class="n">heading</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Business topics&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="8"><span class="kd">final</span><span class="w"> </span><span class="n">help</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Choose topics for this workspace.&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="9"><span class="kt">bool</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="10"><span class="kt">String</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Select a topic&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="11"><span class="kd">late</span><span class="w"> </span><span class="kd">var</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bind</span><span class="p">();</span></span>
+<span class="code-line" data-line="12"><span class="c1">// Explicit record type keeps event handlers statically checked.</span></span>
+<span class="code-line" data-line="13"><span class="n">NgChipData</span><span class="o">&lt;</span><span class="p">({</span><span class="kt">String</span><span class="w"> </span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="kt">String</span><span class="w"> </span><span class="n">owner</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">pinned</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">disabled</span><span class="p">})</span><span class="o">&gt;</span><span class="w"> </span><span class="n">bind</span><span class="p">()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgChipData</span><span class="p">(</span><span class="n">records</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">id</span><span class="p">,</span><span class="w"> </span><span class="nl">text:</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">name</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="nl">disabled:</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">disabled</span><span class="p">,</span><span class="w"> </span><span class="nl">removable:</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">x</span><span class="p">.</span><span class="n">pinned</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">  </span><span class="nl">appearance:</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgChipAppearance</span><span class="p">(</span><span class="nl">themeColor:</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">pinned</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s1">&#39;success&#39;</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;base&#39;</span><span class="p">));</span></span>
+<span class="code-line" data-line="16"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="17"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="n">heading</span><span class="p">),</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">help</span><span class="p">),</span></span>
+<span class="code-line" data-line="18"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Right-to-left layout&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">rtl</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="19"><span class="w">  </span><span class="n">Directionality</span><span class="p">(</span><span class="nl">textDirection:</span><span class="w"> </span><span class="n">rtl</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">TextDirection</span><span class="p">.</span><span class="n">rtl</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TextDirection</span><span class="p">.</span><span class="n">ltr</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="nl">child:</span><span class="w"> </span><span class="n">NgChipList</span><span class="p">(</span><span class="nl">gap:</span><span class="w"> </span><span class="s1">&#39;lg&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">tabIndex:</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticIdentifier:</span><span class="w"> </span><span class="s1">&#39;business-topics&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">semanticHint:</span><span class="w"> </span><span class="n">help</span><span class="p">,</span><span class="w"> </span><span class="nl">label:</span><span class="w"> </span><span class="n">heading</span><span class="p">,</span><span class="w"> </span><span class="nl">items:</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">items</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="nl">multiple:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"> </span><span class="nl">canRemove:</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">canRemove</span><span class="p">,</span><span class="w"> </span><span class="nl">itemAppearance:</span><span class="w"> </span><span class="n">data</span><span class="p">.</span><span class="n">getAppearance</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">v</span><span class="p">),</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="nl">onClick:</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Owner: </span><span class="si">${</span><span class="n">data</span><span class="p">.</span><span class="n">getItem</span><span class="p">(</span><span class="n">id</span><span class="p">).</span><span class="n">owner</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="nl">onRemove:</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="25"><span class="w">      </span><span class="n">message</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Removed </span><span class="si">${</span><span class="n">data</span><span class="p">.</span><span class="n">getItem</span><span class="p">(</span><span class="n">id</span><span class="p">).</span><span class="n">name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="26"><span class="w">      </span><span class="n">records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">records</span><span class="p">.</span><span class="n">where</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">id</span><span class="p">).</span><span class="n">toList</span><span class="p">();</span></span>
+<span class="code-line" data-line="27"><span class="w">      </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">selected</span><span class="p">.</span><span class="n">where</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">id</span><span class="p">).</span><span class="n">toList</span><span class="p">();</span></span>
+<span class="code-line" data-line="28"><span class="w">      </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bind</span><span class="p">();</span></span>
+<span class="code-line" data-line="29"><span class="w">    </span><span class="p">}))),</span></span>
+<span class="code-line" data-line="30"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="n">message</span><span class="p">),</span></span>
+<span class="code-line" data-line="31"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TabIndex</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+<tr>
+<td><code>Gap</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>ChipList spacing preset: sm=4, md=8 (default), lg=12; applies to columns and wrapped rows.</td>
+</tr>
+<tr>
+<td><code>Id</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Class</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>AriaLabelledBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for the accessible name; takes precedence over Label.</td>
+</tr>
+<tr>
+<td><code>AriaDescribedBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for contextual guidance; see target-element rules.</td>
+</tr>
+<tr>
+<td><code>EmptyText</code></td>
+<td><code>string</code></td>
+<td>&quot;No tags&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>RemoveLabel</code></td>
+<td><code>Func&lt;NgOption,string&gt;?</code></td>
+<td>not set</td>
+<td>Complete nonblank accessible removal name; for ChipList, a callback receiving NgOption.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Tags&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgOption&gt;</code></td>
+<td>required</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>IReadOnlyList&lt;string&gt;</code></td>
+<td>[]</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;IReadOnlyList&lt;string&gt;&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>OnRemove</code></td>
+<td><code>EventCallback&lt;string&gt;</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnClick</code></td>
+<td><code>EventCallback&lt;string&gt;</code></td>
+<td>not set</td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>Selectable</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Multiple</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Allow multiple selected IDs instead of a single choice.</td>
+</tr>
+<tr>
+<td><code>AllowEmpty</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>Allow the user to clear the last selection; does not create an initial value.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Rounded</code></td>
+<td><code>string</code></td>
+<td>&quot;full&quot;</td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>FillMode</code></td>
+<td><code>string</code></td>
+<td>&quot;outline&quot;</td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>ThemeColor</code></td>
+<td><code>string</code></td>
+<td>&quot;base&quot;</td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>ItemAppearance</code></td>
+<td><code>Func&lt;NgOption,NgChipAppearance&gt;?</code></td>
+<td>not set</td>
+<td>Per-item nullable presentation overrides; unspecified values inherit list defaults.</td>
+</tr>
+<tr>
+<td><code>CanRemove</code></td>
+<td><code>Func&lt;NgOption,bool&gt;?</code></td>
+<td>not set</td>
+<td>Pure predicate controlling whether an item offers a remove action.</td>
+</tr>
+<tr>
+<td><code>ItemTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>LeadingTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>Decorative leading content for an item; no nested interactive elements.</td>
+</tr>
+<tr>
+<td><code>RemoveContent</code></td>
+<td><code>RenderFragment?</code></td>
+<td>not set</td>
+<td>Decorative replacement for the remove symbol; accessible action label is retained.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>emptyText</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>gap</code></td>
+<td><code>String</code></td>
+<td>ChipList spacing preset: sm=4, md=8 (default), lg=12; applies to columns and wrapped rows.</td>
+</tr>
+<tr>
+<td><code>semanticIdentifier</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank automation identifier in the Flutter semantics tree; not a widget Key or DOM id.</td>
+</tr>
+<tr>
+<td><code>semanticHint</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank contextual guidance in the semantics tree; not a visible tooltip.</td>
+</tr>
+<tr>
+<td><code>tabIndex</code></td>
+<td><code>int</code></td>
+<td>0 keeps normal Tab participation; -1 skips forward/reverse Tab while preserving pointer/application focus. Other values are rejected.</td>
+</tr>
+<tr>
+<td><code>removeLabelBuilder</code></td>
+<td><code>String Function(NgOption)?</code></td>
+<td>Pure callback supplying a complete accessible removal name for each NgOption.</td>
+</tr>
+<tr>
+<td><code>focusController</code></td>
+<td><code>NgChipListController?</code></td>
+<td>Application-owned NgChipListController; one list per controller. See lifecycle and focus rules.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgOption&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>List&lt;String&gt;</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;List&lt;String&gt;&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>onRemove</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>onClick</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>rounded</code></td>
+<td><code>String</code></td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>fillMode</code></td>
+<td><code>String</code></td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>themeColor</code></td>
+<td><code>String</code></td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>itemAppearance</code></td>
+<td><code>NgChipAppearance Function(NgOption)?</code></td>
+<td>Per-item nullable presentation overrides; unspecified values inherit list defaults.</td>
+</tr>
+<tr>
+<td><code>canRemove</code></td>
+<td><code>bool Function(NgOption)?</code></td>
+<td>Pure predicate controlling whether an item offers a remove action.</td>
+</tr>
+<tr>
+<td><code>itemBuilder</code></td>
+<td><code>Widget Function(NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>leadingBuilder</code></td>
+<td><code>Widget Function(NgOption)?</code></td>
+<td>Decorative leading widget for an item; no nested interactive controls.</td>
+</tr>
+<tr>
+<td><code>removeIcon</code></td>
+<td><code>Widget?</code></td>
+<td>Replacement widget for the remove symbol; accessible action label is retained.</td>
+</tr>
+<tr>
+<td><code>selectable</code></td>
+<td><code>bool</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>multiple</code></td>
+<td><code>bool</code></td>
+<td>Allow multiple selected IDs instead of a single choice.</td>
+</tr>
+<tr>
+<td><code>allowEmpty</code></td>
+<td><code>bool</code></td>
+<td>Allow the user to clear the last selection; does not create an initial value.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgChipList</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Tags&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">gap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">tabIndex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticIdentifier</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticHint</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">emptyText</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;No tags&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">removeLabelBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">focusController</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onClick</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;full&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">fillMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">themeColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;base&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemAppearance</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">canRemove</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">leadingBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">removeIcon</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[],</span></span>
+<span class="code-line" data-line="23"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="24"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onRemove</span><span class="p">,</span></span>
+<span class="code-line" data-line="25"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">selectable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="26"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">multiple</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="27"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">allowEmpty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="28"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="29"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

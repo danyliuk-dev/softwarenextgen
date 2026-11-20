@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Ubuntu 26.04 installs Wine with a -stable command suffix.
+if [[ -x /usr/bin/wine64-stable ]]; then exec /usr/bin/wine64-stable "$@"; fi
+if [[ -x /usr/bin/wine ]]; then exec /usr/bin/wine "$@"; fi
+echo 'System Wine is missing; run packaging/setup-windows-host.sh' >&2
+exit 127

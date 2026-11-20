@@ -1,0 +1,44 @@
+[
+  {
+    "id": "0bab5b23-1523-4bf5-9c0b-6089017375a1",
+    "product": "components",
+    "version": "0.73.0",
+    "platform": "Linux x64",
+    "filename": "NextgenComponents-0.73.0-batch073-linux-x86_64.AppImage",
+    "storage_name": "components/0.73.0/batch073/linux-x64/NextgenComponents-0.73.0-batch073-linux-x86_64.AppImage",
+    "size": 220425296,
+    "sha256": "D4E28D432F928C061E9B585BD43F888C216542023C8F8BF87CBB3D5D7C3D4274",
+    "notes": "Components 0.73.0: Grid batch editing, review and undo, one atomic application callback, guarded validation and retained changes on failure. Documentation revision 2026.10.30.2.",
+    "local_path": "artifacts/batch073/installers/NextgenComponents-0.73.0-batch073-linux-x86_64.AppImage",
+    "previous_storage_name": "components/0.72.0/cell072/linux-x64/NextgenComponents-0.72.0-cell072-linux-x86_64.AppImage",
+    "previous_sha256": "BDE547F9BEBB4FD8F896F9DBA427BC7DA989154ED8E2312D8FED4F917D210C89"
+  },
+  {
+    "id": "bff79108-4c79-4033-9c1c-6360336544c8",
+    "product": "components",
+    "version": "0.73.0",
+    "platform": "macOS Apple Silicon",
+    "filename": "NextgenComponents-0.73.0-batch073-mac-arm64.dmg",
+    "storage_name": "components/0.73.0/batch073/osx-arm64/NextgenComponents-0.73.0-batch073-mac-arm64.dmg",
+    "size": 260394226,
+    "sha256": "45370075249F54F390214C63C5998D369D83CF2E03D3942A3DA97C2D3C6F93D1",
+    "notes": "Components 0.73.0: Grid batch editing, review and undo, one atomic application callback, guarded validation and retained changes on failure. Documentation revision 2026.10.30.2.",
+    "local_path": "artifacts/batch073/installers/NextgenComponents-0.73.0-batch073-mac-arm64.dmg",
+    "previous_storage_name": "components/0.72.0/cell072/osx-arm64/NextgenComponents-0.72.0-cell072-mac-arm64.dmg",
+    "previous_sha256": "D2A2E361D4D5B1A2F1DF90BECD3E12C3BAFADD574640EB6004EF78B569F0B66C"
+  },
+  {
+    "id": "5cf41f31-81e0-5c26-83c2-43417fae8ccb",
+    "product": "components",
+    "version": "0.73.0",
+    "platform": "Windows x64",
+    "filename": "NextgenComponents-0.73.0-batch073-win-x64.exe",
+    "storage_name": "components/0.73.0/batch073/win-x64/NextgenComponents-0.73.0-batch073-win-x64.exe",
+    "size": 208664333,
+    "sha256": "F9C7D94C919F95F823F66AF2093682AE2364823573F2EAD1176C3D7D0BC28811",
+    "notes": "Components 0.73.0: Grid batch editing, review and undo, one atomic application callback, guarded validation and retained changes on failure. Documentation revision 2026.10.30.2.",
+    "local_path": "artifacts/batch073/installers/NextgenComponents-0.73.0-batch073-win-x64.exe",
+    "previous_storage_name": "components/0.72.0/cell072/win-x64/NextgenComponents-0.72.0-cell072-win-x64.exe",
+    "previous_sha256": "AA08BE5142B9BFE13239E0F5B01931FD3FC14EEDEB5D0320FC74A8EB403E1DF2"
+  }
+]

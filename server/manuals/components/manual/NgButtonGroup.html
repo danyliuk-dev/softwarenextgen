@@ -1,0 +1,352 @@
+<h1 id="ngbuttongroup-single-and-multiple-choice-buttons">NgButtonGroup — Single and multiple choice buttons</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Present a small set of related settings as visible buttons. Use single selection for alignment or a view mode, and multiple selection for independent styles or filters.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgButtonGroup#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgButtonGroup#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<h3 id="mix-choices-with-commands">Mix choices with commands</h3>
+<p>Items/items contains NgOption records with stable IDs. IsCommand/isCommand is an optional predicate: false means toggle (the default), true means ordinary command. Commands invoke OnClick/onClick with their ID and never enter Value/value. Passing a command ID as selected throws, including when the command is hidden. If an item changes type at runtime, normalize selected IDs in the same parent update. Predicates and builders should be pure.</p>
+<p>OnClick/onClick receives activations of both kinds. A toggle first requests a changed selection, then invokes click; a command invokes only click. A no-op selection, such as rejecting the last deselection with AllowEmpty=false, still produces click. Blazor awaits ValueChanged before OnClick; Flutter callbacks run synchronously. The group never performs command side effects. In the example, the parent handles Clear formatting by clearing its own value.</p>
+<p>Toggles need either ValueChanged/onChanged or OnClick/onClick to be interactive. Click-only toggles retain controlled state. Commands need OnClick/onClick. Disabled/disabled and NgOption.disabled suppress both actions. Async work, busy-state locking and error reporting belong to the application.</p>
+<h3 id="selection-validation-and-visibility">Selection, validation and visibility</h3>
+<p>Value/value is a list of selected toggle IDs even in single mode. Multiple/multiple=false accepts at most one selected ID; true toggles independently. AllowEmpty/allowEmpty=true permits removing the last selection; false prevents that user action but does not invent an initial value or reject an application-supplied empty list. Selection callbacks return new lists in item order; the input is not mutated.</p>
+<p>Use at most 50 records, unique IDs of 1–64 ASCII letters/digits/underscores/hyphens and nonblank labels up to 120 UTF-16 code units. Selected IDs must be unique and present in Items/items. Removing records or switching to single mode requires normalizing the value in the same update. Disabled selected items remain valid.</p>
+<p>IsVisible/isVisible=false hides a record from rendering, focus and accessibility without removing it from Items or Value. Hidden selections still participate in selection rules; selecting another toggle in single mode replaces a hidden selection. When all items are hidden, the empty message is No options even if the parent retains hidden selection. Restore visibility to show the selected state again. The application owns focus recovery when hiding the focused button.</p>
+<h3 id="content-naming-and-layout">Content, naming and layout</h3>
+<p>ItemTemplate/itemBuilder replaces visible item content; LeadingTemplate/leadingBuilder supplies a decorative icon/avatar. Both use NgOption and must remain display-only. The accessible item name remains its label, even if the template uses abbreviated text. Command buttons have no pressed/checked state. Toggle buttons keep the existing selected semantics on each platform.</p>
+<p>Label/label names the group. Blazor offers Id/Class, AriaLabelledBy and AriaDescribedBy; Flutter offers semanticIdentifier/semanticHint. Horizontal groups wrap; Vertical/vertical stacks. Control width through the containing CSS/widget layout. Tab/Shift+Tab visit enabled visible actions and Enter/Space activates them; arrows are not managed as a composite widget. The data-driven NgOption model differs from third-party's declarative child-button API. Routes, native form submission/reset button types and content panels are not implemented by this group.</p>
+<h3 id="shared-appearance-and-per-item-overrides">Shared appearance and per-item overrides</h3>
+<p>Size/size accepts sm, md, lg. Rounded/rounded accepts sm, md, lg, full. FillMode/fillMode accepts solid, outline, flat, link, clear. ThemeColor/themeColor accepts base, primary, secondary, tertiary, info, success, warning, error, dark, light, inverse. Invalid tokens throw. Defaults are md/md/outline/primary, preserving Nextgen's selection emphasis. Colors adapt to the active theme; dark/light are readable theme tokens, not fixed black/white swatches. Exact theme pixels and ThemeBuilder compatibility are not claimed.</p>
+<p>Solid fills the button, outline outlines it, flat omits the resting border/background, link adds underlined text, and clear uses neutral text. Selected toggles retain a distinct filled state in every mode; Flutter also shows a check mark so custom bold content cannot hide selection, while Blazor adds an inset selected outline. Hover and focus remain separate from selection. Disabled styles indicate non-interactivity. A link fill is visual styling and does not turn a button into a navigation link.</p>
+<p>ButtonGroup applies these settings to every item. ItemAppearance/itemAppearance may return NgButtonAppearance with nullable fields; null fields inherit group values. Use this for a command's accent without changing other items. Tokens apply to commands and toggles equally. The Formatting commands and choices demo combines all appearance controls, per-item accents, icons, mixed actions, hidden selection, disabled controls and vertical layout.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgCheckBox</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Hide Emphasis&quot;</span> <span class="err">@</span><span class="na">bind-Value</span><span class="o">=</span><span class="s">&quot;hideEmphasis&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButtonGroup</span> <span class="na">Label</span><span class="o">=</span><span class="s">&quot;Formatting actions&quot;</span> <span class="na">Items</span><span class="o">=</span><span class="s">&quot;actions&quot;</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;selected&quot;</span> <span class="na">ValueChanged</span><span class="o">=</span><span class="s">&quot;Change&quot;</span> <span class="na">Multiple</span></span>
+<span class="code-line" data-line="3">    <span class="na">IsCommand</span><span class="o">=</span><span class="s">&quot;IsCommand&quot;</span> <span class="na">IsVisible</span><span class="o">=</span><span class="s">&quot;ShowItem&quot;</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;Activate&quot;</span></span>
+<span class="code-line" data-line="4">    <span class="na">Size</span><span class="o">=</span><span class="s">&quot;md&quot;</span> <span class="na">Rounded</span><span class="o">=</span><span class="s">&quot;lg&quot;</span> <span class="na">FillMode</span><span class="o">=</span><span class="s">&quot;outline&quot;</span> <span class="na">ItemAppearance</span><span class="o">=</span><span class="s">&quot;Appearance&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5">  <span class="p">&lt;</span><span class="nt">LeadingTemplate</span><span class="p">&gt;&lt;</span><span class="nt">span</span><span class="p">&gt;</span>★<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;&lt;/</span><span class="nt">LeadingTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6">  <span class="p">&lt;</span><span class="nt">ItemTemplate</span> <span class="na">Context</span><span class="o">=</span><span class="s">&quot;item&quot;</span><span class="p">&gt;&lt;</span><span class="nt">strong</span><span class="p">&gt;</span>@item.Label<span class="p">&lt;/</span><span class="nt">strong</span><span class="p">&gt;&lt;/</span><span class="nt">ItemTemplate</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;/</span><span class="nt">NgButtonGroup</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Selected: @string.Join(&quot;,&quot;,selected). @log<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">hideEmphasis</span><span class="p">;</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s">&quot;strong&quot;</span><span class="p">];</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">string</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Ready&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgOption</span><span class="p">[]</span><span class="w"> </span><span class="n">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;strong&quot;</span><span class="p">,</span><span class="s">&quot;Strong&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;emphasis&quot;</span><span class="p">,</span><span class="s">&quot;Emphasis&quot;</span><span class="p">),</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;clear&quot;</span><span class="p">,</span><span class="s">&quot;Clear formatting&quot;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">IsCommand</span><span class="p">(</span><span class="n">NgOption</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="o">==</span><span class="s">&quot;clear&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">ShowItem</span><span class="p">(</span><span class="n">NgOption</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">hideEmphasis</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">Value</span><span class="o">!=</span><span class="s">&quot;emphasis&quot;</span><span class="p">;</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NgButtonAppearance</span><span class="w"> </span><span class="nf">Appearance</span><span class="p">(</span><span class="n">NgOption</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">new</span><span class="p">(</span><span class="n">ThemeColor</span><span class="p">:</span><span class="n">IsCommand</span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="o">?</span><span class="s">&quot;info&quot;</span><span class="p">:</span><span class="k">null</span><span class="p">);</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Change</span><span class="p">(</span><span class="n">IReadOnlyList</span><span class="o">&lt;</span><span class="kt">string</span><span class="o">&gt;</span><span class="w"> </span><span class="k">value</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="k">value</span><span class="p">;</span><span class="w"> </span><span class="n">log</span><span class="o">=</span><span class="s">&quot;changed:&quot;</span><span class="o">+</span><span class="kt">string</span><span class="p">.</span><span class="n">Join</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">,</span><span class="k">value</span><span class="p">);</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Activate</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="o">+=</span><span class="s">&quot; | clicked:&quot;</span><span class="o">+</span><span class="n">id</span><span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">id</span><span class="o">==</span><span class="s">&quot;clear&quot;</span><span class="p">)</span><span class="n">selected</span><span class="o">=</span><span class="p">[];</span><span class="w"> </span><span class="p">}</span></span>
+<span class="code-line" data-line="19"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="kt">bool</span><span class="w"> </span><span class="n">hideEmphasis</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span></span>
+<span class="code-line" data-line="2"><span class="n">List</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="w"> </span><span class="n">selected</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;strong&#39;</span><span class="p">];</span></span>
+<span class="code-line" data-line="3"><span class="kt">String</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Ready&#39;</span><span class="p">;</span></span>
+<span class="code-line" data-line="4"><span class="kd">final</span><span class="w"> </span><span class="n">actions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;strong&#39;</span><span class="p">,</span><span class="s1">&#39;Strong&#39;</span><span class="p">),</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;emphasis&#39;</span><span class="p">,</span><span class="s1">&#39;Emphasis&#39;</span><span class="p">),</span><span class="n">NgOption</span><span class="p">(</span><span class="s1">&#39;clear&#39;</span><span class="p">,</span><span class="s1">&#39;Clear formatting&#39;</span><span class="p">)];</span></span>
+<span class="code-line" data-line="5"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Column</span><span class="p">(</span><span class="nl">children:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="6"><span class="w">  </span><span class="n">NgCheckBox</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Hide Emphasis&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">hideEmphasis</span><span class="p">,</span><span class="w"> </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">hideEmphasis</span><span class="o">=</span><span class="n">v</span><span class="p">)),</span></span>
+<span class="code-line" data-line="7"><span class="w">  </span><span class="n">NgButtonGroup</span><span class="p">(</span><span class="nl">label:</span><span class="w"> </span><span class="s1">&#39;Formatting actions&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">items:</span><span class="w"> </span><span class="n">actions</span><span class="p">,</span><span class="w"> </span><span class="nl">value:</span><span class="w"> </span><span class="n">selected</span><span class="p">,</span><span class="w"> </span><span class="nl">multiple:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="nl">isCommand:</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">value</span><span class="o">==</span><span class="s1">&#39;clear&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">isVisible:</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="o">!</span><span class="n">hideEmphasis</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">value</span><span class="o">!=</span><span class="s1">&#39;emphasis&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="nl">onChanged:</span><span class="w"> </span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">selected</span><span class="o">=</span><span class="n">v</span><span class="p">;</span><span class="w"> </span><span class="n">log</span><span class="o">=</span><span class="s1">&#39;changed:</span><span class="si">${</span><span class="n">v</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">;</span><span class="w"> </span><span class="p">}),</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="nl">onClick:</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">setState</span><span class="p">(()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">log</span><span class="o">+=</span><span class="s1">&#39; | clicked:</span><span class="si">$</span><span class="n">id</span><span class="s1">&#39;</span><span class="p">;</span><span class="w"> </span><span class="k">if</span><span class="p">(</span><span class="n">id</span><span class="o">==</span><span class="s1">&#39;clear&#39;</span><span class="p">)</span><span class="n">selected</span><span class="o">=</span><span class="p">[];</span><span class="w"> </span><span class="p">}),</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="nl">size:</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">rounded:</span><span class="w"> </span><span class="s1">&#39;lg&#39;</span><span class="p">,</span><span class="w"> </span><span class="nl">fillMode:</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="nl">itemAppearance:</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgButtonAppearance</span><span class="p">(</span><span class="nl">themeColor:</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">value</span><span class="o">==</span><span class="s1">&#39;clear&#39;</span><span class="o">?</span><span class="s1">&#39;info&#39;</span><span class="o">:</span><span class="kc">null</span><span class="p">),</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="nl">leadingBuilder:</span><span class="w"> </span><span class="p">(</span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">Icon</span><span class="p">(</span><span class="n">Icons</span><span class="p">.</span><span class="n">star</span><span class="p">,</span><span class="w"> </span><span class="nl">size:</span><span class="m">16</span><span class="p">),</span><span class="w"> </span><span class="nl">itemBuilder:</span><span class="w"> </span><span class="p">(</span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="n">item</span><span class="p">.</span><span class="n">label</span><span class="p">)),</span></span>
+<span class="code-line" data-line="14"><span class="w">  </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Selected: </span><span class="si">${</span><span class="n">selected</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">. </span><span class="si">$</span><span class="n">log</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="15"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Id</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Class</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>AriaLabelledBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for the accessible name; takes precedence over Label.</td>
+</tr>
+<tr>
+<td><code>AriaDescribedBy</code></td>
+<td><code>string?</code></td>
+<td>not set</td>
+<td>Space-separated existing DOM IDs for contextual guidance; see target-element rules.</td>
+</tr>
+<tr>
+<td><code>Size</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>Rounded</code></td>
+<td><code>string</code></td>
+<td>&quot;md&quot;</td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>FillMode</code></td>
+<td><code>string</code></td>
+<td>&quot;outline&quot;</td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>ThemeColor</code></td>
+<td><code>string</code></td>
+<td>&quot;primary&quot;</td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>ItemAppearance</code></td>
+<td><code>Func&lt;NgOption,NgButtonAppearance&gt;?</code></td>
+<td>not set</td>
+<td>Per-item nullable presentation overrides; unspecified values inherit list defaults.</td>
+</tr>
+<tr>
+<td><code>IsVisible</code></td>
+<td><code>Func&lt;NgOption,bool&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>ItemTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>LeadingTemplate</code></td>
+<td><code>RenderFragment&lt;NgOption&gt;?</code></td>
+<td>not set</td>
+<td>Decorative leading content for an item; no nested interactive elements.</td>
+</tr>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Options&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Items</code></td>
+<td><code>IReadOnlyList&lt;NgOption&gt;</code></td>
+<td>required</td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>IReadOnlyList&lt;string&gt;</code></td>
+<td>[]</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;IReadOnlyList&lt;string&gt;&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>IsCommand</code></td>
+<td><code>Func&lt;NgOption,bool&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>OnClick</code></td>
+<td><code>EventCallback&lt;string&gt;</code></td>
+<td>not set</td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>Multiple</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Allow multiple selected IDs instead of a single choice.</td>
+</tr>
+<tr>
+<td><code>AllowEmpty</code></td>
+<td><code>bool</code></td>
+<td>true</td>
+<td>Allow the user to clear the last selection; does not create an initial value.</td>
+</tr>
+<tr>
+<td><code>Disabled</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>Vertical</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>items</code></td>
+<td><code>List&lt;NgOption&gt;</code></td>
+<td>Input collection. Replace it when changing records or configuration.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>List&lt;String&gt;</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;List&lt;String&gt;&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>onClick</code></td>
+<td><code>ValueChanged&lt;String&gt;?</code></td>
+<td>Application click handler.</td>
+</tr>
+<tr>
+<td><code>isCommand</code></td>
+<td><code>bool Function(NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>multiple</code></td>
+<td><code>bool</code></td>
+<td>Allow multiple selected IDs instead of a single choice.</td>
+</tr>
+<tr>
+<td><code>allowEmpty</code></td>
+<td><code>bool</code></td>
+<td>Allow the user to clear the last selection; does not create an initial value.</td>
+</tr>
+<tr>
+<td><code>disabled</code></td>
+<td><code>bool</code></td>
+<td>Disable user interaction.</td>
+</tr>
+<tr>
+<td><code>vertical</code></td>
+<td><code>bool</code></td>
+<td>Use a vertical root layout; see the component keyboard and layout rules.</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td><code>String</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>rounded</code></td>
+<td><code>String</code></td>
+<td>Chip corners: sm, md, lg or full.</td>
+</tr>
+<tr>
+<td><code>fillMode</code></td>
+<td><code>String</code></td>
+<td>Chip fill: solid or outline; see the documented defaults.</td>
+</tr>
+<tr>
+<td><code>themeColor</code></td>
+<td><code>String</code></td>
+<td>Chip semantic color: base, info, success, warning or error.</td>
+</tr>
+<tr>
+<td><code>semanticIdentifier</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank automation identifier in the Flutter semantics tree; not a widget Key or DOM id.</td>
+</tr>
+<tr>
+<td><code>semanticHint</code></td>
+<td><code>String?</code></td>
+<td>Optional nonblank contextual guidance in the semantics tree; not a visible tooltip.</td>
+</tr>
+<tr>
+<td><code>itemAppearance</code></td>
+<td><code>NgButtonAppearance Function(NgOption)?</code></td>
+<td>Per-item nullable presentation overrides; unspecified values inherit list defaults.</td>
+</tr>
+<tr>
+<td><code>isVisible</code></td>
+<td><code>bool Function(NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>itemBuilder</code></td>
+<td><code>Widget Function(NgOption)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+<tr>
+<td><code>leadingBuilder</code></td>
+<td><code>Widget Function(NgOption)?</code></td>
+<td>Decorative leading widget for an item; no nested interactive controls.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgButtonGroup</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Options&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">rounded</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;md&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">fillMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;outline&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">themeColor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;primary&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticIdentifier</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">semanticHint</span><span class="p">,</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemAppearance</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">isVisible</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">itemBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="13"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">leadingBuilder</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">items</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">[],</span></span>
+<span class="code-line" data-line="16"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onClick</span><span class="p">,</span></span>
+<span class="code-line" data-line="17"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">isCommand</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="19"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">multiple</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="20"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">allowEmpty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">disabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="22"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">vertical</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="23"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

@@ -1,0 +1,76 @@
+<h1 id="continuous-remote-grid-ranges">Continuous remote Grid ranges</h1>
+<p><code>ReadRange</code> / <code>readRange</code> enables continuous scrolling over a flat server result with one retained data window. Enable <code>Virtualize</code> / <code>virtualize</code>; omit local Items, ReadData, ReadGroupedData and all grouping descriptors. Existing page adapters retain their pager and behavior. Row height is fixed, 40–128 pixels; the viewport must contain between 1 and 128 rows. The default is 48px rows in a 384px viewport.</p>
+<h2 id="request-and-response">Request and response</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Contract</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>startIndex</td>
+<td>Zero-based offset in the complete filtered and sorted result; 0–100,000.</td>
+</tr>
+<tr>
+<td>count</td>
+<td>Requested window size, 1–512; adapters must support arbitrary offsets and counts.</td>
+</tr>
+<tr>
+<td>search</td>
+<td>Current search string. The server defines matching rules.</td>
+</tr>
+<tr>
+<td>sorts</td>
+<td>Ordered key/descending descriptors. Validate supported keys on the server.</td>
+</tr>
+<tr>
+<td>response startIndex</td>
+<td>Must exactly echo the requested offset.</td>
+</tr>
+<tr>
+<td>response total</td>
+<td>Full filtered record count, 0–100,000.</td>
+</tr>
+<tr>
+<td>response items</td>
+<td>Exactly min(count, max(0, total − startIndex)) records. IDs must be nonblank and unique within the window.</td>
+</tr>
+</tbody>
+</table>
+<p>Example JSON request: <code>{&quot;startIndex&quot;:99980,&quot;count&quot;:20,&quot;search&quot;:&quot;&quot;,&quot;sorts&quot;:[{&quot;key&quot;:&quot;id&quot;,&quot;descending&quot;:false}]}</code>. A response is <code>{&quot;startIndex&quot;:99980,&quot;items&quot;:[...20 records...],&quot;total&quot;:100000}</code>. Record JSON is application-owned. No total-only or short-page response is accepted within the result. An offset beyond a shrinking total returns an empty window and the new total; the renderer corrects its position.</p>
+<p>Apply filtering and stable sorting before offset/limit. Add a unique ID tie-breaker in the database. Count and rows should come from one consistent server snapshot. Clients validate each envelope but cannot prove cross-window consistency: concurrent insertions/reordering can otherwise repeat or skip records. Use application snapshot/version tokens in your adapter and change DataVersion after accepting a new dataset. IDs must be stable across every window. Do not allocate the full result in the client adapter.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">NgDataGrid</span> <span class="na">TItem</span><span class="o">=</span><span class="s">&quot;int&quot;</span> <span class="na">ReadRange</span><span class="o">=</span><span class="s">&quot;Read&quot;</span> <span class="na">Virtualize</span><span class="o">=</span><span class="s">&quot;true&quot;</span></span>
+<span class="code-line" data-line="2">    <span class="na">Columns</span><span class="o">=</span><span class="s">&quot;columns&quot;</span> <span class="na">RowId</span><span class="o">=</span><span class="s">&quot;i=&gt;i.ToString()&quot;</span> <span class="p">/&gt;</span></span>
+<span class="code-line" data-line="3"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="k">readonly</span><span class="w"> </span><span class="n">NgDataColumn</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">[]</span><span class="w"> </span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="k">new</span><span class="p">(</span><span class="s">&quot;id&quot;</span><span class="p">,</span><span class="s">&quot;Record&quot;</span><span class="p">,</span><span class="n">i</span><span class="o">=&gt;</span><span class="n">i</span><span class="p">)];</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">private</span><span class="w"> </span><span class="n">Task</span><span class="o">&lt;</span><span class="n">NgDataRangeResult</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">Read</span><span class="p">(</span><span class="n">NgDataRangeRequest</span><span class="w"> </span><span class="n">q</span><span class="p">,</span><span class="w"> </span><span class="n">CancellationToken</span><span class="w"> </span><span class="n">token</span><span class="p">)</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="6"><span class="w">        </span><span class="n">token</span><span class="p">.</span><span class="n">ThrowIfCancellationRequested</span><span class="p">();</span></span>
+<span class="code-line" data-line="7"><span class="w">        </span><span class="kt">var</span><span class="w"> </span><span class="n">count</span><span class="o">=</span><span class="n">Math</span><span class="p">.</span><span class="n">Min</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">Count</span><span class="p">,</span><span class="w"> </span><span class="n">Math</span><span class="p">.</span><span class="n">Max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">100000</span><span class="o">-</span><span class="n">q</span><span class="p">.</span><span class="n">StartIndex</span><span class="p">));</span></span>
+<span class="code-line" data-line="8"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">Task</span><span class="p">.</span><span class="n">FromResult</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">NgDataRangeResult</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">StartIndex</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">            </span><span class="n">Enumerable</span><span class="p">.</span><span class="n">Range</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">StartIndex</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">count</span><span class="p">).</span><span class="n">ToArray</span><span class="p">(),</span><span class="mi">100000</span><span class="p">));</span></span>
+<span class="code-line" data-line="10"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="11"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<p>Place these members in a State class with Material and nextgen_components imports:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">Future</span><span class="o">&lt;</span><span class="n">NgDataRangeResult</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="n">read</span><span class="p">(</span><span class="n">NgDataRangeRequest</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="kd">async</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="kd">final</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="m">100000</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">startIndex</span><span class="p">).</span><span class="n">clamp</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">count</span><span class="p">);</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="n">NgDataRangeResult</span><span class="p">(</span><span class="n">q</span><span class="p">.</span><span class="n">startIndex</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">      </span><span class="n">List</span><span class="p">.</span><span class="n">generate</span><span class="p">(</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">q</span><span class="p">.</span><span class="n">startIndex</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="p">),</span><span class="w"> </span><span class="m">100000</span><span class="p">);</span></span>
+<span class="code-line" data-line="5"><span class="p">}</span></span>
+<span class="code-line" data-line="6"><span class="nd">@override</span></span>
+<span class="code-line" data-line="7"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">NgDataGrid</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="nl">readRange:</span><span class="w"> </span><span class="n">read</span><span class="p">,</span><span class="w"> </span><span class="nl">virtualize:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="nl">columns:</span><span class="w"> </span><span class="p">[</span><span class="n">NgDataColumn</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;Record&#39;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="n">i</span><span class="p">)],</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="nl">rowId:</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="o">=&gt;</span><span class="w"> </span><span class="s1">&#39;</span><span class="si">$</span><span class="n">i</span><span class="s1">&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="11"><span class="p">);</span></span></code></pre></figure>
+<p>These examples generate only the requested window. The runnable galleries replace that adapter with HTTP: <a href="/preview/components/remote-range">Blazor</a> and <a href="/docs/components/manual/remote-ranges#flutter-example">Flutter implementation</a>. Open the installed workspace; it starts the shared local API automatically. The synthetic fixture uses an in-memory server dataset; it is not a database performance benchmark.</p>
+<h2 id="lifecycle-selection-and-export">Lifecycle, selection and export</h2>
+<p>Search, sort, reader replacement and DataVersion changes reset to the start and invalidate older results. Blazor forwards cancellation tokens; Flutter ignores obsolete futures and debounces scrolling for 50ms, but does not cancel the application's transport. Dispose prevents later results from updating UI. Use a stable reader method; construct transport clients outside build/render methods.</p>
+<p>Only one accepted window is retained, including overscan/prefetch records. Framework window sizes differ; applications must not depend on exact counts. The old window is cleared during a new read. Malformed responses and transport failures display the generic error and Retry; Retry requests the current position. Export and window selection cannot use failed/loading records. Offscreen selected IDs remain caller-owned and survive scrolling, resets and errors. CanSelect and SelectionReadOnly still apply.</p>
+<p>The header selects eligible records in the <strong>loaded window</strong>, including offscreen overscan. Export scope Page means that same loaded window, not the whole server result; its label is LoadedWindowText/loadedWindowText. SelectWindowText/selectWindowText localizes the header action. Filtered/Selected export requires the separate bounded ReadExportData/readExportData adapter. Scrolling invalidates an in-flight export. Persistence remains application-owned; editing uses the existing guarded workflow and a successful refresh resets the range query.</p>
+<p>Focus the scroll area (Blazor) or a row (Flutter) before Ctrl+Home/Ctrl+End or PageUp/PageDown. Recycling can remove a focused row. Selection does not depend on DOM/widget identity. Variable-height rows, remote grouped ranges, column virtualization, totals above 100,000, full treegrid keyboard behavior and native/screen-reader certification remain outside this contract.</p>
+<h2 id="exercise">Exercise</h2>
+<p>Select the first row, jump to the end and verify R100000 and retained selection. Toggle Fail reads, scroll to a different window, clear the flag and Retry. Repeat with Malformed response. Enable Slow reads, change the search twice, and confirm the final query wins. Enable Server has 12 records and scroll into an unloaded range to observe total correction. Refresh query resets to the beginning. Prepare export downloads only the loaded window; the two full-remote scopes are disabled without an export adapter.</p>

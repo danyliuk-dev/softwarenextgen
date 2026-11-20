@@ -1,0 +1,149 @@
+<h1 id="ngspreadsheet-spreadsheet">NgSpreadsheet — Spreadsheet</h1>
+<p><a href="/docs/components/manual/index">Manual</a> · <a href="/docs/components/manual/getting-started">Getting started</a> · <a href="/docs/components/manual/code-examples">Code examples</a> · <a href="/docs/components/manual/models">Models</a></p>
+<h2 id="when-to-use-it">When to use it</h2>
+<p>Edit a small local worksheet with formulas and undo/redo.</p>
+<h2 id="appearance-and-live-example">Appearance and live example</h2>
+<p><a href="/docs/components/manual/NgSpreadsheet#live-example">Try the Blazor example</a> · <a href="/docs/components/manual/NgSpreadsheet#flutter-example">Flutter example code</a></p>
+<p>The live Blazor preview is embedded above. Use Reset to restore its initial state. Flutter implementation code is provided below; run the Flutter gallery from the installed developer workspace. Dialogs and drawers start closed; use their Open button. Tooltips appear on hover or keyboard focus.</p>
+<h2 id="behavior-and-practical-rules">Behavior and practical rules</h2>
+<p>Value/value is controlled. Apply, paste, Undo and Redo propose an immutable NgSheet through ValueChanged/onChanged; display and history change only when the parent returns that exact instance on its next parameter update. Rejection keeps the accepted sheet, history and typed formula draft. A different external replacement clears history and reloads the draft; an out-of-bounds selection resets to A1. No-op edits produce no callback or history entry. Protection applies to user actions; the parent can still replace the whole sheet programmatically. Without a callback, editing is disabled. ReadOnly/readOnly blocks all changes but permits selection and formula inspection. CanEdit/canEdit is a pure predicate receiving uppercase addresses such as A1; false protects the cell, displays a Protected marker and locks its formula input. Protected cells still recalculate when their dependencies change. Paste checks every supplied destination, including unchanged values: any protected or out-of-bounds destination rejects the entire block. TSV rows may have different widths; only supplied cells are targeted. Formulas remain literal, without relative-reference adjustment. Undo/Redo keep up to 50 accepted operations and check current protection for every raw cell value they would change. Changing protection never clears history; lifting protection re-enables eligible history operations. Captured actions cannot modify a replaced sheet or bypass a new lock; callbacks after disposal are ignored. NgSheet.Paste/paste also accepts an optional canEdit predicate for model-level atomic validation; ChangedCells/changedCells compares raw values of equal-sized sheets. Limits: 1–100 rows, 1–26 columns and 1,000 characters per cell. See <a href="/docs/components/manual/models">models and formulas</a> for formula syntax. Single sheet only: no XLSX/CSV, formatting, merges, multi-cell selection, clipboard integration or multi-sheet workbook.</p>
+<h2 id="blazor-example">Blazor example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Razor / Blazor</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Razor / Blazor code example"><code class="language-razor"><span class="code-line" data-line="1"><span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;toolbar&quot;</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="2"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;protect=!protect&quot;</span><span class="p">&gt;</span>Toggle protection<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="3"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;lockA1=!lockA1&quot;</span><span class="p">&gt;</span>Toggle A1 lock<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="4"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;accept=!accept&quot;</span><span class="p">&gt;</span>Toggle acceptance<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="5"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;readOnly=!readOnly&quot;</span><span class="p">&gt;</span>Toggle read-only<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="6"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;sheet=Initial()&quot;</span><span class="p">&gt;</span>Reset sheet<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="7"><span class="p">&lt;</span><span class="nt">NgButton</span> <span class="na">OnClick</span><span class="o">=</span><span class="s">&quot;()=&gt;sheet=new(1,1)&quot;</span><span class="p">&gt;</span>Shrink sheet<span class="p">&lt;/</span><span class="nt">NgButton</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="8"><span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="9"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Protection @(protect?&quot;enabled&quot;:&quot;disabled&quot;) · A1 @(lockA1?&quot;locked&quot;:&quot;editable&quot;) · Changes @(accept?&quot;accepted&quot;:&quot;rejected&quot;)<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="10"><span class="p">&lt;</span><span class="nt">NgSpreadsheet</span> <span class="na">Value</span><span class="o">=</span><span class="s">&quot;sheet&quot;</span> <span class="na">ValueChanged</span><span class="o">=</span><span class="s">&quot;Changed&quot;</span> <span class="na">CanEdit</span><span class="o">=</span><span class="s">&quot;Editable&quot;</span> <span class="na">ReadOnly</span><span class="o">=</span><span class="s">&quot;readOnly&quot;</span><span class="p">/&gt;</span></span>
+<span class="code-line" data-line="11"><span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Accepted A1: @sheet.Raw(&quot;A1&quot;) · Proposals: @proposals<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span></span>
+<span class="code-line" data-line="12"><span class="n">@code</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="n">NgSheet</span><span class="w"> </span><span class="n">sheet</span><span class="o">=</span><span class="n">Initial</span><span class="p">();</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">protect</span><span class="o">=</span><span class="k">true</span><span class="p">,</span><span class="n">lockA1</span><span class="p">,</span><span class="n">readOnly</span><span class="p">,</span><span class="n">accept</span><span class="o">=</span><span class="k">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">proposals</span><span class="p">;</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">Editable</span><span class="p">(</span><span class="kt">string</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">(</span><span class="o">!</span><span class="n">protect</span><span class="o">||!</span><span class="n">a</span><span class="p">.</span><span class="n">StartsWith</span><span class="p">(</span><span class="s">&quot;C&quot;</span><span class="p">))</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="o">!</span><span class="n">lockA1</span><span class="o">||</span><span class="n">a</span><span class="o">!=</span><span class="s">&quot;A1&quot;</span><span class="p">);</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">void</span><span class="w"> </span><span class="nf">Changed</span><span class="p">(</span><span class="n">NgSheet</span><span class="w"> </span><span class="n">next</span><span class="p">){</span><span class="n">proposals</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">sheet</span><span class="o">=</span><span class="n">next</span><span class="p">;}</span></span>
+<span class="code-line" data-line="18"><span class="w"> </span><span class="k">private</span><span class="w"> </span><span class="k">static</span><span class="w"> </span><span class="n">NgSheet</span><span class="w"> </span><span class="nf">Initial</span><span class="p">()</span><span class="o">=&gt;</span><span class="k">new</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="k">new</span><span class="w"> </span><span class="n">Dictionary</span><span class="o">&lt;</span><span class="kt">string</span><span class="p">,</span><span class="kt">string</span><span class="o">&gt;</span><span class="p">{{</span><span class="s">&quot;A1&quot;</span><span class="p">,</span><span class="s">&quot;10&quot;</span><span class="p">},{</span><span class="s">&quot;B1&quot;</span><span class="p">,</span><span class="s">&quot;20&quot;</span><span class="p">},{</span><span class="s">&quot;C1&quot;</span><span class="p">,</span><span class="s">&quot;=SUM(A1:B1)&quot;</span><span class="p">}});</span></span>
+<span class="code-line" data-line="19"><span class="p">}</span></span></code></pre></figure>
+<h2 id="flutter-example">Flutter example</h2>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="n">NgSheet</span><span class="w"> </span><span class="n">sheet</span><span class="o">=</span><span class="n">initial</span><span class="p">();</span></span>
+<span class="code-line" data-line="2"><span class="kt">bool</span><span class="w"> </span><span class="n">protect</span><span class="o">=</span><span class="kc">true</span><span class="p">,</span><span class="n">lockA1</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">readOnly</span><span class="o">=</span><span class="kc">false</span><span class="p">,</span><span class="n">accept</span><span class="o">=</span><span class="kc">true</span><span class="p">;</span></span>
+<span class="code-line" data-line="3"><span class="kt">int</span><span class="w"> </span><span class="n">proposals</span><span class="o">=</span><span class="m">0</span><span class="p">;</span></span>
+<span class="code-line" data-line="4"><span class="kd">static</span><span class="w"> </span><span class="n">NgSheet</span><span class="w"> </span><span class="n">initial</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">NgSheet</span><span class="p">(</span><span class="nl">rows:</span><span class="m">4</span><span class="p">,</span><span class="nl">columns:</span><span class="m">4</span><span class="p">,</span><span class="nl">cells:</span><span class="p">{</span><span class="s1">&#39;A1&#39;</span><span class="o">:</span><span class="s1">&#39;10&#39;</span><span class="p">,</span><span class="s1">&#39;B1&#39;</span><span class="o">:</span><span class="s1">&#39;20&#39;</span><span class="p">,</span><span class="s1">&#39;C1&#39;</span><span class="o">:</span><span class="s1">&#39;=SUM(A1:B1)&#39;</span><span class="p">});</span></span>
+<span class="code-line" data-line="5"><span class="kt">bool</span><span class="w"> </span><span class="n">editable</span><span class="p">(</span><span class="kt">String</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="o">=&gt;</span><span class="p">(</span><span class="o">!</span><span class="n">protect</span><span class="o">||!</span><span class="n">a</span><span class="p">.</span><span class="n">startsWith</span><span class="p">(</span><span class="s1">&#39;C&#39;</span><span class="p">))</span><span class="o">&amp;&amp;</span><span class="p">(</span><span class="o">!</span><span class="n">lockA1</span><span class="o">||</span><span class="n">a</span><span class="o">!=</span><span class="s1">&#39;A1&#39;</span><span class="p">);</span></span>
+<span class="code-line" data-line="6"><span class="n">Widget</span><span class="w"> </span><span class="n">build</span><span class="p">(</span><span class="n">BuildContext</span><span class="w"> </span><span class="n">context</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">Column</span><span class="p">(</span><span class="nl">crossAxisAlignment:</span><span class="n">CrossAxisAlignment</span><span class="p">.</span><span class="n">stretch</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="7"><span class="w"> </span><span class="n">Wrap</span><span class="p">(</span><span class="nl">spacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">runSpacing:</span><span class="m">8</span><span class="p">,</span><span class="nl">children:</span><span class="p">[</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">protect</span><span class="o">=!</span><span class="n">protect</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle protection&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">lockA1</span><span class="o">=!</span><span class="n">lockA1</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle A1 lock&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">accept</span><span class="o">=!</span><span class="n">accept</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle acceptance&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="11"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">readOnly</span><span class="o">=!</span><span class="n">readOnly</span><span class="p">),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Toggle read-only&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="12"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">sheet</span><span class="o">=</span><span class="n">initial</span><span class="p">()),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Reset sheet&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="13"><span class="w">  </span><span class="n">NgButton</span><span class="p">(</span><span class="nl">onPressed:</span><span class="p">()</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">(()</span><span class="o">=&gt;</span><span class="n">sheet</span><span class="o">=</span><span class="n">NgSheet</span><span class="p">(</span><span class="nl">rows:</span><span class="m">1</span><span class="p">,</span><span class="nl">columns:</span><span class="m">1</span><span class="p">)),</span><span class="nl">child:</span><span class="k">const</span><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Shrink sheet&#39;</span><span class="p">)),</span></span>
+<span class="code-line" data-line="14"><span class="w"> </span><span class="p">]),</span></span>
+<span class="code-line" data-line="15"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Protection </span><span class="si">${</span><span class="n">protect</span><span class="o">?</span><span class="s2">&quot;enabled&quot;</span><span class="o">:</span><span class="s2">&quot;disabled&quot;</span><span class="si">}</span><span class="s1"> · A1 </span><span class="si">${</span><span class="n">lockA1</span><span class="o">?</span><span class="s2">&quot;locked&quot;</span><span class="o">:</span><span class="s2">&quot;editable&quot;</span><span class="si">}</span><span class="s1"> · Changes </span><span class="si">${</span><span class="n">accept</span><span class="o">?</span><span class="s2">&quot;accepted&quot;</span><span class="o">:</span><span class="s2">&quot;rejected&quot;</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="16"><span class="w"> </span><span class="n">NgSpreadsheet</span><span class="p">(</span><span class="nl">value:</span><span class="n">sheet</span><span class="p">,</span><span class="nl">canEdit:</span><span class="n">editable</span><span class="p">,</span><span class="nl">readOnly:</span><span class="n">readOnly</span><span class="p">,</span><span class="nl">onChanged:</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">=&gt;</span><span class="n">setState</span><span class="p">((){</span><span class="n">proposals</span><span class="o">++</span><span class="p">;</span><span class="k">if</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span><span class="n">sheet</span><span class="o">=</span><span class="n">v</span><span class="p">;})),</span></span>
+<span class="code-line" data-line="17"><span class="w"> </span><span class="n">Text</span><span class="p">(</span><span class="s1">&#39;Accepted A1: </span><span class="si">${</span><span class="n">sheet</span><span class="p">.</span><span class="n">raw</span><span class="p">(</span><span class="s2">&quot;A1&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1"> · Proposals: </span><span class="si">$</span><span class="n">proposals</span><span class="s1">&#39;</span><span class="p">),</span></span>
+<span class="code-line" data-line="18"><span class="p">]);</span></span></code></pre></figure>
+<h2 id="blazor-parameters-and-events">Blazor parameters and events</h2>
+<p>Names are case-sensitive. <code>?</code> permits null. <code>EditorRequired</code> parameters are marked required; other values use the initializer or CLR default.</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default / requirement</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Label</code></td>
+<td><code>string</code></td>
+<td>&quot;Spreadsheet&quot;</td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>Value</code></td>
+<td><code>NgSheet</code></td>
+<td>required</td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>ValueChanged</code></td>
+<td><code>EventCallback&lt;NgSheet&gt;</code></td>
+<td>not set</td>
+<td>New value for the parent to store and pass back.</td>
+</tr>
+<tr>
+<td><code>ReadOnly</code></td>
+<td><code>bool</code></td>
+<td>false</td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>CanEdit</code></td>
+<td><code>Func&lt;string,bool&gt;?</code></td>
+<td>not set</td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="flutter-parameters-and-events">Flutter parameters and events</h2>
+<p><code>required</code> marks a mandatory argument even if its type is nullable. <code>key</code> is the standard Flutter Key. The exact constructor below specifies defaults.</p>
+<table>
+<thead>
+<tr>
+<th>Argument</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>label</code></td>
+<td><code>String</code></td>
+<td>Visible label or accessible name.</td>
+</tr>
+<tr>
+<td><code>value</code></td>
+<td><code>NgSheet</code></td>
+<td>Current value; see state ownership and model rules above.</td>
+</tr>
+<tr>
+<td><code>onChanged</code></td>
+<td><code>ValueChanged&lt;NgSheet&gt;?</code></td>
+<td>Store the new value using setState or your state manager.</td>
+</tr>
+<tr>
+<td><code>readOnly</code></td>
+<td><code>bool</code></td>
+<td>Prevent changes while retaining supported viewing actions.</td>
+</tr>
+<tr>
+<td><code>canEdit</code></td>
+<td><code>bool Function(String)?</code></td>
+<td>See the behavior rules and model contract above.</td>
+</tr>
+</tbody>
+</table>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Dart / Flutter</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Dart / Flutter code example"><code class="language-dart"><span class="code-line" data-line="1"><span class="k">const</span><span class="w"> </span><span class="n">NgSpreadsheet</span><span class="p">({</span></span>
+<span class="code-line" data-line="2"><span class="w">    </span><span class="k">super</span><span class="p">.</span><span class="n">key</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;Spreadsheet&#39;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">    </span><span class="kd">required</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="n">value</span><span class="p">,</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">onChanged</span><span class="p">,</span></span>
+<span class="code-line" data-line="6"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">readOnly</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="n">canEdit</span><span class="p">,</span></span>
+<span class="code-line" data-line="8"><span class="w">  </span><span class="p">});</span></span></code></pre></figure>
+<h2 id="integration-and-troubleshooting">Integration and troubleshooting</h2>
+<p>If the UI does not update, confirm that the parent stores callback values and passes them back. Blazor event handlers need interactive rendering; Flutter requires setState or a state manager. Submit form data only after successful validation.</p>
+<p>Check accessible labels, empty/invalid states, disabled actions and narrow layouts. Keyboard support is not full screen-reader certification. Current visual verification targets Web in visible Chrome on Linux/iMac; native mobile platforms are a separate phase.</p>
+<h2 id="source-and-complete-examples">Source and complete examples</h2>
+<ul>
+<li><span>Blazor source</span></li>
+<li><span>Flutter source</span></li>
+<li><a href="/docs/components/manual/getting-started#run-the-included-applications">Galleries and launch commands</a></li>
+<li><span>Capability matrix</span></li>
+</ul>
+<p>Use the installed SDK and the Getting started guide to add this component to your application.</p>

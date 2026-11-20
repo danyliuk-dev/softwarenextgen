@@ -1,0 +1,283 @@
+{
+  "title": "Regional inventory",
+  "pages": [
+    {
+      "width": 595.28,
+      "height": 841.89,
+      "commands": [
+        {
+          "type": "text",
+          "text": "East · Inventory",
+          "x": 42,
+          "y": 42,
+          "width": 511.28,
+          "height": 28.6825,
+          "style": {
+            "size": 22,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Minimum quantity: 0",
+          "x": 42,
+          "y": 82.6825,
+          "width": 511.28,
+          "height": 13.037500000000001,
+          "style": {
+            "size": 10,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 107.72,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#EDF1F8"
+        },
+        {
+          "type": "text",
+          "text": "Item",
+          "x": 50,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Region",
+          "x": 177.82,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Qty",
+          "x": 305.64,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Value",
+          "x": 433.46,
+          "y": 115.72,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": true,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 134.95375,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 135.45375,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#FFFFFF"
+        },
+        {
+          "type": "text",
+          "text": "Monitor",
+          "x": 50,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "East",
+          "x": 177.82,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "8",
+          "x": 305.64,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,920.00",
+          "x": 433.46,
+          "y": 143.45375,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 162.6875,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 163.1875,
+          "width": 511.28,
+          "height": 27.73375,
+          "fill": "#F7F9FC"
+        },
+        {
+          "type": "text",
+          "text": "Chair",
+          "x": 50,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "East",
+          "x": 177.82,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "12",
+          "x": 305.64,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "1,440.00",
+          "x": 433.46,
+          "y": 171.1875,
+          "width": 111.82,
+          "height": 11.73375,
+          "style": {
+            "size": 9,
+            "bold": false,
+            "color": "#24324B",
+            "align": "left"
+          }
+        },
+        {
+          "type": "rect",
+          "x": 42,
+          "y": 190.42125,
+          "width": 511.28,
+          "height": 0.5,
+          "fill": "#E2E7EF"
+        },
+        {
+          "type": "text",
+          "text": "",
+          "x": 42,
+          "y": 16,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "left"
+          }
+        },
+        {
+          "type": "text",
+          "text": "Page 1 / 1",
+          "x": 42,
+          "y": 815.89,
+          "width": 511.28,
+          "height": 10.430000000000001,
+          "style": {
+            "size": 8,
+            "bold": false,
+            "color": "#66748A",
+            "align": "right"
+          }
+        }
+      ]
+    }
+  ]
+}

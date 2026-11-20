@@ -1,0 +1,62 @@
+{
+  "template": {
+    "version": 1,
+    "title": "Imported inventory",
+    "blocks": [
+      {
+        "type": "text",
+        "text": "Imported inventory",
+        "style": {
+          "size": 22,
+          "bold": true
+        }
+      },
+      {
+        "type": "table",
+        "source": "items",
+        "columns": [
+          {
+            "title": "Item",
+            "field": "Item"
+          },
+          {
+            "title": "Region",
+            "field": "Region"
+          },
+          {
+            "title": "Quantity",
+            "field": "Quantity"
+          },
+          {
+            "title": "Price",
+            "field": "Price"
+          }
+        ]
+      }
+    ]
+  },
+  "data": {
+    "items": [
+      {
+        "Item": "Monitor",
+        "Region": "East",
+        "Quantity": 8,
+        "Price": 240
+      },
+      {
+        "Item": "Desk",
+        "Region": "West",
+        "Quantity": 2,
+        "Price": 450
+      },
+      {
+        "Item": "Chair",
+        "Region": "East",
+        "Quantity": 12,
+        "Price": 120
+      }
+    ]
+  },
+  "parameters": {},
+  "useSnapshot": true
+}

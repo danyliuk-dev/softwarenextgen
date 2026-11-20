@@ -1,0 +1,12 @@
+{
+  "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+  "title": "Invalid report parameters",
+  "status": 400,
+  "detail": "minimumQuantity: Enter a whole number of zero or greater.",
+  "parameterErrors": [
+    {
+      "parameter": "minimumQuantity",
+      "message": "Enter a whole number of zero or greater."
+    }
+  ]
+}

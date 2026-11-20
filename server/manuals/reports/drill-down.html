@@ -1,0 +1,139 @@
+<h1 id="row-drill-down-and-detail-reports">Row drill-down and detail reports</h1>
+<p>Installed examples: copy <code>SDK</code> from the application resources to a writable folder and run tool commands from that copied SDK folder. It contains <code>tools/</code> and <code>samples/</code>. Python tools require Python 3 and connect to the <a href="/docs/reports/developer-guide#start-the-installed-engine-for-integration">installed integration engine</a>; they do not compile the product. Adjust <code>--base</code> if you chose a different port. Output paths are relative to your working folder.</p>
+<p>Drill-down opens an embedded detail report from a rendered table row. It is a
+Viewer action: it does not insert pages into the parent report or load a remote
+file. Up to three detail levels are supported. Ordinary templates remain
+noninteractive unless a table has a <code>drillDown</code> definition.</p>
+<h2 id="try-the-example">Try the example</h2>
+<ol>
+<li>Save your current project. In the built-in manual, download <strong>Interactive
+orders project</strong>, then open it using <strong>Open project</strong>. The matching source
+files are <code>samples/drill-down.nrtemplate</code> and <code>samples/drill-down.data.json</code>.</li>
+<li>Preview contains 18 orders on multiple pages. The strip above the page controls
+identifies interactive rows. Hover a row to see its outline/action label;
+click it, or focus it with Tab and press Enter/Space.</li>
+<li><strong>Order details</strong> shows the selected customer's order lines. Select a line
+to open <strong>Line details</strong>. The breadcrumb shows the current report path.</li>
+<li>Choose <strong>Back</strong> to return one level. The parent's calculated document, page,
+zoom, search and scroll position are restored without regenerating it.</li>
+<li>Export PDF, HTML, images or Office while a detail is open: the file contains
+the displayed detail report. Back changes export back to the parent.</li>
+</ol>
+<p>The root template/data editors and parameter fields remain the root project's
+editors. Save project and Save template preserve that root, including all
+embedded detail templates. Unfinished edits do not affect a drill-down click.
+A successful Generate preview or project load starts a new root and clears
+navigation history. A failed detail request displays an error and leaves the
+parent view/request/history intact. There is no URL history, forward button,
+automatic detail parameter dialog, or persistence of the navigation stack across
+reloads.</p>
+<h2 id="configure-a-table">Configure a table</h2>
+<ol>
+<li>Select an ordinary Table in Design, including a table inside a repeated
+section. Choose <strong>Add row drill-down</strong> / <strong>Edit row drill-down</strong> in Properties.</li>
+<li>Set an action label (1–120 characters). The label appears in the hover tooltip
+and the accessible row name; it is plain text, not a binding or URL.</li>
+<li>Paste a complete v1 detail-template JSON, or import a <code>.nrtemplate</code>/<code>.json</code>
+file (up to 2 MB). Create that template in a separate Studio project if a
+visual editor is preferred, then export its template and import it here.</li>
+<li>Use <code>{{data.row.id}}</code>, <code>{{data.row.customer}}</code>, etc. for the selected record.
+A child table can use <code>source: &quot;row.lines&quot;</code>. <code>data.source</code> is the complete
+parent report data after its beforeRender event. It is not the enclosing
+repeat/master record. For a second-level detail, <code>data.source.row.id</code> refers
+to the first selected record.</li>
+<li>Apply runs static validation before changing the parent template. Invalid
+JSON, page settings, blocks or excessive detail nesting leave the dialog open.
+Generate and open an actual row to check runtime data bindings and parameters.</li>
+<li>Cancel discards changes. <strong>Remove drill-down</strong> removes only the table action.
+Apply/remove participate in the existing Undo/Redo history. Save project keeps
+the definition inline; no external template file is needed afterward.</li>
+</ol>
+<p>A minimal table action:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">JSON</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="JSON code example"><code class="language-json"><span class="code-line" data-line="1"><span class="p">{</span></span>
+<span class="code-line" data-line="2"><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;table&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;orders&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span><span class="nt">&quot;columns&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="5"><span class="w">    </span><span class="p">{</span></span>
+<span class="code-line" data-line="6"><span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="7"><span class="w">      </span><span class="nt">&quot;field&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;id&quot;</span></span>
+<span class="code-line" data-line="8"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="9"><span class="w">  </span><span class="p">],</span></span>
+<span class="code-line" data-line="10"><span class="w">  </span><span class="nt">&quot;drillDown&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="11"><span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Open order details&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="12"><span class="w">    </span><span class="nt">&quot;template&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span></span>
+<span class="code-line" data-line="13"><span class="w">      </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span></span>
+<span class="code-line" data-line="14"><span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order details&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="15"><span class="w">      </span><span class="nt">&quot;blocks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span></span>
+<span class="code-line" data-line="16"><span class="w">        </span><span class="p">{</span></span>
+<span class="code-line" data-line="17"><span class="w">          </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;text&quot;</span><span class="p">,</span></span>
+<span class="code-line" data-line="18"><span class="w">          </span><span class="nt">&quot;text&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Order {{data.row.id}}&quot;</span></span>
+<span class="code-line" data-line="19"><span class="w">        </span><span class="p">}</span></span>
+<span class="code-line" data-line="20"><span class="w">      </span><span class="p">]</span></span>
+<span class="code-line" data-line="21"><span class="w">    </span><span class="p">}</span></span>
+<span class="code-line" data-line="22"><span class="w">  </span><span class="p">}</span></span>
+<span class="code-line" data-line="23"><span class="p">}</span></span></code></pre></figure>
+<p>Flow, Fixed, grouped, sorted, filtered, master-detail and repeated-section tables
+all associate actions with the <strong>original source row</strong>, after filtering/sorting.
+Calculated display columns do not become fields in <code>data.row</code>. A split row has
+one action on each page fragment, all selecting the same record. Headers, group
+bands and totals have no actions. Charts, cross-tabs, standalone text and images
+do not provide drill-down actions in this stage. Empty tables have no actions.
+In master-detail tables the selected record is the child row; retain a parent ID
+in your data if the detail needs it.</p>
+<h2 id="parameters-scripts-and-exports">Parameters, scripts and exports</h2>
+<p>Only normalized parent parameters whose names are declared by the detail
+are inherited. Others are omitted; detail defaults/required/type/choice/range
+rules apply normally. There is no implicit conversion or field-to-parameter
+mapping. Use <code>data.row</code> for row values. Detail dialog Load/Change events are not
+run; supply inherited values or defaults. Missing required values are reported
+when opening the row.</p>
+<p>The parent is not rerun on navigation: source data and row values come from the
+calculated parent snapshot, including beforeRender output. The selected detail
+runs its own events under the host's existing trusted-script opt-in. Back restores
+cached pages without rerunning either report. Export follows the saved request
+of the currently displayed report and reruns that report's scripts, as existing
+PDF/HTML export does; time/random-dependent scripts may change its values.</p>
+<p>All file exports are <strong>static</strong>. PDF/HTML/PNG/SVG/XLSX/DOCX do not contain clickable
+drill-down actions, the navigation stack, embedded detail definitions or hidden
+source fields merely because the parent had drill-down. Generated page content
+itself still follows the selected template. Save the project for interactivity.</p>
+<h2 id="protocol-and-cli">Protocol and CLI</h2>
+<p><code>POST /api/preview</code> still accepts template/data/parameters. Interactive results
+add an optional <code>drillDown</code> object:</p>
+<ul>
+<li><code>source</code>: owned snapshot of the parent data after beforeRender;</li>
+<li><code>parameters</code>: normalized parent parameters;</li>
+<li><code>targets</code>: deduplicated action label/detail-template definitions;</li>
+<li><code>rows</code>: zero-based target index and the original record;</li>
+<li><code>regions</code>: zero-based page/row indexes plus x/y/width/height in page points.</li>
+</ul>
+<p>The context contains entire records and parent data, including fields not drawn
+on the page. Preview JSON is therefore a data-bearing artifact; use static
+exports when only rendered content is intended. The object is omitted when there
+are no interactive rows. Drawing commands remain unchanged for existing clients.</p>
+<p>To open a region, look up <code>rows[region.row]</code> and its target. Submit that target's
+template to <code>/api/preview</code> with <code>data: {row: selectedRow, source: context.source}</code>
+and matching inherited parameters. The existing same-origin, request-size and
+script rules apply. .NET callers can use <code>DrillDown.Open(document, rowIndex)</code> to
+construct a <code>ReportDetailRequest</code>, then call the ordinary engine/exporter.</p>
+<p>With Studio running:</p>
+<figure class="code-example" data-code-example><figcaption><span class="code-language">Bash</span><div class="code-actions"><button type="button" data-code-wrap aria-pressed="false">Wrap lines</button><button type="button" data-code-copy>Copy code</button><span class="sr-only" data-code-status aria-live="polite"></span></div></figcaption><pre tabindex="0" aria-label="Bash code example"><code class="language-bash"><span class="code-line" data-line="1"><span class="c1"># Validate the parent, then export order 13&#39;s first detail line.</span></span>
+<span class="code-line" data-line="2">python3<span class="w"> </span>tools/report-tool.py<span class="w"> </span>--template<span class="w"> </span>samples/drill-down.nrtemplate<span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="3"><span class="w">  </span>--data<span class="w"> </span>samples/drill-down.data.json<span class="w"> </span>--drill-row<span class="w"> </span><span class="m">13</span><span class="w"> </span>--drill-row<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span></span>
+<span class="code-line" data-line="4"><span class="w">  </span>--format<span class="w"> </span>pdf<span class="w"> </span>--output<span class="w"> </span>artifacts/line-detail.pdf</span></code></pre></figure>
+<p>CLI row numbers are <strong>1-based indexes of the interactive rows</strong>, in table/render
+order after filtering/sorting, not data-array indexes or per-page row numbers.
+Repeat <code>--drill-row</code> up to three times. All existing output formats and page
+selection options apply to the final detail. <code>--format project</code> deliberately
+saves that final detail request as a separate project; Studio Save project keeps
+the root. The standalone .NET CLI exports the supplied root template as before.</p>
+<h2 id="limits-and-verification">Limits and verification</h2>
+<p>Three nested detail-template levels; 10,000 interactive rows and 8 MB total
+serialized row data per generated report. Filtering reduces the interactive
+rows; merely hiding a column does not reduce retained row data. Existing template
+JSON depth, page/layout, request (12 MB), imported project (8 MB) and exporter
+limits still apply. An oversized detail request fails without changing the
+parent. A child template has its own page settings, resources and parameters;
+these are not inherited except for matching parameter values.</p>
+<p>The local Linux iMac is the verification platform. macOS and Windows remain
+unverified. The example contains only synthetic data.</p>

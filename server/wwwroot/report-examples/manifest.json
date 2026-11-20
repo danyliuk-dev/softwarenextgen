@@ -1,0 +1,575 @@
+{
+  "samples": {
+    "sales": {
+      "label": "Sales summary",
+      "pages": 3,
+      "request": "samples/sales/request.json",
+      "response": "samples/sales/response.json",
+      "project": "samples/sales/sample.nrproject.json",
+      "pdf": "samples/sales/report.pdf",
+      "html": "samples/sales/report.html",
+      "images": [
+        "samples/sales/page-1.png",
+        "samples/sales/page-2.png",
+        "samples/sales/page-3.png"
+      ],
+      "exports": {
+        "xlsx-editable-1-1": "samples/sales/xlsx-editable-1-1.xlsx",
+        "xlsx-pages-1-1": "samples/sales/xlsx-pages-1-1.xlsx",
+        "docx-editable-1-1": "samples/sales/docx-editable-1-1.docx",
+        "docx-pages-1-1": "samples/sales/docx-pages-1-1.docx",
+        "png-96-1-1": "samples/sales/png-96-1-1.zip",
+        "png-150-1-1": "samples/sales/png-150-1-1.zip",
+        "png-300-1-1": "samples/sales/png-300-1-1.zip",
+        "svg-96-1-1": "samples/sales/svg-96-1-1.zip",
+        "xlsx-editable-1-2": "samples/sales/xlsx-editable-1-2.xlsx",
+        "xlsx-pages-1-2": "samples/sales/xlsx-pages-1-2.xlsx",
+        "docx-editable-1-2": "samples/sales/docx-editable-1-2.docx",
+        "docx-pages-1-2": "samples/sales/docx-pages-1-2.docx",
+        "png-96-1-2": "samples/sales/png-96-1-2.zip",
+        "png-150-1-2": "samples/sales/png-150-1-2.zip",
+        "png-300-1-2": "samples/sales/png-300-1-2.zip",
+        "svg-96-1-2": "samples/sales/svg-96-1-2.zip",
+        "xlsx-editable-1-3": "samples/sales/xlsx-editable-1-3.xlsx",
+        "xlsx-pages-1-3": "samples/sales/xlsx-pages-1-3.xlsx",
+        "docx-editable-1-3": "samples/sales/docx-editable-1-3.docx",
+        "docx-pages-1-3": "samples/sales/docx-pages-1-3.docx",
+        "png-96-1-3": "samples/sales/png-96-1-3.zip",
+        "png-150-1-3": "samples/sales/png-150-1-3.zip",
+        "png-300-1-3": "samples/sales/png-300-1-3.zip",
+        "svg-96-1-3": "samples/sales/svg-96-1-3.zip",
+        "xlsx-editable-2-2": "samples/sales/xlsx-editable-2-2.xlsx",
+        "xlsx-pages-2-2": "samples/sales/xlsx-pages-2-2.xlsx",
+        "docx-editable-2-2": "samples/sales/docx-editable-2-2.docx",
+        "docx-pages-2-2": "samples/sales/docx-pages-2-2.docx",
+        "png-96-2-2": "samples/sales/png-96-2-2.zip",
+        "png-150-2-2": "samples/sales/png-150-2-2.zip",
+        "png-300-2-2": "samples/sales/png-300-2-2.zip",
+        "svg-96-2-2": "samples/sales/svg-96-2-2.zip",
+        "xlsx-editable-2-3": "samples/sales/xlsx-editable-2-3.xlsx",
+        "xlsx-pages-2-3": "samples/sales/xlsx-pages-2-3.xlsx",
+        "docx-editable-2-3": "samples/sales/docx-editable-2-3.docx",
+        "docx-pages-2-3": "samples/sales/docx-pages-2-3.docx",
+        "png-96-2-3": "samples/sales/png-96-2-3.zip",
+        "png-150-2-3": "samples/sales/png-150-2-3.zip",
+        "png-300-2-3": "samples/sales/png-300-2-3.zip",
+        "svg-96-2-3": "samples/sales/svg-96-2-3.zip",
+        "xlsx-editable-3-3": "samples/sales/xlsx-editable-3-3.xlsx",
+        "xlsx-pages-3-3": "samples/sales/xlsx-pages-3-3.xlsx",
+        "docx-editable-3-3": "samples/sales/docx-editable-3-3.docx",
+        "docx-pages-3-3": "samples/sales/docx-pages-3-3.docx",
+        "png-96-3-3": "samples/sales/png-96-3-3.zip",
+        "png-150-3-3": "samples/sales/png-150-3-3.zip",
+        "png-300-3-3": "samples/sales/png-300-3-3.zip",
+        "svg-96-3-3": "samples/sales/svg-96-3-3.zip"
+      }
+    },
+    "charts": {
+      "label": "Charts and visualizations",
+      "pages": 3,
+      "request": "samples/charts/request.json",
+      "response": "samples/charts/response.json",
+      "project": "samples/charts/sample.nrproject.json",
+      "pdf": "samples/charts/report.pdf",
+      "html": "samples/charts/report.html",
+      "images": [
+        "samples/charts/page-1.png",
+        "samples/charts/page-2.png",
+        "samples/charts/page-3.png"
+      ],
+      "exports": {
+        "xlsx-editable-1-1": "samples/charts/xlsx-editable-1-1.xlsx",
+        "xlsx-pages-1-1": "samples/charts/xlsx-pages-1-1.xlsx",
+        "docx-editable-1-1": "samples/charts/docx-editable-1-1.docx",
+        "docx-pages-1-1": "samples/charts/docx-pages-1-1.docx",
+        "png-96-1-1": "samples/charts/png-96-1-1.zip",
+        "png-150-1-1": "samples/charts/png-150-1-1.zip",
+        "png-300-1-1": "samples/charts/png-300-1-1.zip",
+        "svg-96-1-1": "samples/charts/svg-96-1-1.zip",
+        "xlsx-editable-1-2": "samples/charts/xlsx-editable-1-2.xlsx",
+        "xlsx-pages-1-2": "samples/charts/xlsx-pages-1-2.xlsx",
+        "docx-editable-1-2": "samples/charts/docx-editable-1-2.docx",
+        "docx-pages-1-2": "samples/charts/docx-pages-1-2.docx",
+        "png-96-1-2": "samples/charts/png-96-1-2.zip",
+        "png-150-1-2": "samples/charts/png-150-1-2.zip",
+        "png-300-1-2": "samples/charts/png-300-1-2.zip",
+        "svg-96-1-2": "samples/charts/svg-96-1-2.zip",
+        "xlsx-editable-1-3": "samples/charts/xlsx-editable-1-3.xlsx",
+        "xlsx-pages-1-3": "samples/charts/xlsx-pages-1-3.xlsx",
+        "docx-editable-1-3": "samples/charts/docx-editable-1-3.docx",
+        "docx-pages-1-3": "samples/charts/docx-pages-1-3.docx",
+        "png-96-1-3": "samples/charts/png-96-1-3.zip",
+        "png-150-1-3": "samples/charts/png-150-1-3.zip",
+        "png-300-1-3": "samples/charts/png-300-1-3.zip",
+        "svg-96-1-3": "samples/charts/svg-96-1-3.zip",
+        "xlsx-editable-2-2": "samples/charts/xlsx-editable-2-2.xlsx",
+        "xlsx-pages-2-2": "samples/charts/xlsx-pages-2-2.xlsx",
+        "docx-editable-2-2": "samples/charts/docx-editable-2-2.docx",
+        "docx-pages-2-2": "samples/charts/docx-pages-2-2.docx",
+        "png-96-2-2": "samples/charts/png-96-2-2.zip",
+        "png-150-2-2": "samples/charts/png-150-2-2.zip",
+        "png-300-2-2": "samples/charts/png-300-2-2.zip",
+        "svg-96-2-2": "samples/charts/svg-96-2-2.zip",
+        "xlsx-editable-2-3": "samples/charts/xlsx-editable-2-3.xlsx",
+        "xlsx-pages-2-3": "samples/charts/xlsx-pages-2-3.xlsx",
+        "docx-editable-2-3": "samples/charts/docx-editable-2-3.docx",
+        "docx-pages-2-3": "samples/charts/docx-pages-2-3.docx",
+        "png-96-2-3": "samples/charts/png-96-2-3.zip",
+        "png-150-2-3": "samples/charts/png-150-2-3.zip",
+        "png-300-2-3": "samples/charts/png-300-2-3.zip",
+        "svg-96-2-3": "samples/charts/svg-96-2-3.zip",
+        "xlsx-editable-3-3": "samples/charts/xlsx-editable-3-3.xlsx",
+        "xlsx-pages-3-3": "samples/charts/xlsx-pages-3-3.xlsx",
+        "docx-editable-3-3": "samples/charts/docx-editable-3-3.docx",
+        "docx-pages-3-3": "samples/charts/docx-pages-3-3.docx",
+        "png-96-3-3": "samples/charts/png-96-3-3.zip",
+        "png-150-3-3": "samples/charts/png-150-3-3.zip",
+        "png-300-3-3": "samples/charts/png-300-3-3.zip",
+        "svg-96-3-3": "samples/charts/svg-96-3-3.zip"
+      }
+    },
+    "parameters-east-0": {
+      "label": "East · minimum 0",
+      "pages": 1,
+      "request": "samples/parameters-east-0/request.json",
+      "response": "samples/parameters-east-0/response.json",
+      "project": "samples/parameters-east-0/sample.nrproject.json",
+      "pdf": "samples/parameters-east-0/report.pdf",
+      "html": "samples/parameters-east-0/report.html",
+      "images": [
+        "samples/parameters-east-0/page-1.png"
+      ],
+      "exports": {}
+    },
+    "parameters-east-5": {
+      "label": "East · minimum 5",
+      "pages": 1,
+      "request": "samples/parameters-east-5/request.json",
+      "response": "samples/parameters-east-5/response.json",
+      "project": "samples/parameters-east-5/sample.nrproject.json",
+      "pdf": "samples/parameters-east-5/report.pdf",
+      "html": "samples/parameters-east-5/report.html",
+      "images": [
+        "samples/parameters-east-5/page-1.png"
+      ],
+      "exports": {}
+    },
+    "parameters-east-10": {
+      "label": "East · minimum 10",
+      "pages": 1,
+      "request": "samples/parameters-east-10/request.json",
+      "response": "samples/parameters-east-10/response.json",
+      "project": "samples/parameters-east-10/sample.nrproject.json",
+      "pdf": "samples/parameters-east-10/report.pdf",
+      "html": "samples/parameters-east-10/report.html",
+      "images": [
+        "samples/parameters-east-10/page-1.png"
+      ],
+      "exports": {}
+    },
+    "parameters-west-0": {
+      "label": "West · minimum 0",
+      "pages": 1,
+      "request": "samples/parameters-west-0/request.json",
+      "response": "samples/parameters-west-0/response.json",
+      "project": "samples/parameters-west-0/sample.nrproject.json",
+      "pdf": "samples/parameters-west-0/report.pdf",
+      "html": "samples/parameters-west-0/report.html",
+      "images": [
+        "samples/parameters-west-0/page-1.png"
+      ],
+      "exports": {}
+    },
+    "parameters-west-5": {
+      "label": "West · minimum 5",
+      "pages": 1,
+      "request": "samples/parameters-west-5/request.json",
+      "response": "samples/parameters-west-5/response.json",
+      "project": "samples/parameters-west-5/sample.nrproject.json",
+      "pdf": "samples/parameters-west-5/report.pdf",
+      "html": "samples/parameters-west-5/report.html",
+      "images": [
+        "samples/parameters-west-5/page-1.png"
+      ],
+      "exports": {}
+    },
+    "parameters-west-10": {
+      "label": "West · minimum 10",
+      "pages": 1,
+      "request": "samples/parameters-west-10/request.json",
+      "response": "samples/parameters-west-10/response.json",
+      "project": "samples/parameters-west-10/sample.nrproject.json",
+      "pdf": "samples/parameters-west-10/report.pdf",
+      "html": "samples/parameters-west-10/report.html",
+      "images": [
+        "samples/parameters-west-10/page-1.png"
+      ],
+      "exports": {}
+    },
+    "imported": {
+      "label": "Imported inventory",
+      "pages": 1,
+      "request": "samples/imported/request.json",
+      "response": "samples/imported/response.json",
+      "project": "samples/imported/sample.nrproject.json",
+      "pdf": "samples/imported/report.pdf",
+      "html": "samples/imported/report.html",
+      "images": [
+        "samples/imported/page-1.png"
+      ],
+      "exports": {}
+    },
+    "prepared-10": {
+      "label": "Regional revenue · minimum 10",
+      "pages": 1,
+      "request": "samples/prepared-10/request.json",
+      "response": "samples/prepared-10/response.json",
+      "project": "samples/prepared-10/sample.nrproject.json",
+      "pdf": "samples/prepared-10/report.pdf",
+      "html": "samples/prepared-10/report.html",
+      "images": [
+        "samples/prepared-10/page-1.png"
+      ],
+      "exports": {},
+      "prepared": "samples/prepared-10/prepared.json"
+    },
+    "prepared-60": {
+      "label": "Regional revenue · minimum 60",
+      "pages": 1,
+      "request": "samples/prepared-60/request.json",
+      "response": "samples/prepared-60/response.json",
+      "project": "samples/prepared-60/sample.nrproject.json",
+      "pdf": "samples/prepared-60/report.pdf",
+      "html": "samples/prepared-60/report.html",
+      "images": [
+        "samples/prepared-60/page-1.png"
+      ],
+      "exports": {},
+      "prepared": "samples/prepared-60/prepared.json"
+    },
+    "prepared-100": {
+      "label": "Regional revenue · minimum 100",
+      "pages": 1,
+      "request": "samples/prepared-100/request.json",
+      "response": "samples/prepared-100/response.json",
+      "project": "samples/prepared-100/sample.nrproject.json",
+      "pdf": "samples/prepared-100/report.pdf",
+      "html": "samples/prepared-100/report.html",
+      "images": [
+        "samples/prepared-100/page-1.png"
+      ],
+      "exports": {},
+      "prepared": "samples/prepared-100/prepared.json"
+    },
+    "logic-0": {
+      "label": "Inventory script · minimum 0",
+      "pages": 1,
+      "request": "samples/logic-0/request.json",
+      "response": "samples/logic-0/response.json",
+      "project": "samples/logic-0/sample.nrproject.json",
+      "pdf": "samples/logic-0/report.pdf",
+      "html": "samples/logic-0/report.html",
+      "images": [
+        "samples/logic-0/page-1.png"
+      ],
+      "exports": {}
+    },
+    "logic-5": {
+      "label": "Inventory script · minimum 5",
+      "pages": 1,
+      "request": "samples/logic-5/request.json",
+      "response": "samples/logic-5/response.json",
+      "project": "samples/logic-5/sample.nrproject.json",
+      "pdf": "samples/logic-5/report.pdf",
+      "html": "samples/logic-5/report.html",
+      "images": [
+        "samples/logic-5/page-1.png"
+      ],
+      "exports": {}
+    },
+    "logic-10": {
+      "label": "Inventory script · minimum 10",
+      "pages": 1,
+      "request": "samples/logic-10/request.json",
+      "response": "samples/logic-10/response.json",
+      "project": "samples/logic-10/sample.nrproject.json",
+      "pdf": "samples/logic-10/report.pdf",
+      "html": "samples/logic-10/report.html",
+      "images": [
+        "samples/logic-10/page-1.png"
+      ],
+      "exports": {}
+    },
+    "orders": {
+      "label": "Order summary",
+      "pages": 1,
+      "request": "samples/orders/request.json",
+      "response": "samples/orders/response.json",
+      "project": "samples/orders/sample.nrproject.json",
+      "pdf": "samples/orders/report.pdf",
+      "html": "samples/orders/report.html",
+      "images": [
+        "samples/orders/page-1.png"
+      ],
+      "exports": {}
+    },
+    "order-ord-001": {
+      "label": "ORD-001 · Central office",
+      "pages": 1,
+      "request": "samples/order-ord-001/request.json",
+      "response": "samples/order-ord-001/response.json",
+      "project": "samples/order-ord-001/sample.nrproject.json",
+      "pdf": "samples/order-ord-001/report.pdf",
+      "html": "samples/order-ord-001/report.html",
+      "images": [
+        "samples/order-ord-001/page-1.png"
+      ],
+      "exports": {}
+    },
+    "order-ord-002": {
+      "label": "ORD-002 · West branch",
+      "pages": 1,
+      "request": "samples/order-ord-002/request.json",
+      "response": "samples/order-ord-002/response.json",
+      "project": "samples/order-ord-002/sample.nrproject.json",
+      "pdf": "samples/order-ord-002/report.pdf",
+      "html": "samples/order-ord-002/report.html",
+      "images": [
+        "samples/order-ord-002/page-1.png"
+      ],
+      "exports": {}
+    },
+    "order-ord-003": {
+      "label": "ORD-003 · North branch",
+      "pages": 1,
+      "request": "samples/order-ord-003/request.json",
+      "response": "samples/order-ord-003/response.json",
+      "project": "samples/order-ord-003/sample.nrproject.json",
+      "pdf": "samples/order-ord-003/report.pdf",
+      "html": "samples/order-ord-003/report.html",
+      "images": [
+        "samples/order-ord-003/page-1.png"
+      ],
+      "exports": {}
+    },
+    "http-1": {
+      "label": "HTTP snapshot 1",
+      "pages": 1,
+      "request": "samples/http-1/request.json",
+      "response": "samples/http-1/response.json",
+      "project": "samples/http-1/sample.nrproject.json",
+      "pdf": "samples/http-1/report.pdf",
+      "html": "samples/http-1/report.html",
+      "images": [
+        "samples/http-1/page-1.png"
+      ],
+      "exports": {}
+    },
+    "http-2": {
+      "label": "HTTP snapshot 2",
+      "pages": 1,
+      "request": "samples/http-2/request.json",
+      "response": "samples/http-2/response.json",
+      "project": "samples/http-2/sample.nrproject.json",
+      "pdf": "samples/http-2/report.pdf",
+      "html": "samples/http-2/report.html",
+      "images": [
+        "samples/http-2/page-1.png"
+      ],
+      "exports": {}
+    }
+  },
+  "topics": {
+    "overview": {
+      "mode": "viewer",
+      "title": "Create, preview and export a report",
+      "description": "Choose a sample, turn its pages and download the generated report.",
+      "sample": "sales"
+    },
+    "index": {
+      "mode": "tour",
+      "title": "Choose a reporting workflow",
+      "description": "Open a working example for the task you want to explore.",
+      "sample": "sales"
+    },
+    "agent-authoring": {
+      "mode": "agent",
+      "title": "From a template to a portable project",
+      "description": "Inspect an actual template, inspect the engine result, and download a project to open in Studio.",
+      "sample": "parameters-east-0"
+    },
+    "data-import": {
+      "mode": "import",
+      "title": "Import CSV, TSV or Excel",
+      "description": "Import the included inventory fixture and inspect the typed rows returned by the engine.",
+      "sample": "imported"
+    },
+    "data-preparation": {
+      "mode": "prepare",
+      "title": "Filter, calculate and group data",
+      "description": "Choose a minimum amount and inspect input rows, derived tables and the generated regional report.",
+      "sample": "prepared-10"
+    },
+    "data-sources": {
+      "mode": "sources",
+      "title": "JSON, SQLite and object data",
+      "description": "Inspect the same inventory dataset in three source forms, including a runnable SQLite database.",
+      "sample": "imported"
+    },
+    "desktop": {
+      "mode": "desktop",
+      "title": "Open a report in desktop Studio",
+      "description": "Choose your platform and download the example project for the installed application.",
+      "sample": "sales"
+    },
+    "developer-guide": {
+      "mode": "api",
+      "title": "Request → engine response → report",
+      "description": "Inspect the actual request and response for a report; download the portable project and output.",
+      "sample": "sales"
+    },
+    "dotnet-integration": {
+      "mode": "dotnet",
+      "title": "A paginated .NET / Blazor report",
+      "description": "Inspect the .NET request contract and use the viewer controls with a generated document.",
+      "sample": "sales"
+    },
+    "drill-down": {
+      "mode": "drill",
+      "title": "Open an order detail report",
+      "description": "Choose an order to render its actual nested detail report, then return to the summary.",
+      "sample": "orders"
+    },
+    "flutter-integration": {
+      "mode": "flutter",
+      "title": "A report for the Flutter client",
+      "description": "Inspect the request/response contract and preview the same document consumed by the Flutter SDK.",
+      "sample": "charts"
+    },
+    "http-connections": {
+      "mode": "http",
+      "title": "Refresh a JSON source snapshot",
+      "description": "Compare the two included HTTP-response fixtures and their independently rendered reports.",
+      "sample": "http-1"
+    },
+    "image-export": {
+      "mode": "images",
+      "title": "Export report pages as PNG or SVG",
+      "description": "Choose format, page range and PNG resolution, then download the engine-generated image archive.",
+      "sample": "sales"
+    },
+    "office-export": {
+      "mode": "office",
+      "title": "Export to Excel and Word",
+      "description": "Choose format, editable text or page images, and an inclusive page range. Download is a real Office document.",
+      "sample": "sales"
+    },
+    "report-authoring-manual": {
+      "mode": "parameters",
+      "title": "Generate a report from parameters",
+      "description": "Change the region and minimum quantity. Each combination has a matching engine-generated report and project.",
+      "sample": "parameters-east-0"
+    },
+    "report-library": {
+      "mode": "library",
+      "title": "Save and restore report versions",
+      "description": "Keep sample project versions in this browser, restore one and download its matching project.",
+      "sample": "sales"
+    },
+    "report-logic-manual": {
+      "mode": "logic",
+      "title": "Run report lifecycle examples",
+      "description": "Choose a minimum quantity to inspect actual TypeScript results, or trigger the validation-error example.",
+      "sample": "logic-0"
+    },
+    "template-format": {
+      "mode": "template",
+      "title": "Inspect and validate a template",
+      "description": "Compare a valid template with an invalid block type and inspect diagnostics returned by the engine.",
+      "sample": "parameters-east-0"
+    },
+    "toolbox": {
+      "mode": "toolbox",
+      "title": "A parameter dialog in action",
+      "description": "Use the region selector and quantity control to generate the matching report.",
+      "sample": "parameters-east-0"
+    },
+    "installation": {
+      "mode": "installation",
+      "title": "Install and open your first project",
+      "description": "Choose Linux, macOS or Windows, follow the launch steps, and open the included example project.",
+      "sample": "sales"
+    }
+  },
+  "imports": {
+    "csv": {
+      "input": "inputs/inventory.csv",
+      "result": "inputs/csv-result.json"
+    },
+    "tsv": {
+      "input": "inputs/inventory.tsv",
+      "result": "inputs/tsv-result.json"
+    },
+    "xlsx": {
+      "input": "inputs/inventory.xlsx",
+      "result": "inputs/xlsx-result.json"
+    }
+  },
+  "logicError": "inputs/logic-validation.json",
+  "orders": [
+    {
+      "id": "ORD-001",
+      "customer": "Central office",
+      "amount": 125,
+      "lines": [
+        {
+          "item": "Delivery service",
+          "quantity": 1,
+          "price": 100
+        },
+        {
+          "item": "Packaging",
+          "quantity": 1,
+          "price": 25
+        }
+      ],
+      "sample": "order-ord-001"
+    },
+    {
+      "id": "ORD-002",
+      "customer": "West branch",
+      "amount": 225,
+      "lines": [
+        {
+          "item": "Delivery service",
+          "quantity": 2,
+          "price": 100
+        },
+        {
+          "item": "Packaging",
+          "quantity": 1,
+          "price": 25
+        }
+      ],
+      "sample": "order-ord-002"
+    },
+    {
+      "id": "ORD-003",
+      "customer": "North branch",
+      "amount": 325,
+      "lines": [
+        {
+          "item": "Delivery service",
+          "quantity": 3,
+          "price": 100
+        },
+        {
+          "item": "Packaging",
+          "quantity": 1,
+          "price": 25
+        }
+      ],
+      "sample": "order-ord-003"
+    }
+  ]
+}
