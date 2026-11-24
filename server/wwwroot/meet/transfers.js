@@ -20,17 +20,32 @@ class MeetingTransfers {
     constructor(s) {
         this.s = s;
         this.entries = new Map();
+        this.attachments = new Map();
+        this.urls = new Set();
         this.timer = setInterval(() => this.prune(),10000);
     }
-    roomFor(size) {
-        let total = size;
-        for (const t of this.entries.values()) total += t.size;
-        return this.entries.size < 12 && Number.isSafeInteger(size) && size >= 0 && total <= fileBudget;
+    roomFor(size,file,slots=1) {
+        const outgoing = new Set();
+        let total = 0;
+        for (const t of this.entries.values()) {
+            if (!t.file || !outgoing.has(t.file)) total += t.size;
+            if (t.file) outgoing.add(t.file);
+        }
+        for (const t of this.attachments.values()) total += t.size;
+        return this.entries.size + slots <= 32 && Number.isSafeInteger(size) && size >= 0 &&
+            total + (file && outgoing.has(file) ? 0 : size) <= fileBudget;
+    }
+    download(blob,name) {
+        const url = URL.createObjectURL(blob);
+        this.urls.add(url);
+        const link = document.createElement("a");
+        link.href = url; link.download = name; link.click();
+        setTimeout(() => { if (this.urls.delete(url)) URL.revokeObjectURL(url); },30000);
     }
     wire(t,op,extra={}) {
         send(this.s,{type:"file",id:t.id,to:t.peer,op,...extra});
     }
-    create(id,peer,name,size,state) {
+    create(id,peer,name,size,state,chat=false) {
         const row = document.createElement("li");
         const text = document.createElement("span");
         const bar = document.createElement("progress");
@@ -38,7 +53,7 @@ class MeetingTransfers {
         const accept = document.createElement("button"), cancel = document.createElement("button");
         accept.textContent = "Accept file"; cancel.textContent = "Cancel";
         row.append(text,bar,accept,cancel);
-        const t = {id,peer,name,size,state,row,text,bar,accept,cancel,offset:0,last:Date.now()};
+        const t = {id,peer,name,size,state,chat,row,text,bar,accept,cancel,offset:0,last:Date.now()};
         this.entries.set(id,t);
         accept.onclick = () => this.accept(t);
         cancel.onclick = () => this.cancel(t,"Cancelled");
@@ -71,14 +86,14 @@ class MeetingTransfers {
         this.wire(t,"cancel");
         this.finish(t,reason);
     }
-    offer(peer,file) {
+    offer(peer,file,chat=false) {
         if (!person(this.s,peer)?.files) return statusText("Recipient unavailable.");
         if (!safeFilename(file.name)) return statusText("Choose a file with a valid name.");
-        if (!this.roomFor(file.size)) return statusText("Browser transfers support up to 64 MiB in total and 12 active files.");
+        if (!this.roomFor(file.size,file)) return statusText("Browser transfers support up to 64 MiB in total and 32 active transfers.");
         const id = crypto.randomUUID().replaceAll("-","");
-        const t = this.create(id,peer,file.name,file.size,"Waiting");
+        const t = this.create(id,peer,file.name,file.size,"Waiting",chat);
         t.file = file;
-        this.wire(t,"offer",{name:t.name,size:t.size});
+        this.wire(t,"offer",{name:t.name,size:t.size,chat});
     }
     async accept(t) {
         if (!this.active(t) || t.state !== "Offered") return;
@@ -105,10 +120,18 @@ class MeetingTransfers {
         if (typeof v.id !== "string" || !/^[a-f0-9]{32}$/i.test(v.id) || !this.s.names.has(v.from)) return;
         const t = this.entries.get(v.id);
         if (v.op === "offer") {
-            if (t || !safeFilename(v.name) || !this.roomFor(v.size)) {
+            const chat = v.chat === true;
+            if (t || this.attachments.has(v.id) || !safeFilename(v.name) || !this.roomFor(v.size) ||
+                (chat && this.attachments.size + [...this.entries.values()].filter(t => t.chat && !t.file).length >= 50)) {
                 this.wire({id:v.id,peer:v.from},"cancel");
                 if (!t) statusText("File offer declined: invalid filename, size or browser transfer limit.");
-            } else this.create(v.id,v.from,v.name,v.size,"Offered");
+            } else {
+                const entry = this.create(v.id,v.from,v.name,v.size,chat ? "Receiving" : "Offered",chat);
+                if (chat) {
+                    entry.bytes = new Uint8Array(v.size);
+                    this.wire(entry,"accept");
+                }
+            }
             return;
         }
         if (!t || t.peer !== v.from) return;
@@ -149,15 +172,25 @@ class MeetingTransfers {
         const blob = new Blob([t.bytes],{type:"application/octet-stream"});
         if (await fileDigest(blob) !== v.sha256) throw Error("File checksum mismatch");
         if (!this.active(t)) return;
+        if (t.chat) {
+            this.wire(t,"saved");
+            this.finish(t,"Available");
+            delete t.row.dataset.finished;
+            this.attachments.set(t.id,{blob,size:t.size});
+            t.accept.hidden = false;
+            t.accept.textContent = "Save file";
+            t.accept.onclick = () => {
+                const file = this.attachments.get(t.id);
+                if (file && session === this.s) this.download(file.blob,t.name);
+            };
+            return;
+        }
         if (t.writer) {
             await t.writer.close();
             t.writer = null;
             if (!this.active(t)) return;
         } else {
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = url; link.download = t.name; link.click();
-            setTimeout(()=>URL.revokeObjectURL(url),30000);
+            this.download(blob,t.name);
         }
         this.wire(t,"saved"); this.finish(t,window.showSaveFilePicker ? "Saved" : "Downloaded");
     }
@@ -167,9 +200,15 @@ class MeetingTransfers {
             else if (Date.now()-t.last > 180000) this.cancel(t,"Timed out");
         }
     }
+    interrupt() {
+        for (const t of this.entries.values()) this.finish(t,"Interrupted");
+    }
     close() {
         clearInterval(this.timer);
-        for (const t of this.entries.values()) this.finish(t,"Interrupted");
+        this.interrupt();
+        this.attachments.clear();
+        for (const url of this.urls) URL.revokeObjectURL(url);
+        this.urls.clear();
         el("transfers").replaceChildren(); el("files-panel").hidden = true;
     }
 }

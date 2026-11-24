@@ -145,3 +145,16 @@ main:has(#meeting:not([hidden])) > :is(header,#status) { display:none }
 #transfers progress { display:block; width:100%; margin:3px 0 }
 #transfers button { margin-right:4px }
 @media(max-width:480px) { #host-actions { font-size:12px } #presenters select { max-width:8em } }
+
+#emoji-dialog { width:min(350px,85vw); border:1px solid #506671; border-radius:10px; padding:12px; background:#192b34; color:#edf6f9 }
+#emoji-dialog::backdrop { background:#071014a8 }
+#emoji-dialog form { text-align:right }
+#emoji-dialog input,#emoji-dialog select { width:100%; margin:4px 0 }
+#emoji-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(40px,1fr)); max-height:min(270px,50vh); overflow:auto }
+#emoji-grid button { padding:4px; font-size:22px }
+.chat-reactions { display:flex; flex-wrap:wrap; gap:2px; margin-top:4px }
+.chat-reactions button { min-width:26px; min-height:24px; padding:1px 4px; font-size:13px }
+.chat-reactions button[aria-pressed=true] { background:#28535b }
+#attach-chat,#choose-emoji { padding:2px 5px; font-size:18px }
+#meeting .chat-reactions button::before,#meeting #choose-emoji::before,#meeting #attach-chat::before { display:none }
+#meeting .chat-reactions button { min-width:26px; min-height:24px; padding:1px 4px }

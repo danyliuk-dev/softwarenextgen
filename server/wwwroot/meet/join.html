@@ -3,7 +3,7 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="referrer" content="no-referrer"><title>Nextgen Meet</title>
 <link rel="stylesheet" href="/meet/join.css">
-<script defer src="/meet/crypto.js"></script><script defer src="/meet/media.js"></script><script defer src="/meet/conference.js"></script><script defer src="/meet/join.js"></script><script defer src="/meet/devices.js"></script><script defer src="/meet/transfers.js"></script><script defer src="/meet/collaboration.js"></script>
+<script defer src="/meet/crypto.js"></script><script defer src="/meet/media.js"></script><script defer src="/meet/conference.js"></script><script defer src="/meet/emoji.js"></script><script defer src="/meet/chat.js"></script><script defer src="/meet/join.js"></script><script defer src="/meet/devices.js"></script><script defer src="/meet/transfers.js"></script><script defer src="/meet/collaboration.js"></script>
 </head><body><main>
 <header><b>Nextgen Meet</b><h1 id="title">Join the meeting</h1></header>
 <p id="status" role="status">Checking your invitation…</p>
@@ -26,12 +26,13 @@
 </section>
 <aside id="sidebar" class="glass"><section id="roster-panel"><h2>Participants (<span id="count"></span>)</h2><ul id="people"></ul></section>
 <section id="chat-panel" hidden><h2>Chat</h2><ol id="messages" role="log"></ol>
-<section id="files-panel" hidden><h3>Files</h3><ul id="transfers"></ul></section><form id="chat"><input id="text" aria-label="Message everyone" placeholder="Message everyone" required maxlength="8192" autocomplete="off"><button class="icon" aria-label="Send message" title="Send message"></button></form></section></aside>
+<section id="files-panel" hidden><h3>Files</h3><ul id="transfers"></ul></section><form id="chat"><button type="button" id="attach-chat" title="Attach file to meeting chat" aria-label="Attach file to meeting chat">📎</button><button type="button" id="choose-emoji" aria-label="Emoji" title="Emoji">☺</button><input id="text" aria-label="Message everyone" placeholder="Message everyone" required maxlength="8192" autocomplete="off"><button class="icon" aria-label="Send message" title="Send message"></button></form></section></aside>
 <nav class="glass rail" aria-label="Meeting panels">
 <button class="icon" id="participants-tab" title="Participants" aria-label="Participants" aria-controls="roster-panel"></button>
 <button class="icon" id="chat-tab" title="Chat" aria-label="Chat" aria-controls="chat-panel"><span id="unread" hidden></span></button>
 <button class="icon" id="collapse" aria-controls="sidebar"></button></nav></div>
 <div id="clip-offer" hidden><span></span> <button id="clip-copy">Copy received text</button><button id="clip-dismiss">Dismiss</button></div>
+<dialog id="emoji-dialog" aria-label="Emoji"><form method="dialog"><button aria-label="Close">Close</button></form><input id="emoji-search" placeholder="Search emoji" aria-label="Search emoji"><select id="emoji-category" aria-label="Emoji category"></select><div id="emoji-grid"></div></dialog>
 <input id="file-picker" type="file" hidden>
 <p id="meeting-status" role="status"></p>
 <footer class="glass controls"><button id="mic" title="Unmute" aria-label="Unmute">Unmute</button>

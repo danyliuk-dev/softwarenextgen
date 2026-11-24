@@ -16,6 +16,9 @@ if (invite) {
 } else statusText("The invitation is incomplete. Ask the host for a fresh meeting link.");
 
 function leave(message, keepChat = false, holdCapture = false) {
+    el("emoji-dialog").close();
+    el("file-picker").onchange = null;
+    el("file-picker").value = "";
     recoveryName = undefined;
     el("manual-reconnect").hidden = true;
     clearTimeout(retryTimer);
@@ -214,7 +217,7 @@ function receive(s, event) {
     case "hostChanged":
         s.media.pauseCapture(true);
         releaseControl(s); s.controlEnabled = false; s.controlTarget = null;
-        s.files.close(); s.files = new MeetingTransfers(s); clearClipboardOffer(s);
+        s.files.interrupt(); el("file-picker").onchange = null; clearClipboardOffer(s);
         s.watching = undefined; s.cameras.clear(); s.people=[]; s.names=new Map();
         s.pointer=null; el("presenter-pointer").setAttribute("hidden","");
         el("frame").removeAttribute("src"); el("frame").hidden=true;
@@ -224,6 +227,7 @@ function receive(s, event) {
     case "chat": {
         const item = document.createElement("li");
         item.textContent = event.name + " · " + event.text;
+        if (/^[a-f0-9]{32}$/.test(event.id)) addReactions(item,event.id);
         const log = el("messages");
         if (log.children.length >= 300) log.firstChild.remove();
         log.append(item);
@@ -232,6 +236,7 @@ function receive(s, event) {
         log.scrollTop = log.scrollHeight;
         break;
     }
+    case "reaction": updateReaction(event); break;
     case "pointer":
         if (s.watching === event.from) {
             s.pointer = event.position;
@@ -258,6 +263,7 @@ function reconnect(s, message) {
     const exhausted = s.attempt === retryDelays.length;
     leave(exhausted ? "Unable to reconnect. Try again when the connection is available." : message, canRetry || exhausted, canRetry || exhausted);
     if (exhausted) {
+        el("messages").replaceChildren(); el("text").value = "";
         recoveryName = s.name;
         el("cancel-reconnect").hidden = false;
         el("manual-reconnect").hidden = false;

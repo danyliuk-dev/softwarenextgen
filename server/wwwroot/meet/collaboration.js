@@ -48,9 +48,7 @@ function addPeerActions(s,p,item) {
     if (person(s,s.me)?.host && p.supportsRoles) action(p.cohost ? "Remove co-host" : "Make co-host",
         () => send(s,{type:"setCoHost",to:p.id,on:!p.cohost}));
     if (p.files) action("Send file",() => {
-        s.fileRecipient = p.id;
-        el("file-picker").value = "";
-        el("file-picker").click();
+        chooseFile(s,[p.id]);
     });
     if (p.sharing && !p.window && !canControl(s,p) && (p.host || p.id === 0 || p.cohost || cohost(s))) {
         action("Request control",() => {
@@ -70,10 +68,26 @@ function addPeerActions(s,p,item) {
     });
     if (menu.childElementCount > 1) item.append(menu);
 }
-el("file-picker").onchange = () => {
-    const file = el("file-picker").files[0];
-    if (file && session) session.files.offer(session.fileRecipient,file);
-    el("file-picker").value = "";
+function chooseFile(s,recipients,chat=false) {
+    const picker = el("file-picker");
+    const transfers = s.files;
+    picker.value = "";
+    picker.onchange = () => {
+        const file = picker.files[0];
+        picker.value = "";
+        picker.onchange = null;
+        if (!file || session !== s || s.files !== transfers) return;
+        const peers = recipients.filter(id => person(s,id)?.files);
+        if (!peers.length) return statusText("Recipients have left the meeting.");
+        if (!transfers.roomFor(file.size,file,peers.length))
+            return statusText("The file exceeds the meeting transfer limit.");
+        for (const peer of peers) transfers.offer(peer,file,chat);
+    };
+    picker.click();
+}
+el("attach-chat").onclick = () => {
+    const s = session;
+    if (s?.visible) chooseFile(s,s.people.filter(p => p.id !== s.me && p.files).map(p => p.id),true);
 };
 el("copy-invite").onclick = async () => {
     const s = session;
@@ -95,6 +109,7 @@ el("end-meeting").onclick = () => {
     if (session && cohost(session) && window.confirm("End this meeting for everyone?")) send(session,{type:"endForAll"});
 };
 function syncCollaboration(s) {
+    el("attach-chat").disabled = !s.people.some(p => p.id !== s.me && p.files);
     el("my-role").textContent = person(s,s.me)?.host ? "Host" : cohost(s) ? "Co-host" : "Guest";
     el("email-invite").disabled = !person(s,0);
     el("host-actions").hidden = !cohost(s);
