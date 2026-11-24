@@ -4,7 +4,7 @@ const invite = /^#([a-f0-9]{64})\.([a-f0-9]{64})$/i.exec(location.hash);
 const statusText = message => { el(session?.visible ? "meeting-status" : "status").textContent = message; };
 let session;
 let retryTimer;
-const retryDelays = [1000, 2000, 4000, 8000, 15000, 15000];
+const retryDelays = [1000, 2000, 4000, 8000, 15000, 15000, 15000, 15000, 15000, 15000];
 if (invite) {
     el("open").href = "nextgenmeet://join/" + location.hash;
     el("lobby").hidden = false;
