@@ -3,6 +3,8 @@ const el = id => document.getElementById(id);
 const invite = /^#([a-f0-9]{64})\.([a-f0-9]{64})$/i.exec(location.hash);
 const statusText = message => { el(session?.visible ? "meeting-status" : "status").textContent = message; };
 let session;
+let retryTimer;
+const retryDelays = [1000, 2000, 4000, 8000, 15000, 15000];
 if (invite) {
     el("open").href = "nextgenmeet://join/" + location.hash;
     el("lobby").hidden = false;
@@ -10,9 +12,22 @@ if (invite) {
     statusText(el("connect").disabled ? "Use the desktop app or a browser with secure connections." : "Choose how to join.");
 } else statusText("The invitation is incomplete. Ask the host for a fresh meeting link.");
 
-function leave(message) {
-    if (!session) return;
+function leave(message, keepChat = false) {
+    clearTimeout(retryTimer);
+    retryTimer = undefined;
+    el("cancel-reconnect").hidden = true;
+    el("name").disabled = false;
+    el("connect").disabled = false;
+    if (!keepChat) {
+        el("messages").replaceChildren();
+        el("text").value = "";
+    }
+    if (!session) {
+        statusText(message);
+        return;
+    }
     const previous = session;
+    previous.ready = false;
     releaseControl(previous);
     previous.files.close();
     clearClipboardOffer(previous);
@@ -22,10 +37,9 @@ function leave(message) {
     clearTimeout(previous.timeout);
     previous.socket.close();
     previous.media.close();
-    for (const id of ["people","messages","portraits","filmstrip","watch"]) el(id).replaceChildren();
+    for (const id of ["people","portraits","filmstrip","watch"]) el(id).replaceChildren();
     el("frame").removeAttribute("src");
     el("frame").hidden = el("presenters").hidden = el("meeting").hidden = true;
-    el("text").value = "";
     el("meeting-status").textContent = "";
     for (const id of ["input-level","output-level"]) el(id).value = 0;
     el("lobby").hidden = el("connect").disabled = false;
@@ -36,13 +50,13 @@ function send(s, message) {
     if (session !== s || !s.ready) return;
     const media = ["screen","camera","audio"].includes(message.type);
     if (media && (s.pending > 4 || s.socket.bufferedAmount > 512000)) return;
-    if (s.pending > 64 || s.socket.bufferedAmount > 4000000) return leave("Connection too slow. Please rejoin.");
+    if (s.pending > 64 || s.socket.bufferedAmount > 4000000) return reconnect(s,"Connection too slow. Please rejoin.");
     s.pending++;
     s.outgoing = s.outgoing.then(async () => {
         if (session !== s) return;
         const packet = await s.channel.seal(0, nrBytes(JSON.stringify(message)));
         if (session === s) s.socket.send(packet);
-    }).catch(() => { if (session === s) leave("Connection lost. Please rejoin."); }).finally(() => s.pending--);
+    }).catch(() => { reconnect(s,"Connection lost. Please rejoin."); }).finally(() => s.pending--);
 }
 function watch(s) {
     const peer = s.preferCameras || el("watch").value === "" ? -1 : Number(el("watch").value);
@@ -168,6 +182,9 @@ function roster(s, event) {
     layoutStage(s);
     if (!s.visible) {
         s.visible = true;
+        s.attempt = 0;
+        el("cancel-reconnect").hidden = true;
+        el("name").disabled = false;
         clearTimeout(s.timeout);
         el("lobby").hidden = true;
         el("meeting").hidden = false;
@@ -211,13 +228,32 @@ function receive(s, event) {
     case "camera": cameraFrame(s,event.from,event.data); break;
     }
 }
+function reconnect(s, message) {
+    if (session !== s) return;
+    const canRetry = (s.visible || s.attempt > 0) && s.attempt < retryDelays.length;
+    leave(message, canRetry);
+    if (!canRetry) return;
+    const name = s.name;
+    const attempt = s.attempt + 1;
+    el("connect").disabled = el("name").disabled = true;
+    el("cancel-reconnect").hidden = false;
+    statusText("Connection lost. Reconnecting (" + attempt + "/" + retryDelays.length + ")…");
+    retryTimer = setTimeout(() => {
+        retryTimer = undefined;
+        connect(name, attempt);
+    }, retryDelays[s.attempt]);
+}
+el("cancel-reconnect").onclick = () => leave("Reconnection canceled.");
 el("join").onsubmit = event => {
     event.preventDefault();
     const name = el("name").value.trim();
-    if (!invite || session || !name) return;
+    if (!invite || session || retryTimer !== undefined || !name) return;
+    connect(name, 0);
+};
+function connect(name, attempt) {
     const socket = new WebSocket("wss://connect.softwarenextgen.com/relay/join/" + invite[1]);
     socket.binaryType = "arraybuffer";
-    const s = {socket, tab:"participants", expanded:!matchMedia("(max-width:640px)").matches, unread:0, cameras:new Map(), pending:0, incoming:Promise.resolve(), outgoing:Promise.resolve(), queued:0};
+    const s = {socket, name, attempt, tab:"participants", expanded:!matchMedia("(max-width:640px)").matches, unread:0, cameras:new Map(), pending:0, incoming:Promise.resolve(), outgoing:Promise.resolve(), queued:0};
     session = s;
     s.files = new MeetingTransfers(s);
     s.media = new MeetingMedia(message => {
@@ -225,13 +261,13 @@ el("join").onsubmit = event => {
         if (message.type === "camera" || message.type === "cameraOff") cameraFrame(s,s.me,message.data);
         send(s,message);
     }, message => { if (session === s) statusText(message); });
-    s.timeout = setTimeout(() => leave("The host did not respond. Check the invitation and try again."), 25000);
+    s.timeout = setTimeout(() => reconnect(s,"The host did not respond. Check the invitation and try again."), 25000);
     el("connect").disabled = true;
-    statusText("Connecting to the host…");
-    socket.onclose = () => { if (session === s) leave(s.visible ? "Meeting disconnected." : "Could not join. Check that the host is online and the invitation is current."); };
+    if (!attempt) statusText("Connecting to the host…");
+    socket.onclose = () => reconnect(s,s.visible ? "Meeting disconnected." : "Could not join. Check that the host is online and the invitation is current.");
     socket.onmessage = ({data}) => {
         if (session !== s) return;
-        if (++s.queued > 64 || (data.byteLength ?? data.length) > 1048576) return leave("Connection overloaded. Please rejoin.");
+        if (++s.queued > 64 || (data.byteLength ?? data.length) > 1048576) return reconnect(s,"Connection overloaded. Please rejoin.");
         s.incoming = s.incoming.then(async () => {
             if (session !== s) return;
             if (!s.channel) {
@@ -247,7 +283,7 @@ el("join").onsubmit = event => {
             }
         }).catch(() => { if (session === s) leave("Could not verify the meeting connection. Check your invitation."); }).finally(() => s.queued--);
     };
-};
+}
 for (const kind of ["mic","camera","screen"]) {
     el(kind).onclick = () => session?.media.toggle(kind, el(kind));
 }
