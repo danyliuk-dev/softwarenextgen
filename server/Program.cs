@@ -25,7 +25,7 @@ app.Use(async(c,next)=>{
     c.Response.Headers["X-Frame-Options"]=demo?"SAMEORIGIN":"DENY";
     c.Response.Headers["Content-Security-Policy"]="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; object-src 'none'; frame-ancestors "+(demo?"'self'":"'none'")+"; base-uri 'none'; form-action 'self'";
     if (c.Request.Path == "/meet/join" || c.Request.Path == "/meet/join.html")
-        c.Response.Headers["Content-Security-Policy"] = c.Response.Headers["Content-Security-Policy"].ToString() + "; connect-src 'self' wss://connect.softwarenextgen.com";
+        c.Response.Headers["Content-Security-Policy"] = c.Response.Headers["Content-Security-Policy"].ToString().Replace("script-src 'self'", "script-src 'self' 'wasm-unsafe-eval'") + "; connect-src 'self' wss://connect.softwarenextgen.com";
     c.Response.Headers["Cache-Control"]="no-store";
     if(c.Request.IsHttps)c.Response.Headers["Strict-Transport-Security"]="max-age=31536000";
     if(c.Request.Path.StartsWithSegments("/api/licenses") || c.Request.Path == "/api/meet/invitations") {

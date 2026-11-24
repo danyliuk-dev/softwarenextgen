@@ -159,7 +159,7 @@ class MeetingMedia {
                     channelCount:1, channelCountMode:"explicit", numberOfOutputs:0
                 });
                 device.processor.port.onmessage = ({data}) => {
-                    if (current()) {
+                    if (current() && !this.paused) {
                         this.level("input-level",new DataView(data));
                         this.send({type:"audio", data:nrB64(new Uint8Array(data))});
                     }
@@ -176,7 +176,7 @@ class MeetingMedia {
                 const ctx = canvas.getContext("2d", {alpha:false});
                 device.timer = setInterval(() => {
                     const video = device.video;
-                    if (!video.videoWidth || video.readyState < 2) return;
+                    if (this.paused || !video.videoWidth || video.readyState < 2) return;
                     const scale = Math.min(1,(screen ? 1440 : 480)/video.videoWidth,(screen ? 900 : 360)/video.videoHeight);
                     const width = Math.max(1, Math.round(video.videoWidth * scale));
                     const height = Math.max(1, Math.round(video.videoHeight * scale));
@@ -198,6 +198,14 @@ class MeetingMedia {
                 this.stop(kind);
                 this.notice("Could not start " + {mic:"microphone",camera:"camera",screen:"screen sharing"}[kind] + ". " + error.message);
             }
+        }
+    }
+    pauseCapture(paused) {
+        this.paused = paused;
+        this.playAt.clear();
+        for (const [kind,device] of this.devices) {
+            if (!device.active) { this.stop(kind); continue; }
+            for (const track of device.stream.getTracks()) track.enabled = !paused;
         }
     }
     close() {

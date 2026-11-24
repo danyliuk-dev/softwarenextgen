@@ -15,7 +15,7 @@ static class MeetInvitations
         var link = input.Link;
         if (address is not { Length: > 0 and <= 254 } || address.Any(char.IsControl) ||
             !MailAddress.TryCreate(address, out var parsed) || parsed.Address != address ||
-            link is not { Length: 167 } || !Regex.IsMatch(link, @"\Ahttps://softwarenextgen\.com/meet/join#[0-9a-f]{64}\.[0-9a-f]{64}\z"))
+            link is not { Length: 167 or 170 } || !Regex.IsMatch(link, @"\Ahttps://softwarenextgen\.com/meet/join#(?:v2\.)?[0-9a-f]{64}\.[0-9a-f]{64}\z"))
             return Results.BadRequest();
 
         var scope = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(address + "\n" + link)));

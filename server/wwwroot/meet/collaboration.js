@@ -1,6 +1,6 @@
 "use strict";
 function person(s,id) { return s.people?.find(p => p.id === id); }
-function cohost(s) { return !!person(s,s.me)?.cohost; }
+function cohost(s) { const me=person(s,s.me); return !!(me?.host || me?.cohost); }
 function canControl(s,p) {
     return !!p?.sharing && !p.window && p.controller === s.me;
 }
@@ -45,12 +45,14 @@ function addPeerActions(s,p,item) {
         btn.onclick = () => { menu.open = false; if (session === s) run(); };
         menu.append(btn);
     }
+    if (person(s,s.me)?.host && p.supportsRoles) action(p.cohost ? "Remove co-host" : "Make co-host",
+        () => send(s,{type:"setCoHost",to:p.id,on:!p.cohost}));
     if (p.files) action("Send file",() => {
         s.fileRecipient = p.id;
         el("file-picker").value = "";
         el("file-picker").click();
     });
-    if (p.sharing && !p.window && !canControl(s,p) && (p.id === 0 || p.cohost || cohost(s))) {
+    if (p.sharing && !p.window && !canControl(s,p) && (p.host || p.id === 0 || p.cohost || cohost(s))) {
         action("Request control",() => {
             el("watch").value = String(p.id);
             selectView(false);
@@ -93,7 +95,8 @@ el("end-meeting").onclick = () => {
     if (session && cohost(session) && window.confirm("End this meeting for everyone?")) send(session,{type:"endForAll"});
 };
 function syncCollaboration(s) {
-    el("my-role").textContent = cohost(s) ? "Co-host" : "Guest";
+    el("my-role").textContent = person(s,s.me)?.host ? "Host" : cohost(s) ? "Co-host" : "Guest";
+    el("email-invite").disabled = !person(s,0);
     el("host-actions").hidden = !cohost(s);
     if (!cohost(s)) el("host-actions").open = false;
     const control = canControl(s,person(s,s.watching));
