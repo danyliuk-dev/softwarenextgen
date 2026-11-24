@@ -158,3 +158,5 @@ main:has(#meeting:not([hidden])) > :is(header,#status) { display:none }
 #attach-chat,#choose-emoji { padding:2px 5px; font-size:18px }
 #meeting .chat-reactions button::before,#meeting #choose-emoji::before,#meeting #attach-chat::before { display:none }
 #meeting .chat-reactions button { min-width:26px; min-height:24px; padding:1px 4px }
+
+#meeting .chat-reactions button[hidden] { display:none }

@@ -4,17 +4,30 @@ function addReactions(item,id) {
     item.reactions = {};
     const strip = document.createElement("div");
     strip.className = "chat-reactions";
+    const more = document.createElement("button");
+    more.type = "button"; more.textContent = "+"; more.title = more.ariaLabel = "More reactions";
+    more.setAttribute("aria-expanded","false");
+    more.onclick = () => {
+        const open = more.getAttribute("aria-expanded") !== "true";
+        more.setAttribute("aria-expanded",String(open));
+        more.textContent = open ? "−" : "+";
+        more.title = more.ariaLabel = open ? "Fewer reactions" : "More reactions";
+        for (const emoji of extraReactions)
+            strip.children[reactions.indexOf(emoji)].hidden = !open && !item.reactions[emoji]?.length;
+    };
     for (const emoji of reactions) {
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = emoji;
-        button.ariaLabel = "React "+emoji;
+        button.hidden = extraReactions.includes(emoji);
+        button.title = button.ariaLabel = reactionLabels[emoji] || "React "+emoji;
         button.setAttribute("aria-pressed","false");
         button.onclick = () => {
             if (session?.visible) send(session,{type:"reaction",id,emoji,on:!item.reactions[emoji]?.includes(session.me)});
         };
         strip.append(button);
     }
+    strip.append(more);
     item.append(strip);
 }
 function updateReaction(event) {
@@ -24,6 +37,8 @@ function updateReaction(event) {
     applyReaction(item.reactions,event.emoji,event.from,event.on);
     const users = item.reactions[event.emoji];
     const button = item.lastElementChild.children[reactions.indexOf(event.emoji)];
+    button.hidden = extraReactions.includes(event.emoji) && !users.length &&
+        item.lastElementChild.lastElementChild.getAttribute("aria-expanded") !== "true";
     button.textContent = event.emoji+(users.length ? " "+users.length : "");
     button.setAttribute("aria-pressed",String(users.includes(session.me)));
 }
